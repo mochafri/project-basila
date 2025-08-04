@@ -4,7 +4,7 @@
 
 <x-head />
 
-<body class="dark:bg-neutral-800 bg-neutral-100 dark:text-white">
+<body class=" bg-neutral-100 dark:bg-neutral-800 dark:text-white">
 
     <!-- ..::  header area start ::.. -->
     <x-sidebar />

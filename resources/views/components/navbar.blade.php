@@ -1,4 +1,4 @@
-<div class="navbar-header border-b border-neutral-200 dark:border-neutral-600">
+<div class="navbar-header border-neutral-200 dark:border-neutral-600">
     <div class="flex items-center justify-between">
         <div class="col-auto">
             <div class="flex flex-wrap items-center gap-[16px]">
