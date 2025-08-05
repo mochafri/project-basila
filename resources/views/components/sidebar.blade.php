@@ -98,8 +98,24 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('wallet') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Wallet</a>
+                        <a href="{{ route('index2') }}"><i
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('index3') }}"><i
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Penetapan Yudisium</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('index4') }}"><i
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Approval Yudisium</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('index5') }}"><i
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Eligibilitas Yudisium</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('index6') }}"><i
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Laporan</a>
                     </li>
                 </ul>
             </li>
@@ -115,7 +131,7 @@
                 <ul class="sidebar-submenu">
                     <li>
                         <a href="{{ route('typography') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Typography</a>
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i> Typography</a>
                     </li>
                     <li>
                         <a href="{{ route('colors') }}"><i
