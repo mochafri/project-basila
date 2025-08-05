@@ -114,6 +114,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/index-7','index7')->name('index7');
         Route::get('/index-8','index8')->name('index8');
         Route::get('/index-9','index9')->name('index9');
+        Route::get('/basilaDashboard','basilaDashboard')->name('basilaDashboard');
     });
 });
 

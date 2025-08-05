@@ -2028,6 +2028,57 @@ select{
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+/* Warna teks angka/value dalam tooltip (misalnya: 8, 6, 5) */
+.apexcharts-tooltip-text-y-value {
+  color: #000000 !important;
+}
+
+/* Warna teks judul tooltip (misalnya: kategori 'FIF', 'FTE') */
+.apexcharts-tooltip-title {
+  color: #000000 !important;
+}
+
+/* Jika Anda menggunakan kelas .rounded-tooltip-value seperti dalam CSS Anda */
+.rounded-tooltip-value .apexcharts-tooltip-text-y-value {
+  color: #000000 !important;
+}
+
+/* Secara umum: jika ingin semua teks dalam box tooltip jadi hitam */
+.apexcharts-tooltip.apexcharts-theme-light {
+  color: #000000 !important;
+}
+
+/* Menyusun marker dan teks ke satu baris sejajar tengah */
+.apexcharts-tooltip-series-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+/* Pastikan marker tidak terpisah atau berukuran aneh */
+.apexcharts-tooltip-marker {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+}
+
+/* Styling teks label */
+.apexcharts-tooltip-text-y-label {
+    color: #000000 !important;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1;
+}
+
+/* Styling angka */
+.apexcharts-tooltip-text-y-value {
+    color: #000000 !important;
+    font-weight: 700;
+    margin: 0 0 0 4px;
+    line-height: 1;
+}
 /* Square Chart End */
 /* Home Two Donut Chart Css Start*/
 .apexcharts-tooltip-z-none .apexcharts-tooltip-z-group{
