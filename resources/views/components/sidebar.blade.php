@@ -3,10 +3,9 @@
         <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
     </button>
     <div>
-        <a href="{{ route('index') }}" class="sidebar-logo background-primary">
-            <img src="{{ asset('assets/images/logo.png') }}" alt="site logo" class="light-logo">
-            <img src="{{ asset('assets/images/logo-light.png') }}" alt="site logo" class="dark-logo">
-            <img src="{{ asset('assets/images/logo-icon.png') }}" alt="site logo" class="logo-icon">
+        <a href="{{ route('index') }}" class="sidebar-logo background-primary flex items-center justify-center">
+            <img src="{{ asset('assets/basila_images/basila_white.png') }}" alt="site logo" class="light-logo" width="120">
+
         </a>
     </div>
     <div class="sidebar-menu-area">
@@ -14,7 +13,7 @@
 
             <!-- Penambahan -->
             <div class="identitas flex flex-col items-center gap-1 my-10">
-                <img src="" alt="logo basila">
+                <img src="{{ asset('assets/basila_images/favicon.png')}}" alt="logo basila" width="50">
                 <h2 class="uppercase text-xl">fadhlullah B</h2>
                 <h4 class="text-sm">19930026</h4>
             </div>

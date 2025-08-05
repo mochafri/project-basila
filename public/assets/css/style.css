@@ -6843,7 +6843,7 @@ h6, .h6 {
 
 .sidebar-menu li.dropdown.open > a, .sidebar-menu li.dropdown.dropdown-open > a{
   --tw-bg-opacity: 1;
-  background-color: rgb(72 127 255 / var(--tw-bg-opacity));
+  background-color: rgb(266 19 19 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
@@ -6947,9 +6947,9 @@ h6, .h6 {
 
 .sidebar-menu .sidebar-submenu li.active-page a{
   --tw-bg-opacity: 1;
-  background-color: rgb(228 241 255 / var(--tw-bg-opacity));
+  background-color: rgb(226 19 19 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 :is(.dark .sidebar-menu .sidebar-submenu li.active-page a){
