@@ -1,8 +1,8 @@
-<div class="navbar-header border-neutral-200 dark:border-neutral-600">
+<div class="navbar-header bg-[rgb(226,19,19)] dark:bg-[rgb(39 49 66)] border-neutral-200 dark:border-neutral-600">
     <div class="flex items-center justify-between">
         <div class="col-auto">
             <div class="flex flex-wrap items-center gap-[16px]">
-                <button type="button" class="sidebar-toggle">
+                <button type="button" class="sidebar-toggle text-white">
                     <iconify-icon icon="heroicons:bars-3-solid" class="icon non-active"></iconify-icon>
                     <iconify-icon icon="iconoir:arrow-right" class="icon active"></iconify-icon>
                 </button>
@@ -13,12 +13,11 @@
                     <input type="text" name="search" placeholder="Search">
                     <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
                 </form>
-
             </div>
         </div>
         <div class="col-auto">
             <div class="flex flex-wrap items-center gap-3">
-                <button type="button" id="theme-toggle" class="w-10 h-10 bg-neutral-200 dark:bg-neutral-700 dark:text-white rounded-full flex justify-center items-center">
+                <button type="button" id="theme-toggle" class="w-10 h-10  rounded-full flex justify-center items-center">
                     <span id="theme-toggle-dark-icon" class="hidden">
                         <i class="ri-sun-line"></i>
                     </span>
@@ -29,7 +28,7 @@
 
                 <!-- Language Dropdown Start  -->
                 <div class="hidden sm:inline-block">
-                    <button data-dropdown-toggle="dropdownInformation" class="has-indicator w-10 h-10 bg-neutral-200 dark:bg-neutral-700 dark:text-white rounded-full flex justify-center items-center" type="button">
+                    <button data-dropdown-toggle="dropdownInformation" class="has-indicator w-10 h-10  rounded-full flex justify-center items-center" type="button">
                         <img src="{{ asset('assets/images/lang-flag.png') }}" alt="image" class="w-6 h-6 object-cover rounded-full">
                     </button>
                     <div id="dropdownInformation" class="z-10 hidden bg-white dark:bg-neutral-700 rounded-lg shadow-lg dropdown-menu-sm p-3">
@@ -128,7 +127,7 @@
                 </div>
                 <!-- Language Dropdown End  -->
                 <!-- Message Dropdown Start  -->
-                <button data-dropdown-toggle="dropdownMessage" class="has-indicator w-10 h-10 bg-neutral-200 dark:bg-neutral-700 rounded-full flex justify-center items-center" type="button">
+                <button data-dropdown-toggle="dropdownMessage" class="has-indicator w-10 h-10  rounded-full flex justify-center items-center" type="button">
                     <iconify-icon icon="mage:email" class="text-neutral-900 dark:text-white text-xl"></iconify-icon>
                 </button>
                 <div id="dropdownMessage" class="z-10 hidden bg-white dark:bg-neutral-700 rounded-2xl overflow-hidden shadow-lg max-w-[394px] w-full">
@@ -227,7 +226,7 @@
                 </div>
                 <!-- Message Dropdown End  -->
                 <!-- Notification Start  -->
-                <button data-dropdown-toggle="dropdownNotification" class="has-indicator w-10 h-10 bg-neutral-200 dark:bg-neutral-700 rounded-full flex justify-center items-center" type="button">
+                <button data-dropdown-toggle="dropdownNotification" class="has-indicator w-10 h-10  rounded-full flex justify-center items-center" type="button">
                     <iconify-icon icon="iconoir:bell" class="text-neutral-900 dark:text-white text-xl"></iconify-icon>
                 </button>
                 <div id="dropdownNotification" class="z-10 hidden bg-white dark:bg-neutral-700 rounded-2xl overflow-hidden shadow-lg max-w-[394px] w-full">

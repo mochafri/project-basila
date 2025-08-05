@@ -26,6 +26,16 @@
 5. Use the user's configured `sans` font-feature-settings by default.
 6. Use the user's configured `sans` font-variation-settings by default.
 */
+/* CSS custom */
+.background-primary {
+  background-color: rgb(226,19,19);
+}
+
+.background-primary-dark {
+  background-color: rgb(120, 10, 10);
+}
+
+
 html {
   line-height: 1.5; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
@@ -6419,7 +6429,6 @@ h6, .h6 {
   height: 4.5rem;
   border-width: 0px;
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   padding-top: 1rem;
   padding-bottom: 1rem;
   padding-left: 1.5rem;
@@ -6526,7 +6535,7 @@ h6, .h6 {
 
 .navbar-search input:focus{
   --tw-border-opacity: 1;
-  border-color: rgb(72 127 255 / var(--tw-border-opacity));
+  border-color: rgb(204 0 0 / var(--tw-border-opacity));
 }
 
 .navbar-search .icon{
