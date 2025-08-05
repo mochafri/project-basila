@@ -12,7 +12,7 @@
         <div class="relative">
             <select id="periodeSelect" class="text-gray-400 border border-gray-300 text-sm rounded-md py-2 pl-10 pr-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500">
                 <option selected>Ganjil 2024/2025</option>
-                <option>Genap 2024/2025</option>
+                <option >Genap 2024/2025</option>
                 <option>Ganjil 2025/2026</option>
                 <option>Genap 2025/2026</option>
             </select>
