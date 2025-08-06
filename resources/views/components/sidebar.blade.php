@@ -98,23 +98,23 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('index2') }}"><i
+                        <a href="{{ route('index') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a href="{{ route('index3') }}"><i
+                        <a href="{{ route('index2') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Penetapan Yudisium</a>
                     </li>
                     <li>
-                        <a href="{{ route('index4') }}"><i
+                        <a href="{{ route('index3') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Approval Yudisium</a>
                     </li>
                     <li>
-                        <a href="{{ route('index5') }}"><i
+                        <a href="{{ route('index4') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Eligibilitas Yudisium</a>
                     </li>
                     <li>
-                        <a href="{{ route('index6') }}"><i
+                        <a href="{{ route('index5') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Laporan</a>
                     </li>
                 </ul>
