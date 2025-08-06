@@ -16,13 +16,14 @@
         <x-navbar />
         <!-- ..::  navbar end ::.. -->
         <div class="dashboard-main-body">
-            
+
             <!-- ..::  breadcrumb  start ::.. -->
-            <x-breadcrumb title='{{ isset($title) ? $title : "" }}' subTitle='{{ isset($subTitle) ? $subTitle : "" }}' />
+            <x-breadcrumb title='{{ isset($title) ? $title : "" }}'
+                subTitle='{{ isset($subTitle) ? $subTitle : "" }}' />
             <!-- ..::  header area end ::.. -->
 
             @yield('content')
-        
+
         </div>
         <!-- ..::  footer  start ::.. -->
         <x-footer />
@@ -31,9 +32,11 @@
     </main>
 
     <!-- ..::  scripts  start ::.. -->
-    <x-script  script='{!! isset($script) ? $script : "" !!}' />
+    <x-script script='{!! isset($script) ? $script : "" !!}' />
     <!-- ..::  scripts  end ::.. -->
 
+    <!-- Script sidebar -->
+     <script src="{{ asset('assets/js/sidebar.js')}}"></script>
 </body>
 
 </html>
