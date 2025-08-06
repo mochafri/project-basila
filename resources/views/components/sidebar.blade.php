@@ -5,7 +5,8 @@
     <div>
         <a href="{{ route('index') }}" class="sidebar-logo background-primary flex items-center justify-center">
             <img src="{{ asset('assets/basila_images/basila_white.png') }}" alt="site logo" class="light-logo" width="120">
-
+            <img src="{{ asset('assets/images/logo-light.png') }}" alt="site logo" class="dark-logo">
+            <img src="{{ asset('assets/basila_images/logo_basila.png') }}" alt="site logo" class="logo-icon" width="30">
         </a>
     </div>
     <div class="sidebar-menu-area">
@@ -13,9 +14,9 @@
 
             <!-- Penambahan -->
             <div class="identitas flex flex-col items-center gap-1 my-10">
-                <img src="{{ asset('assets/basila_images/favicon.png')}}" alt="logo basila" width="50">
-                <h2 class="uppercase text-xl">fadhlullah B</h2>
-                <h4 class="text-sm">19930026</h4>
+                <img src="{{ asset('assets/basila_images/favicon.png')}}" alt="logo basila" width="50" id="logo">
+                <h1 class="uppercase text-xl " id="sidebar-name">fadhlullah B</h1>
+                <h5 class="text-sm" id="sidebar-nim">19930026</h5>
             </div>
             <!-- Penambahan -->
 
@@ -399,3 +400,4 @@
         </ul>
     </div>
 </aside>
+

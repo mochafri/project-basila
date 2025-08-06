@@ -4,7 +4,7 @@
 
 <x-head />
 
-<body class=" bg-neutral-100 dark:bg-neutral-800 dark:text-white">
+<body class=" bg-neutral-100 dark:bg-dark-3 dark:text-white">
 
     <!-- ..::  header area start ::.. -->
     <x-sidebar />
@@ -16,13 +16,14 @@
         <x-navbar />
         <!-- ..::  navbar end ::.. -->
         <div class="dashboard-main-body">
-            
+
             <!-- ..::  breadcrumb  start ::.. -->
-            <x-breadcrumb title='{{ isset($title) ? $title : "" }}' subTitle='{{ isset($subTitle) ? $subTitle : "" }}' />
+            <x-breadcrumb title='{{ isset($title) ? $title : "" }}'
+                subTitle='{{ isset($subTitle) ? $subTitle : "" }}' />
             <!-- ..::  header area end ::.. -->
 
             @yield('content')
-        
+
         </div>
         <!-- ..::  footer  start ::.. -->
         <x-footer />
@@ -31,9 +32,11 @@
     </main>
 
     <!-- ..::  scripts  start ::.. -->
-    <x-script  script='{!! isset($script) ? $script : "" !!}' />
+    <x-script script='{!! isset($script) ? $script : "" !!}' />
     <!-- ..::  scripts  end ::.. -->
 
+    <!-- Script sidebar -->
+     <script src="{{ asset('assets/js/sidebar.js')}}"></script>
 </body>
 
 </html>
