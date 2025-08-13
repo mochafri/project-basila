@@ -14,6 +14,9 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CryptocurrencyController;
 
+// login
+use App\Http\Controllers\AuthController;
+
 Route::controller(DashboardController::class)->group(function () {
     Route::get('/', 'index')->name('index');
 });
@@ -103,7 +106,7 @@ Route::prefix('cryptocurrency')->group(function () {
 });
 
 // Dashboard
-Route::prefix('dashboard')->group(function () {
+Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
         Route::get('/index-2', 'index2')->name('index2');
@@ -168,3 +171,15 @@ Route::prefix('users')->group(function () {
         Route::get('/view-profile', 'viewProfile')->name('viewProfile');
     });
 });
+
+// sign in
+// routes/web.php
+
+
+// routes/web.php
+
+Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');
+Route::post('/authentication/sign-in', [AuthController::class, 'processSignIn'])->name('signin.process');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+

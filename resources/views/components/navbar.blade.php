@@ -348,10 +348,16 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="text-black px-0 py-2 hover:text-danger-600 flex items-center gap-4" href="javascript:void(0)">
-                                    <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon>  Log Out
-                                </a>
-                            </li>
+    <form action="{{ route('logout') }}" method="POST" class="w-full">
+        @csrf
+        <button type="submit"
+            class="text-black px-0 py-2 hover:text-danger-600 flex items-center gap-4 w-full text-left">
+            <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon>  
+            Log Out
+        </button>
+    </form>
+</li>
+
                         </ul>
                     </div>
                 </div>

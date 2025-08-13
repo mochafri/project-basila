@@ -34,4 +34,5 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
+
 </head>

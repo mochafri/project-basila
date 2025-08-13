@@ -15,7 +15,7 @@
             <!-- Penambahan -->
             <div class="identitas flex flex-col items-center gap-1 my-10">
                 <img src="{{ asset('assets/basila_images/favicon.png')}}" alt="logo basila" width="50" id="logo">
-                <h1 class="uppercase text-xl " id="sidebar-name">fadhlullah B</h1>
+                <h1 class="uppercase text-xl " id="sidebar-name">{{ session('username') }}</h1>
                 <h5 class="text-sm" id="sidebar-nim">19930026</h5>
             </div>
             <!-- Penambahan -->
@@ -317,10 +317,7 @@
                     <span>Authentication</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('signin') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Sign In</a>
-                    </li>
+                    
                     <li>
                         <a href="{{ route('signup') }}"><i
                                 class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Sign Up</a>
