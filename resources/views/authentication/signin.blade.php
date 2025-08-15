@@ -6,7 +6,7 @@
 
 <body class="dark:bg-neutral-800 bg-neutral-100 dark:text-white ">
     @if(session('error'))
-    <div class="alert alert-danger bg-red-200 text-danger-600 border border-danger-600 px-6 py-[11px] font-semibold text-lg rounded-lg flex items-center justify-between w-1/2"
+    <div class="alert alert-danger bg-red-200 text-danger-600 border border-danger-600 px-6 py-[11px] font-semibold text-lg rounded-lg flex items-center justify-between w-1/2 absolute translate-x-1/2 mt-2 animate-fade-in"
         role="alert">
         {{ session('error') }}
         <button class="remove-button text-danger-600 text-2xl line-height-1">
@@ -20,7 +20,6 @@
                 <img src="{{ asset('assets/basila_images/telu.png') }}" alt="telu" width="500px">
             </div>
         </div>
-
 
 
         <div class="lg:w-1/2 py-8 px-6 flex flex-col justify-center">

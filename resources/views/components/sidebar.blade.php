@@ -15,8 +15,8 @@
             <!-- Penambahan -->
             <div class="identitas flex flex-col items-center gap-1 my-10">
                 <img src="{{ asset('assets/basila_images/favicon.png')}}" alt="logo basila" width="50" id="logo">
-                <h1 class="uppercase text-xl " id="sidebar-name">{{ session('username') }}</h1>
-                <h5 class="text-sm" id="sidebar-nim">19930026</h5>
+                <h1 class="uppercase text-xl truncate overflow-hidden whitespace-nowrap max-w-[80%]" id="sidebar-name">{{ session('username') }}</h1>
+                <h5 class="text-sm" id="sidebar-nim">{{session('nim')}}</h5>
             </div>
             <!-- Penambahan -->
 

@@ -46,7 +46,7 @@
                 <img src="{{ asset('assets/images/user-grid/user-grid-bg1.png') }}" alt="" class="w-full object-fit-cover">
                 <div class="pb-6 ms-6 mb-6 me-6 -mt-[100px]">
                     <div class="text-center border-b border-neutral-200 dark:border-neutral-600">
-                        <img src="{{ asset('assets/images/user-grid/user-grid-img14.png') }}" alt="" class="border br-white border-width-2-px w-200-px h-[200px] rounded-full object-fit-cover mx-auto">
+                        <img src="{{ session('profilephoto') }}" alt="" class="border br-white border-width-[2px] w-[200px] h-[200px] rounded-full object-cover mx-auto object-top">
                         <h6 class="mb-0 mt-4">Jacob Jones</h6>
                         <span class="text-secondary-light mb-4">ifrandom@gmail.com</span>
                     </div>

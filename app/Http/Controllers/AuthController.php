@@ -32,32 +32,35 @@ class AuthController extends Controller
 
             // Simpan token & username dari form (karena API tidak mengembalikan username)
             session([
-                'token'    => $data['token'] ?? null,
+                'token' => $data['token'] ?? null,
                 'username' => $request->username
             ]);
 
-           if ($token) {
-    // Ambil data profile
-    $profileResponse = Http::withToken($token)->get('https://gateway.telkomuniversity.ac.id/issueprofile');
+            if ($token) {
+                // Ambil data profile
+                $profileResponse = Http::withToken($token)->get('https://gateway.telkomuniversity.ac.id/issueprofile');
 
-    if ($profileResponse->successful()) {
-        $profileData = $profileResponse->json();
+                if ($profileResponse->successful()) {
+                    $profileData = $profileResponse->json();
 
-        // Simpan token & data profile ke session
-        session([
-            'token'    => $token,
-            'username' => $profileData['fullname'] ?? $request->username,
-            'numberid' => $profileData['numberid'] ?? null
-        ]);
-    }
-} else {
-    Alert::warning('Peringatan', 'Silahkan login terlebih dahulu');
-    return redirect()->route('signin.show');
-}
+                    // dd($profileData); // Debugging untuk melihat data profile
+
+                    // Simpan token & data profile ke session
+                    session([
+                        'token' => $token,
+                        'username' => $profileData['fullname'] ?? $request->username,
+                        'nim' => $profileData['numberid'] ?? null,
+                        'profilephoto' => $profileData['photo'] ?? $request->profilephoto
+                    ]);
+                }
+            } else {
+                Alert::warning('Peringatan', 'Silahkan login terlebih dahulu');
+                return redirect()->route('signin.show');
+            }
 
             return redirect()->route('index')->with('success', 'Sign in berhasil');
         } else {
-            
+
             return back()->withErrors(['signin' => 'Username atau password salah']);
         }
     }
