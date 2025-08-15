@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Cookie;
 
 
 class AuthController extends Controller
@@ -30,9 +30,9 @@ class AuthController extends Controller
             $data = $response->json();
             $token = $data['token'] ?? null;
 
-            // Simpan token & username dari form (karena API tidak mengembalikan username)
+            // Simpan token & username dari form (sementara)
             session([
-                'token' => $data['token'] ?? null,
+                'token' => $token,
                 'username' => $request->username
             ]);
 
@@ -43,8 +43,6 @@ class AuthController extends Controller
                 if ($profileResponse->successful()) {
                     $profileData = $profileResponse->json();
 
-                    // dd($profileData); // Debugging untuk melihat data profile
-
                     // Simpan token & data profile ke session
                     session([
                         'token' => $token,
@@ -53,14 +51,22 @@ class AuthController extends Controller
                         'profilephoto' => $profileData['photo'] ?? $request->profilephoto
                     ]);
                 }
+
+                // ✅ Cek apakah remember me dicentang
+                if ($request->has('remember')) {
+                    // Simpan cookie selama 30 hari (43200 menit)
+                    Cookie::queue('remember_token', $token, 43200);
+                } else {
+                    // Pastikan cookie hilang saat browser ditutup
+                    config(['session.expire_on_close' => true]);
+                }
+
+                return redirect()->route('index')->with('success', 'Sign in berhasil');
             } else {
-                Alert::warning('Peringatan', 'Silahkan login terlebih dahulu');
                 return redirect()->route('signin.show');
             }
 
-            return redirect()->route('index')->with('success', 'Sign in berhasil');
         } else {
-
             return back()->withErrors(['signin' => 'Username atau password salah']);
         }
     }
@@ -69,6 +75,10 @@ class AuthController extends Controller
     {
         // Hapus semua data session
         $request->session()->flush();
+
+        // Hapus cookie remember me
+        Cookie::queue(Cookie::forget('remember_token'));
+        Cookie::queue(Cookie::forget('remember_username'));
 
         // Redirect ke halaman sign in
         return redirect()->route('signin.show')->with('success', 'Berhasil logout');
