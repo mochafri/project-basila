@@ -42,44 +42,44 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="col-span-12 lg:col-span-4">
-            <div class="user-grid-card relative border border-neutral-200 dark:border-neutral-600 rounded-2xl overflow-hidden bg-white dark:bg-neutral-700 h-full">
+            <div class="user-grid-card relative border border-neutral-200  rounded-2xl overflow-hidden bg-white  h-full">
                 <img src="{{ asset('assets/images/user-grid/user-grid-bg1.png') }}" alt="" class="w-full object-fit-cover">
                 <div class="pb-6 ms-6 mb-6 me-6 -mt-[100px]">
-                    <div class="text-center border-b border-neutral-200 dark:border-neutral-600">
+                    <div class="text-center border-b border-neutral-200 ">
                         <img src="{{ session('profilephoto') }}" alt="" class="border br-white border-width-[2px] w-[200px] h-[200px] rounded-full object-cover mx-auto object-top">
-                        <h6 class="mb-0 mt-4">Jacob Jones</h6>
-                        <span class="text-secondary-light mb-4">ifrandom@gmail.com</span>
+                        <h6 class="mb-0 mt-4">{{ session('username')}}</h6>
+                        <span class="text-neutral-900 mb-4">{{ session('email')}}</span>
                     </div>
                     <div class="mt-6">
                         <h6 class="text-xl mb-4">Personal Info</h6>
                         <ul>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600 dark:text-neutral-200">Full Name</span>
-                                <span class="w-[70%] text-secondary-light font-medium">: Will Jonto</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600">Full Name</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: {{ ucfirst(strtolower(session('username'))) }}</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600 dark:text-neutral-200"> Email</span>
-                                <span class="w-[70%] text-secondary-light font-medium">: willjontoax@gmail.com</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Email</span>
+                                <span class="w-[70%] text-neutral-900 font-medium truncate overflow-hidden whitespace-nowrap max-w-[80%]">: {{ session('email')}}</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600 dark:text-neutral-200"> Phone Number</span>
-                                <span class="w-[70%] text-secondary-light font-medium">: (1) 2536 2561 2365</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Phone Number</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: {{session('phone')}}</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600 dark:text-neutral-200"> Department</span>
-                                <span class="w-[70%] text-secondary-light font-medium">: Design</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Department</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: Design</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600 dark:text-neutral-200"> Designation</span>
-                                <span class="w-[70%] text-secondary-light font-medium">: UI UX Designer</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Designation</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: UI UX Designer</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600 dark:text-neutral-200"> Languages</span>
-                                <span class="w-[70%] text-secondary-light font-medium">: English</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Languages</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: English</span>
                             </li>
                             <li class="flex items-center gap-1">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600 dark:text-neutral-200"> Bio</span>
-                                <span class="w-[70%] text-secondary-light font-medium">: Lorem Ipsum is simply dummy text of the       printing and typesetting industry.</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Bio</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: Lorem Ipsum is simply dummy text of the       printing and typesetting industry.</span>
                             </li>
                         </ul>
                     </div>
@@ -97,12 +97,12 @@
                             </button>
                         </li>
                         <li class="" role="presentation">
-                            <button class="py-2.5 px-4 border-t-2 font-semibold text-base inline-flex items-center gap-3 text-neutral-600 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="change-password-tab" data-tabs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">
+                            <button class="py-2.5 px-4 border-t-2 font-semibold text-base inline-flex items-center gap-3 text-neutral-600 hover:text-gray-600 hover:border-gray-300" id="change-password-tab" data-tabs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">
                                 Change Password
                             </button>
                         </li>
                         <li class="" role="presentation">
-                            <button class="py-2.5 px-4 border-t-2 font-semibold text-base inline-flex items-center gap-3 text-neutral-600 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="notification-password-tab" data-tabs-target="#notification-password" type="button" role="tab" aria-controls="notification-password" aria-selected="false">
+                            <button class="py-2.5 px-4 border-t-2 font-semibold text-base inline-flex items-center gap-3 text-neutral-600 hover:text-gray-600 hover:border-gray-300" id="notification-password-tab" data-tabs-target="#notification-password" type="button" role="tab" aria-controls="notification-password" aria-selected="false">
                                 Notification Password
                             </button>
                         </li>
@@ -200,14 +200,14 @@
                                 <label for="your-password" class="inline-block font-semibold text-neutral-600 dark:text-neutral-200 text-sm mb-2">New Password <span class="text-danger-600">*</span></label>
                                 <div class="relative">
                                     <input type="password" class="form-control rounded-lg" id="your-password" placeholder="Enter New Password*">
-                                    <span class="toggle-password ri-eye-line cursor-pointer absolute end-0 top-1/2 -translate-y-1/2 me-4 text-secondary-light" data-toggle="#your-password"></span>
+                                    <span class="toggle-password ri-eye-line cursor-pointer absolute end-0 top-1/2 -translate-y-1/2 me-4 text-neutral-900" data-toggle="#your-password"></span>
                                 </div>
                             </div>
                             <div class="mb-5">
                                 <label for="confirm-password" class="inline-block font-semibold text-neutral-600 dark:text-neutral-200 text-sm mb-2">Confirmed Password <span class="text-danger-600">*</span></label>
                                 <div class="relative">
                                     <input type="password" class="form-control rounded-lg" id="confirm-password" placeholder="Confirm Password*">
-                                    <span class="toggle-password ri-eye-line cursor-pointer absolute end-0 top-1/2 -translate-y-1/2 me-4 text-secondary-light" data-toggle="#confirm-password"></span>
+                                    <span class="toggle-password ri-eye-line cursor-pointer absolute end-0 top-1/2 -translate-y-1/2 me-4 text-neutral-900" data-toggle="#confirm-password"></span>
                                 </div>
                             </div>
                         </div>
@@ -215,35 +215,35 @@
                             <div class="form-switch switch-primary py-3 px-4 border rounded-lg relative mb-4">
                                 <label for="companzNew" class="absolute w-full h-full start-0 top-0"></label>
                                 <div class="flex items-center gap-3 justify-between">
-                                    <span class="form-check-label line-height-1 font-medium text-secondary-light">Company News</span>
+                                    <span class="form-check-label line-height-1 font-medium text-neutral-900">Company News</span>
                                     <input class="form-check-input" type="checkbox" role="switch" id="companzNew">
                                 </div>
                             </div>
                             <div class="form-switch switch-primary py-3 px-4 border rounded-lg relative mb-4">
                                 <label for="pushNotifcation" class="absolute w-full h-full start-0 top-0"></label>
                                 <div class="flex items-center gap-3 justify-between">
-                                    <span class="form-check-label line-height-1 font-medium text-secondary-light">Push Notification</span>
+                                    <span class="form-check-label line-height-1 font-medium text-neutral-900">Push Notification</span>
                                     <input class="form-check-input" type="checkbox" role="switch" id="pushNotifcation" checked>
                                 </div>
                             </div>
                             <div class="form-switch switch-primary py-3 px-4 border rounded-lg relative mb-4">
                                 <label for="weeklyLetters" class="absolute w-full h-full start-0 top-0"></label>
                                 <div class="flex items-center gap-3 justify-between">
-                                    <span class="form-check-label line-height-1 font-medium text-secondary-light">Weekly News Letters</span>
+                                    <span class="form-check-label line-height-1 font-medium text-neutral-900">Weekly News Letters</span>
                                     <input class="form-check-input" type="checkbox" role="switch" id="weeklyLetters" checked>
                                 </div>
                             </div>
                             <div class="form-switch switch-primary py-3 px-4 border rounded-lg relative mb-4">
                                 <label for="meetUp" class="absolute w-full h-full start-0 top-0"></label>
                                 <div class="flex items-center gap-3 justify-between">
-                                    <span class="form-check-label line-height-1 font-medium text-secondary-light">Meetups Near you</span>
+                                    <span class="form-check-label line-height-1 font-medium text-neutral-900">Meetups Near you</span>
                                     <input class="form-check-input" type="checkbox" role="switch" id="meetUp">
                                 </div>
                             </div>
                             <div class="form-switch switch-primary py-3 px-4 border rounded-lg relative mb-4">
                                 <label for="orderNotification" class="absolute w-full h-full start-0 top-0"></label>
                                 <div class="flex items-center gap-3 justify-between">
-                                    <span class="form-check-label line-height-1 font-medium text-secondary-light">Orders Notifications</span>
+                                    <span class="form-check-label line-height-1 font-medium text-neutral-900">Orders Notifications</span>
                                     <input class="form-check-input" type="checkbox" role="switch" id="orderNotification" checked>
                                 </div>
                             </div>

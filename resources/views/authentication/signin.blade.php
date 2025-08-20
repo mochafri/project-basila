@@ -4,7 +4,7 @@
 
 <x-head />
 
-<body class="dark:bg-neutral-800 bg-neutral-100 dark:text-white  overflow-hidden">
+<body class="dark:bg-neutral-800 bg-neutral-100 dark:text-white overflow-hidden">
 
     <!-- alert -->
     @if(session('error'))

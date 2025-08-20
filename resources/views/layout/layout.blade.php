@@ -36,8 +36,7 @@
     <!-- ..::  scripts  end ::.. -->
 
     <!-- Script sidebar -->
-     <script src="{{ asset('assets/js/sidebar.js')}}"></script>
-     @include('sweetalert::alert')
+    <script src="{{ asset('assets/js/sidebar.js')}}"></script>
 </body>
 
 </html>

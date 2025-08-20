@@ -48,7 +48,9 @@ class AuthController extends Controller
                         'token' => $token,
                         'username' => $profileData['fullname'] ?? $request->username,
                         'nim' => $profileData['numberid'] ?? null,
-                        'profilephoto' => $profileData['photo'] ?? $request->profilephoto
+                        'profilephoto' => $profileData['photo'] ?? $request->profilephoto,
+                        'email' => $profileData['email'] ?? null,
+                        'phone' => $profileData['phone'] ?? null,
                     ]);
                 }
 

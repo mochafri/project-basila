@@ -17,9 +17,14 @@ use App\Http\Controllers\CryptocurrencyController;
 // login
 use App\Http\Controllers\AuthController;
 
-Route::controller(DashboardController::class)->group(function () {
-    Route::get('/', 'index')->name('index');
+Route::get('/', function () {
+    return redirect()->route('signin.show');
 });
+
+
+// Route::controller(DashboardController::class)->group(function () {
+//     Route::get('/', 'index')->name('index');
+// });
 
 Route::controller(HomeController::class)->group(function () {
     Route::get('calendar-Main','calendarMain')->name('calendarMain');
