@@ -87,9 +87,9 @@
                     <div class="mt-7">
                         <div class="flex justify-between gap-2">
                             <div class="flex items-center">
-                                <input class="form-check-input border border-neutral-300" type="checkbox" value=""
+                                <!-- <input class="form-check-input border border-neutral-300" type="checkbox" value=""
                                     id="remember" name="remember">
-                                <label class="ps-2" for="remember" name="remember">Remember me </label>
+                                <label class="ps-2" for="remember" name="remember">Remember me </label> -->
                             </div>
                             <a href="https://satu.telkomuniversity.ac.id/auth/forgot-password"
                                 class="text-primary-600 font-medium hover:underline">Lupa password?</a>
@@ -124,7 +124,7 @@
                     initializePasswordToggle(".toggle-password");
                     // ========================= Password Show Hide Js End ===========================
                 });
-                </script>';
+                </script>'
     @endphp
 
     <x-script />
@@ -136,7 +136,7 @@
         $(".remove-button").on("click", function () {
             $(this).closest(".alert").addClass("hidden")
         });
-    </script>';
+    </script>
 
 </body>
 

@@ -43,7 +43,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="col-span-12 lg:col-span-4">
             <div class="user-grid-card relative border border-neutral-200  rounded-2xl overflow-hidden bg-white  h-full">
-                <img src="{{ asset('assets/images/user-grid/user-grid-bg1.png') }}" alt="" class="w-full object-fit-cover">
+                <!-- <img src="{{ asset('assets/images/user-grid/user-grid-bg1.png') }}" alt="" class="w-full object-fit-cover"> -->
+                 <div class="w-full h-28 bg-gradient-to-l from-red-500 to-orange-500"></div>
                 <div class="pb-6 ms-6 mb-6 me-6 -mt-[100px]">
                     <div class="text-center border-b border-neutral-200 ">
                         <img src="{{ session('profilephoto') }}" alt="" class="border br-white border-width-[2px] w-[200px] h-[200px] rounded-full object-cover mx-auto object-top">
@@ -55,7 +56,7 @@
                         <ul>
                             <li class="flex items-center gap-1 mb-3">
                                 <span class="w-[30%] text-base font-semibold text-neutral-600">Full Name</span>
-                                <span class="w-[70%] text-neutral-900 font-medium">: {{ ucfirst(strtolower(session('username'))) }}</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: {{ ucwords(strtolower(session('username'))) }}</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
                                 <span class="w-[30%] text-base font-semibold text-neutral-600"> Email</span>
@@ -66,21 +67,19 @@
                                 <span class="w-[70%] text-neutral-900 font-medium">: {{session('phone')}}</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Department</span>
-                                <span class="w-[70%] text-neutral-900 font-medium">: Design</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Faculty</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: {{ ucwords(strtolower(session('fakultas')))}}</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Designation</span>
-                                <span class="w-[70%] text-neutral-900 font-medium">: UI UX Designer</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Study Program</span>
+                                <span class="w-[70%] text-neutral-900 font-medium ">: {{session('prodi')}}</span>
                             </li>
                             <li class="flex items-center gap-1 mb-3">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Languages</span>
-                                <span class="w-[70%] text-neutral-900 font-medium">: English</span>
+                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Class</span>
+                                <span class="w-[70%] text-neutral-900 font-medium">: {{session('kelas')}}</span>
                             </li>
-                            <li class="flex items-center gap-1">
-                                <span class="w-[30%] text-base font-semibold text-neutral-600"> Bio</span>
-                                <span class="w-[70%] text-neutral-900 font-medium">: Lorem Ipsum is simply dummy text of the       printing and typesetting industry.</span>
-                            </li>
+                            
+                            
                         </ul>
                     </div>
                 </div>
