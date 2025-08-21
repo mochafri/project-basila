@@ -1,6 +1,6 @@
 <aside class="sidebar">
     <button type="button" class="sidebar-close-btn !mt-4">
-        <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
+        <iconify-icon icon="radix-icons:cross-2" class="text-neutral-200"></iconify-icon>
     </button>
     <div>
         <a href="{{ route('index') }}" class="sidebar-logo background-primary flex items-center justify-center">

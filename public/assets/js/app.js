@@ -78,10 +78,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  document.documentElement.classList.add('dark');
+if (localStorage.getItem('color-theme') === 'light' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+  document.documentElement.classList.add('light');
 } else {
-  document.documentElement.classList.remove('dark')
+  document.documentElement.classList.remove('light')
 }
 
 // light dark version js
@@ -90,7 +90,7 @@ var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
 // Change the icons inside the button based on previous settings
 if(themeToggleDarkIcon || themeToggleLightIcon){
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (localStorage.getItem('color-theme') === 'light' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
       themeToggleLightIcon.classList.remove('hidden');
   } else {
       themeToggleDarkIcon.classList.remove('hidden');
@@ -109,21 +109,21 @@ if(themeToggleDarkIcon || themeToggleLightIcon || themeToggleBtn){
     // if set via local storage previously
     if (localStorage.getItem('color-theme')) {
         if (localStorage.getItem('color-theme') === 'light') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
+            document.documentElement.classList.add('light');
+            localStorage.setItem('color-theme', 'light');
         } else {
-            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove('light');
             localStorage.setItem('color-theme', 'light');
         }
 
     // if NOT set via local storage previously
     } else {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
+        if (document.documentElement.classList.contains('light')) {
+            document.documentElement.classList.remove('light');
             localStorage.setItem('color-theme', 'light');
         } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
+            document.documentElement.classList.add('light');
+            localStorage.setItem('color-theme', 'light');
         }
     }
 });

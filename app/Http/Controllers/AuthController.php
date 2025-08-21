@@ -51,6 +51,9 @@ class AuthController extends Controller
                         'profilephoto' => $profileData['photo'] ?? $request->profilephoto,
                         'email' => $profileData['email'] ?? null,
                         'phone' => $profileData['phone'] ?? null,
+                        'fakultas' => $profileData['faculty'] ?? null,
+                        'prodi' => $profileData['studyprogram'] ?? null,
+                        'kelas' => $profileData['studentclass'] ?? null,
                     ]);
                 }
 
