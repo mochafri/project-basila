@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\YudiciumController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AiapplicationController;
@@ -16,6 +17,8 @@ use App\Http\Controllers\CryptocurrencyController;
 
 // login
 use App\Http\Controllers\AuthController;
+
+Route::get('/yudicium', [YudiciumController::class, 'index']);
 
 Route::get('/', function () {
     return redirect()->route('signin.show');
@@ -116,7 +119,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::get('/index', 'index')->name('index');
-            Route::get('/index-2', 'index2')->name('index2');
+            Route::get('/index-2', [YudiciumController::class, 'index'])->name('index2'); 
             Route::get('/index-3', 'index3')->name('index3');
             Route::get('/index-4', 'index4')->name('index4');
             Route::get('/index-5', 'index5')->name('index5');
