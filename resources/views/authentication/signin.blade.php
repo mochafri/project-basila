@@ -64,7 +64,8 @@
                             <iconify-icon icon="mage:email"></iconify-icon>
                         </span>
                         <input type="text" name="username"
-                            class="form-control h-[56px] ps-11 border-neutral-300 bg-neutral-50 dark:bg-dark-2 rounded-xl"
+                            class="form-control py-4 ps-11 border-neutral-300
+                            bg-neutral-50 dark:bg-dark-2 rounded-xl"
                             placeholder="username SSO" autocomplete="username" required
                             oninvalid="this.setCustomValidity('Username wajib diisi')"
                             oninput="this.setCustomValidity('')">
