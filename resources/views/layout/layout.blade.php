@@ -23,6 +23,7 @@
             <!-- ..::  header area end ::.. -->
 
             @yield('content')
+            @stack('scripts')
 
         </div>
         <!-- ..::  footer  start ::.. -->
@@ -37,6 +38,8 @@
 
     <!-- Script sidebar -->
     <script src="{{ asset('assets/js/sidebar.js')}}"></script>
+
+    <!-- Script dropdown -->
 </body>
 
 </html>
