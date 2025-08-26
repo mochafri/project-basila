@@ -1,6 +1,6 @@
-if (document.getElementById("selection-table") && typeof simpleDatatables.DataTable !== 'undefined') {
+if (document.getElementById("selection-table")) {
 
-    let multiSelect = true;
+    let multiSelect = false;
     let rowNavigation = false;
     let table = null;
 
@@ -10,6 +10,25 @@ if (document.getElementById("selection-table") && typeof simpleDatatables.DataTa
         }
 
         const options = {
+            searchable: true,
+            perPageSelect: false,
+
+            template: (props) => `
+            <div class='${props.classes.left}'>
+                    ${props.searchable ? `
+                        <div class='${props.classes.search}'>
+                            <input class='${props.classes.input}' placeholder='${props.labels.placeholder}' type='search' title='${props.labels.searchTitle}'>
+                        </div>
+                        ` : ""}
+                <nav class='${props.classes.pagination}'></nav>
+                </div>
+                <div class='${props.classes.top}'>
+                    ${props.paging && props.perPageSelect ? `...` : ""}
+                </div>
+                <div class='${props.classes.container}'></div>
+            ${props.paging ? `<div class='${props.classes.info}'></div>` : ""}
+            `,
+
             columns: [
                 { select: [0, 6], sortable: false } // Disable sorting on the first column (index 0 and 6)
             ],
