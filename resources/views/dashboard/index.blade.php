@@ -11,15 +11,15 @@
             <!-- Dropdown Periode -->
             <div class="relative">
                 <div class="flex items-end">
-                    <button id="periodeSelect"
-                        class="text-gray-400 border border-gray-300 text-sm bg-white rounded-md py-2 pl-10 pr-4 appearance-none">
+                    <button id="periode-btn" type="button"
+                        class="text-gray-400 border text-sm bg-white rounded-md py-2 pl-10 pr-4 appearance-none">
                         <div class="flex items-center space-x-2">
-                            <span id="periodeText"></span>
-                            <iconify-icon icon="ph:caret-down-bold" class="text-gray-500"></iconify-icon>
+                            <span id="periode-selected">Periode Ganjil 2024/2025</span>
+                            <iconify-icon icon="ph:caret-down-bold" id="caret-down" class="text-gray-500 rotate-[-90deg]"></iconify-icon>
                         </div>
                     </button>
-                    <div id="periodeDropdown">
-                        <ul class="absolute left-0 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                    <div id="periode-dropdown">
+                        <ul class="absolute left-0 w-full bg-white border rounded-md shadow-lg z-10 text-center text-neutral-700">
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Ganjil 2024/2025</li>
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Genap 2024/2025</li>
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Ganjil 2023/2024</li>
@@ -97,7 +97,7 @@
 
                 <!-- Total Yudisium dengan Gavel -->
                 <div class="flex items-center space-x-2">
-                    <div class="bg-red-600 p-3 rounded-full">
+                    <div class="bg-red-600 px-4 py-3 rounded-full">
                         <iconify-icon icon="clarity:gavel-solid" class="text-white text-2xl"></iconify-icon>
                     </div>
                     <div class="flex flex-col justify-center items-center text-center">
@@ -120,7 +120,7 @@
                     <p class="text-xs text-gray-500">Berikut detail predikat mahasiswa periode ganjil 2024/2025</p>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <div class="bg-green-600 p-3 rounded-full">
+                    <div class="bg-green-600 px-4 py-3 rounded-full">
                         <iconify-icon icon="ph:student-fill" class="text-white text-xl"></iconify-icon>
                     </div>
                     <div class="flex flex-col justify-center items-center text-center">
@@ -187,33 +187,12 @@
             </ul>
         </div>
     </div>
-
-    <script>
-        const periodeSelect = document.getElementById('periodeSelect');
-        const periodeDropdown = document.getElementById('periodeDropdown');
-        const periodeText = document.getElementById('periodeText');
-
-        periodeDropdown.classList.add('hidden');
-
-        var currentValue = "Periode Ganjil 2024/2025";
-        periodeText.textContent = currentValue;
-
-        periodeSelect.addEventListener('click', () => {
-            periodeDropdown.classList.toggle('hidden');
-        });
-
-        window.addEventListener('click', (e) => {
-            if (!periodeDropdown.contains(e.target) && !periodeSelect.contains(e.target)) {
-                periodeDropdown.classList.add('hidden');
-            }
-        });
-
-        periodeDropdown.querySelectorAll('li').forEach((li) => {
-            li.addEventListener('click', () => {
-                currentValue = li.textContent;
-                periodeText.textContent = currentValue;
-                periodeDropdown.classList.add('hidden');
-            });
-        })
-    </script>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('assets/js/dropdown.js') }}"></script>
+    <script>
+        // Inisialisasi dropdown untuk periode
+        toggleDropdown('periode-btn', 'periode-dropdown', 'periode-selected', 'caret-down');
+    </script>
+@endpush
