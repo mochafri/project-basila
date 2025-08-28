@@ -73,7 +73,7 @@
                 </div>
                 <div class="card-body">
                     <table id="selection-table"
-                        class="border border-neutral-200 dark:border-neutral-600 rounded-lg border-separate	">
+                        class="border border-neutral-200  rounded-lg border-separate	">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-neutral-800 dark:text-white">
