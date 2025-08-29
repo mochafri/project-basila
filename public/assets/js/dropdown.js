@@ -27,6 +27,8 @@ function toggleDropdown(btnId, dropdownId, selectedId, caretDown) {
             }
         });
 
+        isOpen = !isOpen ;
+
         if (isHiden) {
             dropdown.classList.remove('hidden');
             isOpen = true;
@@ -54,19 +56,6 @@ window.addEventListener('click', () => {
     activeDropdowns.length = 0;
 });
 
-
-// Dropdown Penetapan yudisium
-toggleDropdown('semester-btn', 'semester-dropdown', 'semester-selected', 'caret-down');
-
-// Dropdown Aproval yudisium
-toggleDropdown('fakultas-btn', 'fakultas-dropdown', 'fakultas-selected', 'caret-down');
-toggleDropdown('semester', 'semester-drpdwn', 'semester-select', 'caret-down2');
-
-// Dropdown Laporan yudisium
-toggleDropdown('status-btn', 'status-dropdown', 'status-selected', 'caret-down');
-toggleDropdown('format-btn', 'format-dropdown', 'format-selected', 'caret-down2');
-
-// Dropdown tambah penetapan yudisium
 toggleDropdown('btn', 'dropdown', 'selected', 'caret-down');
 toggleDropdown('btn2', 'dropdown2', 'selected2', 'caret-down2');
 toggleDropdown('btn3', 'dropdown3', 'selected3', 'caret-down3');

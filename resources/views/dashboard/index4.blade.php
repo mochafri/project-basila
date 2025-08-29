@@ -28,16 +28,16 @@
                                     <div class="flex justify-between items-center">
                                         <label for="fakultas" class="text-neutral-800">Fakultas</label>
                                         <div class="flex flex-col space-y-1">
-                                            <button id="fakultas-btn" type="button"
+                                            <button id="btn" type="button"
                                                 class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
                                                 <div class="flex flex-row items-center justify-between px-2">
-                                                    <span id="fakultas-selected">Informatika</span>
+                                                    <span id="selected">Informatika</span>
                                                     <iconify-icon icon="ph:caret-down-bold"
                                                         class="text-gray-500 rotate-[-90deg]"
                                                         id="caret-down"></iconify-icon>
                                                 </div>
                                             </button>
-                                            <div id="fakultas-dropdown">
+                                            <div id="dropdown">
                                                 <ul
                                                     class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Ilmu Terapan</li>
@@ -53,15 +53,15 @@
                                     <div class="flex justify-between items-center">
                                         <label for="Semester" class="text-neutral-800">Semester</label>
                                         <div class="flex flex-col space-y-1">
-                                            <button id="semester" type="button"
+                                            <button id="btn2" type="button"
                                                 class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
                                                 <div class="flex justify-between items-center px-2">
-                                                    <span id="semester-select">Ganjil 2024/2025</span>
+                                                    <span id="selected2">Ganjil 2024/2025</span>
                                                     <iconify-icon icon="ph:caret-down-bold" id="caret-down2"
                                                         class="text-gray-500 rotate-[-90deg]"></iconify-icon>
                                                 </div>
                                             </button>
-                                            <div id="semester-drpdwn">
+                                            <div id="dropdown2">
                                                 <ul
                                                     class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center">
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Ganjil 2024/2025</li>
@@ -401,7 +401,7 @@
 
 @push('scripts')
     <script src="{{ asset('assets/js/dropdown.js') }}">
-        toggleDropdown('fakultas-btn', 'fakultas-dropdown', 'fakultas-selected', 'caret-down');
-        toggleDropdown('semester', 'semester-drpdwn', 'semester-select', 'caret-down2');
+        toggleDropdown('btn', 'dropdown', 'selected', 'caret-down');
+        toggleDropdown('btn2', 'dropdown2', 'selected2', 'caret-down2');
     </script>
 @endpush

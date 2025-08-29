@@ -17,14 +17,14 @@
                     <div class="flex items-center gap-3">
                         <label for="semester" class="text-sm font-medium text-neutral-700 whitespace-nowrap">Semester</label>
                         <div class="text-neutral-950">
-                            <button id="semester-btn" class="bg-neutral-100 rounded-lg">
+                            <button id="btn" class="bg-neutral-100 rounded-lg">
                                 <div class="p-1 flex items-center justify-between gap-20 px-3">
-                                    <span id="semester-selected" class="text-sm text-neutral-600">Ganjil 2024/2025</span>
+                                    <span id="selected" class="text-sm text-neutral-600">Ganjil 2024/2025</span>
                                     <iconify-icon icon="ph:caret-down-bold" class="text-gray-500 rotate-[-90deg]"
                                         id="caret-down"></iconify-icon>
                                 </div>
                             </button>
-                            <div id="semester-dropdown" class="mt-1">
+                            <div id="dropdown" class="mt-1">
                                 <ul
                                     class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center text-neutral-700">
                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Ganjil 2024/2025</li>
@@ -464,10 +464,6 @@
 
 @push('scripts')
     <script src="{{ asset('assets/js/dropdown.js') }}">
-        toggleDropdown('semester-btn', 'semester-dropdown', 'semester-selected', 'caret-down');
-    </script>
-    <script>
-        // Inisialisasi dropdown untuk semester
-        // toggleDropdown('semester-btn', 'semester-dropdown', 'semester-selected', 'caret-down');
+        toggleDropdown('btn', 'dropdown', 'selected', 'caret-down');
     </script>
 @endpush

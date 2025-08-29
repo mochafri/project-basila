@@ -11,15 +11,17 @@
             <!-- Dropdown Periode -->
             <div class="relative">
                 <div class="flex items-end">
-                    <button id="periode-btn" type="button"
+                    <button id="btn" type="button"
                         class="text-gray-400 border text-sm bg-white rounded-md py-2 pl-10 pr-4 appearance-none">
                         <div class="flex items-center space-x-2">
-                            <span id="periode-selected">Periode Ganjil 2024/2025</span>
-                            <iconify-icon icon="ph:caret-down-bold" id="caret-down" class="text-gray-500 rotate-[-90deg]"></iconify-icon>
+                            <span id="selected">Periode Ganjil 2024/2025</span>
+                            <iconify-icon icon="ph:caret-down-bold" id="caret-down"
+                                class="text-gray-500 rotate-[-90deg]"></iconify-icon>
                         </div>
                     </button>
-                    <div id="periode-dropdown">
-                        <ul class="absolute left-0 w-full bg-white border rounded-md shadow-lg z-10 text-center text-neutral-700">
+                    <div id="dropdown">
+                        <ul
+                            class="absolute left-0 w-full bg-white border rounded-md shadow-lg z-10 text-center text-neutral-700">
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Ganjil 2024/2025</li>
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Genap 2024/2025</li>
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Ganjil 2023/2024</li>
@@ -190,9 +192,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('assets/js/dropdown.js') }}"></script>
-    <script>
-        // Inisialisasi dropdown untuk periode
-        toggleDropdown('periode-btn', 'periode-dropdown', 'periode-selected', 'caret-down');
+    <script src="{{ asset('assets/js/dropdown.js') }}">
+        toggleDropdown('btn', 'dropdown', 'selected', 'caret-down');
     </script>
 @endpush

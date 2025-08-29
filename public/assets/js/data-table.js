@@ -83,4 +83,14 @@ if (document.getElementById("selection-table")) {
     }
 
     resetTable();
+
+    const masterCheckBox = document.getElementById("serial");
+    if(masterCheckBox){
+        masterCheckBox.addEventListener("change", () => {
+            const checked = document.querySelectorAll("#selection-table input[type=checkbox]");
+            checked.forEach(ele => {
+                ele.checked = masterCheckBox.checked;
+            })
+        });
+    }
 }
