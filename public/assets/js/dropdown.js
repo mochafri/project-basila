@@ -5,15 +5,17 @@ function toggleDropdown(btnId, dropdownId, selectedId, caretDown) {
     const dropdown = document.getElementById(dropdownId);
     const selected = document.getElementById(selectedId);
     const caret = document.getElementById(caretDown);
-    let isOpen = false ;
+    let isOpen = false;
 
-    if (!btn || !dropdown || !selected) {
+    if (!btn || !dropdown || !selected || !caretDown) {
         console.warn(`Element with ID ${btnId}, ${dropdownId}, or ${selectedId} not found.`);
+        console.log("Dropdown not found");
         return;
     }
 
     dropdown.classList.add('hidden');
     activeDropdowns.push({ btn, dropdown });
+    console.log("Active !!");
 
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -38,6 +40,7 @@ function toggleDropdown(btnId, dropdownId, selectedId, caretDown) {
 
     dropdown.addEventListener('click', (e) => {
         if (e.target.tagName === 'LI') {
+            console.log("bla bla", e.target.textContent);
             selected.textContent = e.target.textContent;
             dropdown.classList.add('hidden');
         }
@@ -62,3 +65,8 @@ toggleDropdown('semester', 'semester-drpdwn', 'semester-select', 'caret-down2');
 // Dropdown Laporan yudisium
 toggleDropdown('status-btn', 'status-dropdown', 'status-selected', 'caret-down');
 toggleDropdown('format-btn', 'format-dropdown', 'format-selected', 'caret-down2');
+
+// Dropdown tambah penetapan yudisium
+toggleDropdown('btn', 'dropdown', 'selected', 'caret-down');
+toggleDropdown('btn2', 'dropdown2', 'selected2', 'caret-down2');
+toggleDropdown('btn3', 'dropdown3', 'selected3', 'caret-down3');

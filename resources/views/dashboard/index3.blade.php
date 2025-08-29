@@ -7,7 +7,7 @@
 @endphp
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4 text-neutral-500">Penetapan Yudisium / Tambah</h1>
+    <h1 class="text-2xl font-bold mb-4 text-neutral-500">Penetapan Yudisium / Tambah</h1>
     <div class="bg-white p-6 rounded-xl shadow-md mb-6">
         <h2 class="text-lg font-semibold mb-1">Mahasiswa Yudisium</h2>
         <p class="text-sm text-gray-500 mb-4">Pastikan data yang dipilih telah sesuai untuk menampilkan data mahasiswa</p>
@@ -24,17 +24,43 @@
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-50">
-                        <option>INFORMATKA</option>
-                    </select>
+                    <div class="flex flex-col space-y-1">
+                        <button id="btn" type="button"
+                            class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
+                            <div class="flex justify-between items-center px-2">
+                                <span id="selected">Fakultas</span>
+                                <iconify-icon icon="ph:caret-down-bold" id="caret-down"
+                                    class="text-gray-500 rotate-[-90deg]"></iconify-icon>
+                            </div>
+                        </button>
+                        <div id="dropdown">
+                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
+                                <li class="p-2 hover:bg-gray-100 cursor-pointer">Fakultas Ilmu Terapan</li>
+                                <li class="p-2 hover:bg-gray-100 cursor-pointer">Fakultas Informatika</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Semester -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Semester</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-100">
-                        <option>Ganjil 2024/2025</option>
-                    </select>
+                    <div class="flex flex-col space-y-1">
+                        <button id="btn2" type="button"
+                            class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
+                            <div class="flex justify-between items-center px-2">
+                                <span id="selected2">Periode Ganjil 2024/2025</span>
+                                <iconify-icon icon="ph:caret-down-bold" id="caret-down2"
+                                    class="text-gray-500 rotate-[-90deg]"></iconify-icon>
+                            </div>
+                        </button>
+                        <div id="dropdown2">
+                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Genap 2024/2025</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Ganjil 2023/2024</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Spacer -->
@@ -43,9 +69,26 @@
                 <!-- Program Studi -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Program Studi</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-50">
-                        <option>S1 Informatika</option>
-                    </select>
+                    <div class="flex flex-col space-y-1">
+                        <button id="btn3" type="button"
+                            class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
+                            <div class="flex flex-row items-center justify-between px-2">
+                                <span id="selected3">Informatika</span>
+                                <iconify-icon icon="ph:caret-down-bold" class="text-gray-500 rotate-[-90deg]"
+                                    id="caret-down3"></iconify-icon>
+                            </div>
+                        </button>
+                        <div id="dropdown3">
+                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
+                                <li class="p-2 hover:bg-gray-100 cursor-pointer">Ilmu Terapan</li>
+                                <li class="p-2 hover:bg-gray-100 cursor-pointer">Industri Kreatif</li>
+                                <li class="p-2 hover:bg-gray-100 cursor-pointer">Teknik Electro</li>
+                                <li class="p-2 hover:bg-gray-100 cursor-pointer">Rekayasa Industri</li>
+                                <li class="p-2 hover:bg-gray-100 cursor-pointer">Ekonomi dan Bisnis</li>
+                                <li class="p-2 hover:bg-gray-100 cursor-pointer">Komunikasi dan Bisnis</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tombol -->
@@ -105,36 +148,42 @@
                                             NIM
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
                                             Nama
-                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
                                             Masa Studi
-                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
                                             SKS Lulus
-                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round"
                                                     stroke-linejoin="round" stroke-width="2"
                                                     d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -349,3 +398,11 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('assets/js/dropdown.js') }}">
+        toggleDropdown('btn', 'dropdown', 'selected', 'caret-down');
+        toggleDropdown('btn2', 'dropdown2', 'selected2', 'caret-down2');
+        toggleDropdown('btn3', 'dropdown3', 'selected3', 'caret-down3');
+    </script>
+@endpush

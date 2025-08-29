@@ -33,7 +33,8 @@
                                                 <div class="flex flex-row items-center justify-between px-2">
                                                     <span id="fakultas-selected">Informatika</span>
                                                     <iconify-icon icon="ph:caret-down-bold"
-                                                        class="text-gray-500 rotate-[-90deg]" id="caret-down"></iconify-icon>
+                                                        class="text-gray-500 rotate-[-90deg]"
+                                                        id="caret-down"></iconify-icon>
                                                 </div>
                                             </button>
                                             <div id="fakultas-dropdown">
@@ -44,8 +45,7 @@
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Teknik Electro</li>
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Rekayasa Industri</li>
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Ekonomi dan Bisnis</li>
-                                                    <li class="p-2 hover:bg-gray-100 cursor-pointer">Komunikasi dan Bisnis
-                                                    </li>
+                                                    <li class="p-2 hover:bg-gray-100 cursor-pointer">Komunikasi dan Bisnis</li>
                                                 </ul>
                                             </div>
                                         </div>
