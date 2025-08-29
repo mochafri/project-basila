@@ -1,4 +1,6 @@
 @charset "UTF-8";
+@import url("https://fonts.cdnfonts.com/css/poppins");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 /*
 ! tailwindcss v3.3.0 | MIT License | https://tailwindcss.com
 */
@@ -6,7 +8,9 @@
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
-*,
+*{
+    font-family: 'Poppins', sans-serif, 'Roboto';
+}
 ::before,
 ::after {
   box-sizing: border-box; /* 1 */
@@ -2791,16 +2795,16 @@ td.fc-header-center{
   background-color: rgb(39 49 66 / var(--tw-bg-opacity));
 }
 
-:is(.dark .flatpickr-am-pm),:is(.dark 
-.flatpickr-time input),:is(.dark 
-.numInputWrapper span),:is(.dark 
-.flatpickr-time .flatpickr-time-separator),:is(.dark 
+:is(.dark .flatpickr-am-pm),:is(.dark
+.flatpickr-time input),:is(.dark
+.numInputWrapper span),:is(.dark
+.flatpickr-time .flatpickr-time-separator),:is(.dark
 .flatpickr-current-month){
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-:is(.dark .flatpickr-prev-month svg),:is(.dark 
+:is(.dark .flatpickr-prev-month svg),:is(.dark
 .flatpickr-next-month svg){
   fill: #ffffff;
 }

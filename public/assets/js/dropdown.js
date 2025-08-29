@@ -5,55 +5,55 @@ function toggleDropdown(btnId, dropdownId, selectedId, caretDown) {
     const dropdown = document.getElementById(dropdownId);
     const selected = document.getElementById(selectedId);
     const caret = document.getElementById(caretDown);
-    let isOpen = false;
 
-    if (!btn || !dropdown || !selected || !caretDown) {
+    if (!btn || !dropdown || !selected || !caret) {
         console.warn(`Element with ID ${btnId}, ${dropdownId}, or ${selectedId} not found.`);
         console.log("Dropdown not found");
         return;
     }
 
     dropdown.classList.add('hidden');
-    activeDropdowns.push({ btn, dropdown });
-    console.log("Active !!");
+    activeDropdowns.push({ btn, dropdown, caret });
 
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
+
         const isHiden = dropdown.classList.contains('hidden');
 
         activeDropdowns.forEach(e => {
             if (e.dropdown !== dropdown) {
                 e.dropdown.classList.add('hidden');
+                caret.style.transform = 'rotate(-90deg)';
             }
         });
 
-        isOpen = !isOpen ;
-
         if (isHiden) {
             dropdown.classList.remove('hidden');
-            isOpen = true;
+            caret.style.transform = 'rotate(-360deg)';
         } else {
             dropdown.classList.add('hidden');
-            isOpen = false;
+            caret.style.transform = 'rotate(-90deg)';
         }
-
-        caret.style.transform = isOpen ? 'rotate(-360deg)' : 'rotate(-90deg)';
     });
 
     dropdown.addEventListener('click', (e) => {
         if (e.target.tagName === 'LI') {
-            console.log("bla bla", e.target.textContent);
             selected.textContent = e.target.textContent;
             dropdown.classList.add('hidden');
+            caret.style.transform = 'rotate(-90deg)';
         }
     });
+
+    caret.style.transform = 'rotate(-90deg)';
 }
 
-window.addEventListener('click', () => {
-    activeDropdowns.forEach(e => {
-        e.dropdown.classList.add('hidden');
+window.addEventListener('click', (e) => {
+    activeDropdowns.forEach(item => {
+        if (!item.btn.contains(e.target) && !item.dropdown.contains(e.target)){
+            item.dropdown.classList.add('hidden');
+            item.caret.style.transform = 'rotate(-90deg)';
+        }
     });
-    activeDropdowns.length = 0;
 });
 
 toggleDropdown('btn', 'dropdown', 'selected', 'caret-down');
