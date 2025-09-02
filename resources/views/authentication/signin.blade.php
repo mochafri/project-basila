@@ -33,7 +33,8 @@
                         <img src="{{ asset('assets/basila_images/basila_color.png') }}" alt="" width="100px">
                     </a>
                     <h4 class="mb-3">Masuk ke akun anda</h4>
-                    <p class="mb-8 text-secondary-light text-lg">Selamat datang kembali! Silakan masukkan detail Anda</p>
+                    <p class="mb-8 text-secondary-light text-lg">Selamat datang kembali! Silakan masukkan detail Anda
+                    </p>
                 </div>
 
                 <!-- username alert -->
@@ -106,25 +107,25 @@
 
     @php
         $script = '
-                <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    // ================== Password Show Hide Js Start ==========
-                    function initializePasswordToggle(toggleSelector) {
-                        $(toggleSelector).on("click", function() {
-                            $(this).toggleClass("ri-eye-off-line");
-                            var input = $($(this).attr("data-toggle"));
-                            if (input.attr("type") === "password") {
-                                input.attr("type", "text");
-                            } else {
-                                input.attr("type", "password");
+                        <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            // ================== Password Show Hide Js Start ==========
+                            function initializePasswordToggle(toggleSelector) {
+                                $(toggleSelector).on("click", function() {
+                                    $(this).toggleClass("ri-eye-off-line");
+                                    var input = $($(this).attr("data-toggle"));
+                                    if (input.attr("type") === "password") {
+                                        input.attr("type", "text");
+                                    } else {
+                                        input.attr("type", "password");
+                                    }
+                                });
                             }
+                            // Call the function
+                            initializePasswordToggle(".toggle-password");
+                            // ========================= Password Show Hide Js End ===========================
                         });
-                    }
-                    // Call the function
-                    initializePasswordToggle(".toggle-password");
-                    // ========================= Password Show Hide Js End ===========================
-                });
-                </script>'
+                        </script>'
     @endphp
 
     <x-script />
@@ -136,6 +137,10 @@
         $(".remove-button").on("click", function () {
             $(this).closest(".alert").addClass("hidden")
         });
+
+        setTimeout(function () {
+            $(".alert").fadeOut("slow");
+        }, 2000);
     </script>
 
 </body>
