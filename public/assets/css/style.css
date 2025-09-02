@@ -1313,7 +1313,7 @@ input:checked + .toggle-bg{
 .datatable-wrapper .datatable-table thead{
   font-size: 0.75rem;
   color: #6B7280;
-  background-color: #F9FAFB;
+  background-color: #e4f1fd;
 }
 .dark .datatable-wrapper .datatable-table thead{
   color: #9CA3AF;
@@ -1338,7 +1338,7 @@ input:checked + .toggle-bg{
 .dark .datatable-wrapper .datatable-table thead th .datatable-sorter:hover, .dark .datatable-wrapper .datatable-table thead th.datatable-ascending .datatable-sorter, .dark .datatable-wrapper .datatable-table thead th.datatable-descending .datatable-sorter{
   color: white;
 }
-.datatable-wrapper .datatable-table tbody tr.selected{
+.datatable-wrapper .datatable-table tbody tr:hover{
   background-color: #F3F4F6;
 }
 .dark .datatable-wrapper .datatable-table tbody tr.selected{
