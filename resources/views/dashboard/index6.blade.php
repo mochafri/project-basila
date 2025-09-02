@@ -127,16 +127,16 @@
                                         <div class="flex justify-between items-center">
                                             <label for="fakultas" class="text-neutral-500">Jenis Laporan</label>
                                             <div class="flex flex-col space-y-1">
-                                                <button id="status-btn" type="button"
+                                                <button id="btn" type="button"
                                                     class="w-56 bg-neutral-300 rounded-md h-8">
                                                     <div
                                                         class="flex flex-row items-center justify-between px-3 text-neutral-500">
-                                                        <span id="status-selected">Yudisium</span>
+                                                        <span id="selected">Yudisium</span>
                                                         <iconify-icon icon="ph:caret-down-bold"
                                                             class="text-gray-500 rotate-[-90deg]" id="caret-down"></iconify-icon>
                                                     </div>
                                                 </button>
-                                                <div id="status-dropdown">
+                                                <div id="dropdown">
                                                     <ul
                                                         class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
                                                         <li class="p-2 hover:bg-gray-100 cursor-pointer">Yudisium</li>
@@ -148,15 +148,15 @@
                                         <div class="flex justify-between items-center">
                                             <label for="Semester" class="text-neutral-500">Format</label>
                                             <div class="flex flex-col space-y-1">
-                                                <button id="format-btn" type="button"
+                                                <button id="btn2" type="button"
                                                     class="text-neutral-950 w-56 bg-neutral-300 rounded-md h-8">
                                                     <div class="flex justify-between items-center px-3 text-neutral-500">
-                                                        <span id="format-selected">Excel</span>
+                                                        <span id="selected2">Excel</span>
                                                         <iconify-icon icon="ph:caret-down-bold"
                                                             class="text-gray-500 rotate-[-90deg]" id="caret-down2"></iconify-icon>
                                                     </div>
                                                 </button>
-                                                <div id="format-dropdown">
+                                                <div id="dropdown2">
                                                     <ul
                                                         class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center">
                                                         <li class="p-2 hover:bg-gray-100 cursor-pointer">Excel</li>
@@ -180,7 +180,7 @@
 
 @push('scripts')
     <script src="{{ asset('assets/js/dropdown.js') }}">
-        toggleDropdown('status-btn', 'status-dropdown', 'status-selected', 'caret-down');
-        toggleDropdown('format-btn', 'format-dropdown', 'format-selected', 'caret-down2');
+        toggleDropdown('btn', 'dropdown', 'selected', 'caret-down');
+        toggleDropdown('btn2', 'dropdown2', 'selected2', 'caret-down2);
     </script>
 @endpush
