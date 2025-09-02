@@ -1,10 +1,10 @@
 <!-- meta tags and other links -->
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" >
 
 <x-head />
 
-<body class=" bg-neutral-100 dark:bg-dark-3 dark:text-white">
+<body class=" bg-neutral-100">
 
     <!-- ..::  header area start ::.. -->
     <x-sidebar />

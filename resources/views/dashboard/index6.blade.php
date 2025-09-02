@@ -126,7 +126,7 @@ $script = '
                                 <div class="w-[60%] flex flex-col gap-2 font-medium">
                                     <div class="flex justify-between items-center">
                                         <label for="fakultas" class="text-neutral-500">Jenis Laporan</label>
-                                        <select name="fakultas" id="fakultas" class="text-neutral-500  w-[50%]">
+                                        <select name="fakultas" id="fakultas" class="text-neutral-500  w-[50%] form-select text-sm">
                                             <option value="informatika">Yudisium</option>
                                             <option value="Ilmu Terapan">Tidak Yudisium</option>
 
@@ -134,7 +134,7 @@ $script = '
                                     </div>
                                     <div class="flex justify-between items-center">
                                         <label for="Semester" class="text-neutral-500">Format</label>
-                                        <select name="Semester" id="Semester" class="text-neutral-500 w-[50%]">
+                                        <select name="Semester" id="Semester" class="text-neutral-500 w-[50%] form-select text-sm">
                                             <option value="genap24">Excel</option>
                                             <option value="ganjil24">PDF</option>
                                         </select>

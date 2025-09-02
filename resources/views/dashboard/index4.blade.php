@@ -1,6 +1,6 @@
 @extends('layout.layout')
 @php
-$title='Approval Yudisium';
+$title = 'Approval Yudisium';
 $subTitle = 'Cryptocracy';
 $script = '
 <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
@@ -28,19 +28,21 @@ $script = '
                             <div class="w-[60%] flex flex-col gap-2">
                                 <div class="flex justify-between items-center">
                                     <label for="fakultas" class="text-neutral-800">Fakultas</label>
-                                    <select name="fakultas" id="fakultas" class="text-neutral-800 uppercase w-[50%]">
-                                        <option value="informatika">Informatika</option>
-                                        <option value="Ilmu Terapan">Ilmu Terapan</option>
-                                        <option value="Industri Kreatif">Industri Kreatif</option>
-                                        <option value="Teknik Elektro">Teknik Elektro</option>
-                                        <option value="Rekayasa Industri">Rekayasa Industri</option>
-                                        <option value="Ekonomi dan Bisnis">Ekonomi dan Bisnis</option>
-                                        <option value="Komunikasi dan Bisnis">Komunikasi dan Bisnis</option>
+                                    <select name="fakultas" id="fakultas"
+                                        class="text-neutral-800 uppercase w-[55%] form-select text-sm">
+                                        <option value="">-- Pilih Fakultas --</option>
+                                        @foreach ($faculties as $faculty)
+                                        <option value="{{ $faculty['facultyid'] }}">
+                                            {{ $faculty['facultyname'] }}
+                                        </option>
+                                        @endforeach
                                     </select>
                                 </div>
+
                                 <div class="flex justify-between items-center">
                                     <label for="Semester" class="text-neutral-800">Semester</label>
-                                    <select name="Semester" id="Semester" class="text-neutral-800 w-[50%]">
+                                    <select name="Semester" id="Semester"
+                                        class="text-neutral-800 w-[55%] form-select text-sm">
                                         <option value="genap24">Genap 2024/2025</option>
                                         <option value="ganjil24">Ganjil 2024/2025</option>
                                         <option value="genap25">Genap 2025/2026 </option>
@@ -87,11 +89,11 @@ $script = '
                     <div class="card border-0 overflow-hidden">
                         <div class="card-header">
                             <h6 class="card-title text-lg font-bold mb-2">Daftar Yudisium</h6>
-                            <p class="text-sm text-neutral-400 mb-5">Berikut daftar yudisium periode Ganjil 2024/2025</p>
+                            <p class="text-sm text-neutral-400 mb-5">Berikut daftar yudisium periode Ganjil 2024/2025
+                            </p>
                         </div>
                         <div class="card-body">
-                            <table id="selection-table"
-                                class="border border-neutral-200 dark:border-neutral-600 rounded-lg border-separate	">
+                            <table id="selection-table" class="border border-neutral-200 rounded-lg border-separate	">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-neutral-800 dark:text-white" style="color: black;">
