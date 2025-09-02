@@ -184,6 +184,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::put('/yudicium/{id}/approve', [YudiciumController::class, 'approve'])->name('yudicium.approve');
+
 });
 
 
