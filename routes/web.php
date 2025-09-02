@@ -118,7 +118,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::prefix('dashboard')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
-            Route::get('/index', 'index')->name('index');
+            Route::get('/index', [YudiciumController::class, 'showPostCount'])->name('index');
             Route::get('/index-2', [YudiciumController::class, 'index'])->name('index2');
             Route::get('/index-3', [FacultyController::class, 'index'])->name('index3'); // diarahkan ke FacultyController
             Route::get('/index-4', [FacultyController::class, 'index'])->name('index4'); // diarahkan ke FacultyController

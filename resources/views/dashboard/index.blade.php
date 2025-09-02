@@ -49,7 +49,7 @@
                 <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
             </div>
             <div class="flex flex-col text-center">
-                <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
+                <h2 class="text-4xl text-white font-bold leading-tight">{{$postCount}}</h2>
                 <p class="text-sm">Total Yudisium</p>
             </div>
         </div>
@@ -60,7 +60,7 @@
                 <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
             </div>
             <div class="flex flex-col text-center">
-                <h2 class="text-4xl text-white font-bold leading-tight">214</h2>
+                <h2 class="text-4xl text-white font-bold leading-tight">{{$postTotalMahasiswa}}</h2>
                 <p class="text-sm">Total Mahasiswa</p>
             </div>
         </div>
@@ -103,7 +103,7 @@
                         <iconify-icon icon="clarity:gavel-solid" class="text-white text-2xl"></iconify-icon>
                     </div>
                     <div class="flex flex-col justify-center items-center text-center">
-                        <h2 class="text-3xl font-bold text-red-600 leading-tight">43</h2>
+                        <h2 class="text-3xl font-bold text-red-600 leading-tight">{{$postCount}}</h2>
                         <p class="text-xs text-red-600">Total Yudisium</p>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                     </div>
                     <div class="flex flex-col justify-center items-center text-center">
                         <h2 class="text-3xl font-bold text-green-600 leading-tight">214</h2>
-                        <p class="text-xs text-green-600">Total Yudisium</p>
+                        <p class="text-xs text-green-600">Total Mahasiswa</p>
                     </div>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                 <li class="text-yellow-500">🟡 Total Waiting: 0</li>
                 <li class="text-green-600">🟢 Total Approved: 0</li>
                 <li class="text-red-600">🔴 Total Rejected: 0</li>
-                <li class="text-blue-600">🔵 Total Done: 43</li>
+                <li class="text-blue-600">🔵 Total Done: {{$postCount}}</li>
             </ul>
         </div>
 

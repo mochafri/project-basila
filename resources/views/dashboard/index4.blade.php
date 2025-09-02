@@ -31,7 +31,7 @@
                                             <button id="btn" type="button"
                                                 class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
                                                 <div class="flex flex-row items-center justify-between px-2">
-                                                    <span id="selected">Informatika</span>
+                                                    <span id="selected">Fakultas</span>
                                                     <iconify-icon icon="ph:caret-down-bold"
                                                         class="text-gray-500 rotate-[-90deg]"
                                                         id="caret-down"></iconify-icon>

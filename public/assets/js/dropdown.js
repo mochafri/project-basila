@@ -39,6 +39,7 @@ function toggleDropdown(btnId, dropdownId, selectedId, caretDown) {
     dropdown.addEventListener('click', (e) => {
         if (e.target.tagName === 'LI') {
             selected.textContent = e.target.textContent;
+            selected.dataset.value = e.target.dataset.value;
             dropdown.classList.add('hidden');
             caret.style.transform = 'rotate(-90deg)';
         }
