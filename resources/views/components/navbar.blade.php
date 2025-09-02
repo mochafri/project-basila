@@ -268,8 +268,8 @@
                     <div
                         class="py-3 px-4 rounded-lg bg-primary-50 dark:bg-primary-600/25 mb-4 flex items-center justify-between gap-2">
                         <div class="flex items-center gap-3">
-                            <img src="{{ session('profilephoto') }}" alt="image"
-                                class="w-10 h-10 rounded-full">
+                            {{-- <img src="{{ session('profilephoto') }}" alt="image"
+                                class="w-10 h-10 rounded-full"> --}}
                             <div class="flex flex-col">
                                 <h6 class="text-lg text-neutral-900 font-semibold mb-0 normal-case">
                                     {{ session('username') }}</h6>

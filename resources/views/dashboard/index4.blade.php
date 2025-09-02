@@ -1,8 +1,8 @@
 @extends('layout.layout')
 @php
-$title = 'Approval Yudisium';
-$subTitle = 'Cryptocracy';
-$script = '
+    $title = 'Approval Yudisium';
+    $subTitle = 'Cryptocracy';
+    $script = '
 <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
 <script src="' . asset('assets/js/data-table.js') . '"></script>
 ';
@@ -40,12 +40,11 @@ $script = '
                                             <div id="dropdown">
                                                 <ul
                                                     class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg z-10">
-                                                    <li class="p-2 hover:bg-gray-100 cursor-pointer">Ilmu Terapan</li>
-                                                    <li class="p-2 hover:bg-gray-100 cursor-pointer">Industri Kreatif</li>
-                                                    <li class="p-2 hover:bg-gray-100 cursor-pointer">Teknik Electro</li>
-                                                    <li class="p-2 hover:bg-gray-100 cursor-pointer">Rekayasa Industri</li>
-                                                    <li class="p-2 hover:bg-gray-100 cursor-pointer">Ekonomi dan Bisnis</li>
-                                                    <li class="p-2 hover:bg-gray-100 cursor-pointer">Komunikasi dan Bisnis</li>
+                                                    @foreach ($faculties as $faculty)
+                                                        <li class="p-2 hover:bg-gray-100 cursor-pointer"
+                                                            value={{ $faculty['facultyid'] }}>{{ $faculty['facultyname'] }}
+                                                        </li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
@@ -108,7 +107,7 @@ $script = '
                 </div>
             </div>
             <div class="grid grid-cols-12">
-                <div class="col-span-12">
+                <div class="col-span-12 pt-10">
                     <div class="card border-0 overflow-hidden">
                         <div class="card-header">
                             <h6 class="card-title text-lg font-bold mb-2">Daftar Yudisium</h6>
@@ -151,7 +150,8 @@ $script = '
                                                 </svg>
                                             </div>
                                         </th>
-                                        <th scope="col" class="text-neutral-800 dark:text-white" style="color: black;">
+                                        <th scope="col" class="text-neutral-800 dark:text-white"
+                                            style="color: black;">
                                             <div class="flex items-center gap-2">
                                                 Fakultas
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
@@ -163,7 +163,8 @@ $script = '
                                                 </svg>
                                             </div>
                                         </th>
-                                        <th scope="col" class="text-neutral-800 dark:text-white" style="color: black;">
+                                        <th scope="col" class="text-neutral-800 dark:text-white"
+                                            style="color: black;">
                                             <div class="flex items-center gap-2">
                                                 Program Studi
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
@@ -175,7 +176,8 @@ $script = '
                                                 </svg>
                                             </div>
                                         </th>
-                                        <th scope="col" class="text-neutral-800 dark:text-white" style="color: black;">
+                                        <th scope="col" class="text-neutral-800 dark:text-white"
+                                            style="color: black;">
                                             <div class="flex items-center gap-2">
                                                 Total Mahasiswa
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
@@ -187,7 +189,8 @@ $script = '
                                                 </svg>
                                             </div>
                                         </th>
-                                        <th scope="col" class="text-neutral-800 dark:text-white" style="color: black;">
+                                        <th scope="col" class="text-neutral-800 dark:text-white"
+                                            style="color: black;">
                                             <div class="flex items-center gap-2">
                                                 Action
                                             </div>
@@ -207,8 +210,8 @@ $script = '
                                         <td><a href="javascript:void(0)" class="text-primary-600">#526534</a></td>
                                         <td>
                                             <div class="flex items-center">
-                                                <img src="{{ asset('assets/images/user-list/user-list1.png') }}" alt=""
-                                                    class="shrink-0 me-3 rounded-lg">
+                                                <img src="{{ asset('assets/images/user-list/user-list1.png') }}"
+                                                    alt="" class="shrink-0 me-3 rounded-lg">
                                                 <h6 class="text-base mb-0 font-medium grow">Kathryn Murphy</h6>
                                             </div>
                                         </td>
@@ -244,8 +247,8 @@ $script = '
                                         <td><a href="javascript:void(0)" class="text-primary-600">#696589</a></td>
                                         <td>
                                             <div class="flex items-center">
-                                                <img src="{{ asset('assets/images/user-list/user-list2.png') }}" alt=""
-                                                    class="shrink-0 me-3 rounded-lg">
+                                                <img src="{{ asset('assets/images/user-list/user-list2.png') }}"
+                                                    alt="" class="shrink-0 me-3 rounded-lg">
                                                 <h6 class="text-base mb-0 font-medium grow">Annette Black</h6>
                                             </div>
                                         </td>
@@ -281,8 +284,8 @@ $script = '
                                         <td><a href="javascript:void(0)" class="text-primary-600">#256584</a></td>
                                         <td>
                                             <div class="flex items-center">
-                                                <img src="{{ asset('assets/images/user-list/user-list3.png') }}" alt=""
-                                                    class="shrink-0 me-3 rounded-lg">
+                                                <img src="{{ asset('assets/images/user-list/user-list3.png') }}"
+                                                    alt="" class="shrink-0 me-3 rounded-lg">
                                                 <h6 class="text-base mb-0 font-medium grow">Ronald Richards</h6>
                                             </div>
                                         </td>
@@ -318,8 +321,8 @@ $script = '
                                         <td><a href="javascript:void(0)" class="text-primary-600">#526587</a></td>
                                         <td>
                                             <div class="flex items-center">
-                                                <img src="{{ asset('assets/images/user-list/user-list4.png') }}" alt=""
-                                                    class="shrink-0 me-3 rounded-lg">
+                                                <img src="{{ asset('assets/images/user-list/user-list4.png') }}"
+                                                    alt="" class="shrink-0 me-3 rounded-lg">
                                                 <h6 class="text-base mb-0 font-medium grow">Eleanor Pena</h6>
                                             </div>
                                         </td>
@@ -355,8 +358,8 @@ $script = '
                                         <td><a href="javascript:void(0)" class="text-primary-600">#105986</a></td>
                                         <td>
                                             <div class="flex items-center">
-                                                <img src="{{ asset('assets/images/user-list/user-list5.png') }}" alt=""
-                                                    class="shrink-0 me-3 rounded-lg">
+                                                <img src="{{ asset('assets/images/user-list/user-list5.png') }}"
+                                                    alt="" class="shrink-0 me-3 rounded-lg">
                                                 <h6 class="text-base mb-0 font-medium grow">Leslie Alexander</h6>
                                             </div>
                                         </td>
@@ -381,14 +384,14 @@ $script = '
                                         </td>
                                     </tr>
 
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection
 

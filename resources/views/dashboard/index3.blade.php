@@ -314,7 +314,7 @@ $script = '
             </div>
         </div>
     </div>
-    <!-- Daftar Mahasiswa -->
+    {{-- <!-- Daftar Mahasiswa -->
     <div class="bg-white p-6 rounded-xl shadow-md">
         <!-- Tabel Mahasiswa -->
         <div class="grid grid-cols-12 mt-6">
@@ -584,10 +584,10 @@ $script = '
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
     <!-- Nomor Yudisium & Button -->
-    <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
+    {{-- <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
         <input type="text" class="form-input border border-gray-300 rounded w-full md:w-1/3"
             placeholder="Nomor Yudisium" value="32/AKD15/IF-DEK/2024" readonly />
         <button class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
