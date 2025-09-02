@@ -72,8 +72,7 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <table id="selection-table"
-                        class="border border-neutral-200  rounded-lg border-separate	">
+                    <table id="selection-table" class="border border-neutral-200  rounded-lg border-separate	">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-neutral-800 dark:text-white">
@@ -163,7 +162,7 @@
                         </thead>
                         <tbody>
                             @foreach ($datas as $data)
-                                <tr> <!-- class="{{ $loop->odd ? 'bg-blue-100' : 'bg-white' }}"  untuk membedakan background row-->  
+                                <tr> <!-- class="{{ $loop->odd ? 'bg-blue-100' : 'bg-white' }}"  untuk membedakan background row-->
                                     <td>
                                         <div class="form-check style-check flex items-center">
                                             <input class="form-check-input" type="checkbox">
@@ -201,10 +200,17 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="flex items-center">
-                                            <span
-                                                class="bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 px-6 py-1.5 rounded-full font-medium text-sm">Approved</span>
-                                        </div>
+                                        @if($data->approval_status === 'approved')
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Approved</span>
+                                            </div>
+                                        @else
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Not Approved</span>
+                                            </div>
+                                        @endif
                                     </td>
                                     <td>
                                         <div class="flex items-center">
@@ -228,11 +234,17 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            
+
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    <form action="{{ route('yudicium.approve', $data->id) }}" method="POST">
+    @csrf
+    @method('PUT')
+    <button type="submit" class="btn bg-red-500 text-white btn-sm mt-5">Misal Approve</button>
+</form>
+
 @endsection

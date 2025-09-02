@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,6 +16,9 @@ return new class extends Migration
             $table->time('periode'); // periode yudicium (misalnya "2025/2026")
             $table->string('fakultas'); // nama fakultas
             $table->string('prodi'); // nama program studi
+            $table->enum('approval_status', ['not_approved', 'approved'])->default('not_approved');
+            $table->unsignedBigInteger('approved_by')->nullable(); // optional
+            $table->timestamp('approved_at')->nullable(); // optional
             $table->timestamps(); // created_at & updated_at
         });
     }
