@@ -23,7 +23,6 @@
             <!-- ..::  header area end ::.. -->
 
             @yield('content')
-            @stack('scripts')
 
         </div>
         <!-- ..::  footer  start ::.. -->
