@@ -21,7 +21,7 @@
                     </button>
                     <div id="dropdown">
                         <ul
-                            class="absolute left-0 w-full bg-white border rounded-md shadow-lg z-10 text-center text-neutral-700">
+                            class="absolute left-0 w-full bg-white border rounded-md shadow-lg z-10 text-neutral-700">
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Ganjil 2024/2025</li>
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Genap 2024/2025</li>
                             <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Ganjil 2023/2024</li>

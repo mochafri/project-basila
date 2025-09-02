@@ -26,7 +26,7 @@
                             </button>
                             <div id="dropdown" class="mt-1">
                                 <ul
-                                    class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center text-neutral-700">
+                                    class="absolute bg-white border border-gray-300 shadow-lg w-60 rounded-lg text-neutral-700">
                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Ganjil 2024/2025</li>
                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Genap 2024/2025</li>
                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Ganjil 2023/2024</li>

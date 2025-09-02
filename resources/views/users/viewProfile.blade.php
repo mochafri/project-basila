@@ -44,10 +44,10 @@
         <div class="col-span-12 lg:col-span-4">
             <div class="user-grid-card relative border border-neutral-200  rounded-2xl overflow-hidden bg-white  h-full">
                 <!-- <img src="{{ asset('assets/images/user-grid/user-grid-bg1.png') }}" alt="" class="w-full object-fit-cover"> -->
-                 <div class="w-full h-28 bg-gradient-to-l from-red-500 to-orange-500"></div>
+                 <div class="w-full py-20 bg-gradient-to-l from-red-500 to-orange-500"></div>
                 <div class="pb-6 ms-6 mb-6 me-6 -mt-[100px]">
                     <div class="text-center border-b border-neutral-200 ">
-                        <img src="{{ session('profilephoto') }}" alt="" class="border br-white border-width-[2px] w-[200px] h-[200px] rounded-full object-cover mx-auto object-top">
+                        <img src="{{ session('profilephoto') }}" alt="" class="border br-white border-width-[8px] w-[200px] h-[200px] rounded-full object-cover mx-auto object-top">
                         <h6 class="mb-0 mt-4">{{ session('username')}}</h6>
                         <span class="text-neutral-900 mb-4">{{ session('email')}}</span>
                     </div>
@@ -78,8 +78,8 @@
                                 <span class="w-[30%] text-base font-semibold text-neutral-600"> Class</span>
                                 <span class="w-[70%] text-neutral-900 font-medium">: {{session('kelas')}}</span>
                             </li>
-                            
-                            
+
+
                         </ul>
                     </div>
                 </div>

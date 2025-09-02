@@ -39,7 +39,7 @@
                                             </button>
                                             <div id="dropdown">
                                                 <ul
-                                                    class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
+                                                    class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg z-10">
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Ilmu Terapan</li>
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Industri Kreatif</li>
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Teknik Electro</li>
@@ -63,7 +63,7 @@
                                             </button>
                                             <div id="dropdown2">
                                                 <ul
-                                                    class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center">
+                                                    class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg">
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Ganjil 2024/2025</li>
                                                     <li class="p-2 hover:bg-gray-100 cursor-pointer">Genap 2024/2025</li>
                                                 </ul>

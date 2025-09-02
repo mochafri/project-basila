@@ -26,7 +26,7 @@
                     <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
                     <div class="flex flex-col space-y-1">
                         <button id="btn" type="button"
-                            class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
+                            class="text-neutral-950 w-72 border border-neutral-200 rounded-md h-8">
                             <div class="flex justify-between items-center px-2">
                                 <span id="selected">Fakultas</span>
                                 <iconify-icon icon="ph:caret-down-bold" id="caret-down"
@@ -34,7 +34,7 @@
                             </div>
                         </button>
                         <div id="dropdown">
-                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
+                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-60 rounded-lg z-10">
                                 <li class="p-2 hover:bg-gray-100 cursor-pointer">Fakultas Ilmu Terapan</li>
                                 <li class="p-2 hover:bg-gray-100 cursor-pointer">Fakultas Informatika</li>
                             </ul>
@@ -47,7 +47,7 @@
                     <label class="block text-sm font-medium text-gray-500 mb-1">Semester</label>
                     <div class="flex flex-col space-y-1">
                         <button id="btn2" type="button"
-                            class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
+                            class="text-neutral-950 w-72 border border-neutral-200 rounded-md h-8">
                             <div class="flex justify-between items-center px-2">
                                 <span id="selected2">Periode Ganjil 2024/2025</span>
                                 <iconify-icon icon="ph:caret-down-bold" id="caret-down2"
@@ -55,7 +55,7 @@
                             </div>
                         </button>
                         <div id="dropdown2">
-                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
+                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-60 rounded-lg z-10">
                                 <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Genap 2024/2025</li>
                                 <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Periode Ganjil 2023/2024</li>
                             </ul>
@@ -71,15 +71,15 @@
                     <label class="block text-sm font-medium text-gray-500 mb-1">Program Studi</label>
                     <div class="flex flex-col space-y-1">
                         <button id="btn3" type="button"
-                            class="text-neutral-950 w-56 border border-neutral-200 rounded-md h-8">
-                            <div class="flex flex-row items-center justify-between px-2">
+                            class="text-neutral-950 w-72 border border-neutral-200 rounded-md h-8">
+                            <div class="flex flex-row items-center justify-between px-2 ">
                                 <span id="selected3">Informatika</span>
                                 <iconify-icon icon="ph:caret-down-bold" class="text-gray-500 rotate-[-90deg]"
                                     id="caret-down3"></iconify-icon>
                             </div>
                         </button>
                         <div id="dropdown3">
-                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-56 rounded-lg text-center z-10">
+                            <ul class="absolute bg-white border border-gray-300 shadow-lg w-60 rounded-lg z-10">
                                 <li class="p-2 hover:bg-gray-100 cursor-pointer">Ilmu Terapan</li>
                                 <li class="p-2 hover:bg-gray-100 cursor-pointer">Industri Kreatif</li>
                                 <li class="p-2 hover:bg-gray-100 cursor-pointer">Teknik Electro</li>
