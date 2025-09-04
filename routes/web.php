@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Index3Controller;
 use App\Http\Controllers\YudiciumController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -14,7 +15,6 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CryptocurrencyController;
-use App\Http\Controllers\FacultyController;
 
 // login
 use App\Http\Controllers\AuthController;
@@ -117,11 +117,20 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard
     Route::prefix('dashboard')->group(function () {
+        // Yudicium routes
+        Route::controller(YudiciumController::class)->group(function () {
+            Route::get('/index', 'showPostCount')->name('index');
+            Route::get('/index-2', 'index')->name('index2');
+        });
+
+        // Index3 routes
+        Route::controller(Index3Controller::class)->group(function () {
+            Route::get('/index-3', 'index')->name('index3');
+            Route::get('/index-4', 'index')->name('index4');
+        });
+
+        // Dashboard routes
         Route::controller(DashboardController::class)->group(function () {
-            Route::get('/index', [YudiciumController::class, 'showPostCount'])->name('index');
-            Route::get('/index-2', [YudiciumController::class, 'index'])->name('index2');
-            Route::get('/index-3', [FacultyController::class, 'index'])->name('index3'); // diarahkan ke FacultyController
-            Route::get('/index-4', [FacultyController::class, 'index'])->name('index4'); // diarahkan ke FacultyController
             Route::get('/index-5', 'index5')->name('index5');
             Route::get('/index-6', 'index6')->name('index6');
             Route::get('/index-7', 'index7')->name('index7');
@@ -130,6 +139,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/basilaDashboard', 'basilaDashboard')->name('basilaDashboard');
         });
     });
+
 
 
     // Forms

@@ -241,10 +241,12 @@
             </div>
         </div>
     </div>
+    @foreach ($datas as $data)
     <form action="{{ route('yudicium.approve', $data->id) }}" method="POST">
-    @csrf
-    @method('PUT')
-    <button type="submit" class="btn bg-red-500 text-white btn-sm mt-5">Misal Approve</button>
-</form>
+        @csrf
+        @method('PUT')
+        <button type="submit" class="btn bg-red-500 text-white btn-sm mt-5">Approve</button>
+    </form>
+@endforeach
 
 @endsection
