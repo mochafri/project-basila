@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('study_period');
             $table->integer('pass_sks');
             $table->decimal('ipk', 3, 2);
-            $table->string('predikat');
-            $table->string('status');
+            $table->string('predikat')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

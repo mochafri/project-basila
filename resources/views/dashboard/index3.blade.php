@@ -4,7 +4,7 @@
     $title = 'Penetapan Yudisium';
     $subTitle = 'Tambah';
     $script = '
-                            <script src="' . asset('assets/js/data-table.js') . '"></script>';
+                                <script src="' . asset('assets/js/data-table.js') . '"></script>';
 @endphp
 
 @section('content')
@@ -76,12 +76,23 @@
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                             <span class="text-sm text-neutral-950">Total Eligible</span>
-                            <span class="font-semibold text-neutral-950">1</span>
+                            @foreach ($mahasiswa as $mhs)
+                                @if ($mhs->status == 'Eligible')
+                                    @php
+                                        $totalEligible = isset($totalEligible) ? $totalEligible + 1 : 1;
+                                    @endphp
+                                    @elseif ($mhs->status == 'Tidak Eligible')
+                                    @php
+                                        $totalTidakEligible = isset($totalTidakEligible) ? $totalTidakEligible + 1 : 1;
+                                    @endphp
+                                @endif
+                            @endforeach
+                            <span class="font-semibold text-neutral-950">{{ $totalEligible ?? 0 }}</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-red-500 rounded-full"></div>
                             <span class="text-sm text-neutral-950">Total Tidak Eligible</span>
-                            <span class="font-semibold text-neutral-950">1</span>
+                            <span class="font-semibold text-neutral-950">{{ $totalTidakEligible ?? 0 }}</span>
                         </div>
                     </div>
 
@@ -217,7 +228,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="flex items-center" >
+                                            <div class="flex items-center">
                                                 {{ $mhs->predikat }}
                                             </div>
                                         </td>
@@ -228,7 +239,8 @@
                                                         class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Eligible</span>
                                                 @else
                                                     <span
-                                                        class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Tidak Eligible</span>
+                                                        class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Tidak
+                                                        Eligible</span>
                                                 @endif
 
                                             </div>
