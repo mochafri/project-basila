@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
         // Index3 routes
         Route::controller(Index3Controller::class)->group(function () {
             Route::get('/index-3', 'index')->name('index3');
+            Route::post('/index-3/generate', 'generate')->name('index3.generate');
             Route::get('/index-4', 'index')->name('index4');
         });
 

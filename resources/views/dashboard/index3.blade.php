@@ -4,7 +4,7 @@
     $title = 'Penetapan Yudisium';
     $subTitle = 'Tambah';
     $script = '
-                                <script src="' . asset('assets/js/data-table.js') . '"></script>';
+                                                    <script src="' . asset('assets/js/data-table.js') . '"></script>';
 @endphp
 
 @section('content')
@@ -20,25 +20,34 @@
             </div>
 
             <!-- Form -->
-            <div class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
+
+
+            <form action="{{ route('index3.generate') }}" method="POST"
+                class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
+                @csrf
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-50">
+                    <select class="form-select w-full text-neutral-900 bg-gray-50" name="fakultas">
                         <option value="">-- Pilih Fakultas --</option>
-                        @foreach ($faculties as $faculty)
+                        <!-- @foreach ($faculties as $faculty)
                             <option value="{{ $faculty['facultyid'] }}">
                                 {{ $faculty['facultyname'] }}
                             </option>
-                        @endforeach
+
+                        @endforeach -->
+                        <option value="Ilmu Terapan">Ilmu Terapan</option>
+                        <option value="Informatika">Informatika</option>
+                        <option value="Teknik Elektro">Teknik Elektro</option>
                     </select>
                 </div>
 
                 <!-- Semester -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Semester</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-100">
+                    <select class="form-select w-full text-neutral-900 bg-gray-100" name="semester">
                         <option>Ganjil 2024/2025</option>
+                        <option>Genap 2025/2026</option>
                     </select>
                 </div>
 
@@ -48,18 +57,27 @@
                 <!-- Program Studi -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Program Studi</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-50">
+                    <select class="form-select w-full text-neutral-900 bg-gray-50" name="prodi">
                         <option>S1 Informatika</option>
                     </select>
                 </div>
 
+                <!-- Jumlah Mahasiswa -->
+                <div class="col-span-12 md:col-span-5">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Jumlah Mahasiswa</label>
+                    <input type="number" name="jumlah" class="form-input w-full text-neutral-900 bg-gray-50" required>
+                </div>
+
                 <!-- Tombol -->
                 <div class="col-span-12 md:col-start-6 md:col-span-2 flex items-end">
-                    <button class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded shadow w-full">
+                    <button class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded shadow w-full"
+                        type="submit">
                         Tampilkan
                     </button>
                 </div>
-            </div>
+            </form>
+
+
         </div>
     </div>
     <!-- Daftar Mahasiswa -->
@@ -81,7 +99,7 @@
                                     @php
                                         $totalEligible = isset($totalEligible) ? $totalEligible + 1 : 1;
                                     @endphp
-                                    @elseif ($mhs->status == 'Tidak Eligible')
+                                @elseif ($mhs->status == 'Tidak Eligible')
                                     @php
                                         $totalTidakEligible = isset($totalTidakEligible) ? $totalTidakEligible + 1 : 1;
                                     @endphp
@@ -268,13 +286,19 @@
             </div>
         </div>
 
-        <!-- Nomor Yudisium & Button -->
+        <!-- Hasil generate kode -->
         <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
-            <input type="text" class="form-input border border-gray-300 rounded w-full md:w-1/3"
-                placeholder="Nomor Yudisium" value="32/AKD15/IF-DEK/2024" readonly />
+            @if(isset($kode))
+                <input type="text" class="form-input border border-gray-300 rounded w-full md:w-1/3"
+                    placeholder="Nomor Yudisium" value="{{ $kode }}" readonly />
+            @else
+                <input type="text" class="form-input border border-gray-300 rounded w-full md:w-1/3"
+                    placeholder="Nomor Yudisium" value="" readonly />
+            @endif
             <button class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
                 Tetapkan Yudisium
             </button>
         </div>
+
     </div>
 @endsection

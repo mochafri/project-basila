@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Mahasiswa;
+use App\Models\Yudicium;
 
 class Index3Controller extends Controller
 {
@@ -15,23 +16,63 @@ class Index3Controller extends Controller
 
         $token = session('token');
 
-        // ambil data dari API
+        // ambil data fakultas dari API
         $response = Http::withToken($token)
             ->get('https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69');
         $faculties = $response->successful() ? $response->json() : [];
 
-        //menampilkan data mahasiswa
+        // ambil data mahasiswa
         $mahasiswa = Mahasiswa::all();
         foreach ($mahasiswa as $mhs) {
-            $mhs->save(); // ini akan trigger booted() → isi predikat & status
+            $mhs->save(); // trigger booted()
         }
-        // tentukan view sesuai route
+
+        // Ambil kode jika ada hasil generate
+        $kode = session('kode');
+
         if ($routeName === 'index3') {
-            return view('dashboard.index3', compact('faculties', 'mahasiswa'));
+            return view('dashboard.index3', compact('faculties', 'mahasiswa', 'kode'));
         } elseif ($routeName === 'index4') {
             return view('dashboard.index4', compact('faculties', 'mahasiswa'));
         }
+    }
 
+    public function generate(Request $request)
+    {
+        $request->validate([
+            'fakultas' => 'required',
+            'semester' => 'required',
+            'prodi' => 'required',
+            'jumlah' => 'required|integer|min:1',
+        ]);
+
+        // Ambil auto_increment terakhir
+        $last = Yudicium::max('id') ?? 0;
+        $nextNo = $last + 1;
+
+        // Ambil jumlah mahasiswa dari input
+        $jumlah = $request->jumlah;
+
+        // Map fakultas ke inisial
+        $map = [
+            'Informatika' => 'IF',
+            'Sistem Informasi' => 'SI',
+            'Teknik Elektro' => 'TE',
+            'Ilmu Terapan' => 'IT',
+            'Ekonomi dan Bisnis' => 'EB',
+            'Komunikasi dan Bisnis'=> 'KB',
+        ];
+        $fakultasInitial = $map[$request->fakultas] ?? strtoupper(substr($request->fakultas, 0, 2));
+
+        // Ambil tahun awal dari semester (contoh: "Ganjil 2024/2025" → 2024)
+        preg_match('/\d{4}/', $request->semester, $match);
+        $tahun = $match[0] ?? date('Y');
+
+        // Susun nomor yudisium
+        $kode = $nextNo . '/AKD' . $jumlah . '/' . $fakultasInitial . '-DEK/' . $tahun;
+
+        // Redirect balik ke index3 dengan membawa kode
+        return redirect()->route('index3')->with('kode', $kode);
     }
 
 
