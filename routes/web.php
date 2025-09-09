@@ -119,8 +119,9 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         // Yudicium routes
         Route::controller(YudiciumController::class)->group(function () {
-            Route::get('/index', 'showPostCount')->name('index');
+            Route::get('/index', 'index')->name('index');
             Route::get('/index-2', 'index')->name('index2');
+            Route::get('/index-6', 'index')->name('index6');
         });
 
         // Index3 routes
@@ -132,8 +133,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Dashboard routes
         Route::controller(DashboardController::class)->group(function () {
-            Route::get('/index-5', 'index5')->name('index5');
-            Route::get('/index-6', 'index6')->name('index6');
+            Route::get('/index-5', 'index5')->name('index5');           
             Route::get('/index-7', 'index7')->name('index7');
             Route::get('/index-8', 'index8')->name('index8');
             Route::get('/index-9', 'index9')->name('index9');

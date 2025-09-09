@@ -40,7 +40,7 @@
                         <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                     </div>
                     <div class="flex flex-col text-center sm:text-left">
-                        <h2 class="text-4xl text-white font-bold">43</h2>
+                        <h2 class="text-4xl text-white font-bold">{{$postCount}}</h2>
                         <p class="text-sm">Total Yudisium</p>
                     </div>
                 </div>

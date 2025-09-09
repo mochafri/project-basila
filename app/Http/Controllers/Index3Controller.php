@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Mahasiswa;
 use App\Models\Yudicium;
+use App\Models\Post;
 
 class Index3Controller extends Controller
 {
@@ -30,11 +31,13 @@ class Index3Controller extends Controller
         // Ambil kode jika ada hasil generate
         $kode = session('kode');
 
-        if ($routeName === 'index3') {
-            return view('dashboard.index3', compact('faculties', 'mahasiswa', 'kode'));
-        } elseif ($routeName === 'index4') {
-            return view('dashboard.index4', compact('faculties', 'mahasiswa'));
+        $postCount = Post::count();
+
+
+        if ($routeName === 'index3' || $routeName === 'index4') {
+            return view("dashboard.$routeName", compact('faculties', 'mahasiswa', 'kode', 'postCount'));
         }
+
     }
 
     public function generate(Request $request)
@@ -60,7 +63,7 @@ class Index3Controller extends Controller
             'Teknik Elektro' => 'TE',
             'Ilmu Terapan' => 'IT',
             'Ekonomi dan Bisnis' => 'EB',
-            'Komunikasi dan Bisnis'=> 'KB',
+            'Komunikasi dan Bisnis' => 'KB',
         ];
         $fakultasInitial = $map[$request->fakultas] ?? strtoupper(substr($request->fakultas, 0, 2));
 
