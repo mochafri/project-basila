@@ -26,7 +26,7 @@
 
         </div>
         <!-- ..::  footer  start ::.. -->
-        <x-footer />
+        <!-- <x-footer /> -->
         <!-- ..::  footer area end ::.. -->
 
     </main>
