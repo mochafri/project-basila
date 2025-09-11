@@ -46,15 +46,12 @@ class Index3Controller extends Controller
             'fakultas' => 'required',
             'semester' => 'required',
             'prodi' => 'required',
-            'jumlah' => 'required|integer|min:1',
         ]);
 
         // Ambil auto_increment terakhir
         $last = Yudicium::max('id') ?? 0;
         $nextNo = $last + 1;
 
-        // Ambil jumlah mahasiswa dari input
-        $jumlah = $request->jumlah;
 
         // Map fakultas ke inisial
         $map = [
@@ -72,7 +69,7 @@ class Index3Controller extends Controller
         $tahun = $match[0] ?? date('Y');
 
         // Susun nomor yudisium
-        $kode = $nextNo . '/AKD' . $jumlah . '/' . $fakultasInitial . '-DEK/' . $tahun;
+        $kode = $nextNo . '/AKD100' . '/' . $fakultasInitial . '-DEK/' . $tahun;
 
         // Redirect balik ke index3 dengan membawa kode
         return redirect()->route('index3')->with('kode', $kode);
