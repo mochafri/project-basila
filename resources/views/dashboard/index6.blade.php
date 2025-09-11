@@ -50,7 +50,7 @@ $script = '
                                     <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                 </div>
                                 <div class="flex flex-col text-center">
-                                    <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
+                                    <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
                                     <p class="text-sm">Total Yudisium</p>
                                 </div>
                             </div>

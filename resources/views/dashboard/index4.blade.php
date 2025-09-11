@@ -51,22 +51,22 @@
                                     <button
                                         class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">Tampilkan</button>
 
+                            </div>
+                        </form>
+                    </div>
+                    <div class="right">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
+                            {{-- Card Total Yudisium --}}
+                            <div
+                                class="bg-[#e51411] text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
+                                <div class="w-16 h-16 bg-[#c7110f] rounded-full flex items-center justify-center">
+                                    <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="right">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
-                                {{-- Card Total Yudisium --}}
-                                <div
-                                    class="bg-[#e51411] text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
-                                    <div class="w-16 h-16 bg-[#c7110f] rounded-full flex items-center justify-center">
-                                        <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
-                                    </div>
-                                    <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
-                                        <p class="text-sm">Total Yudisium</p>
-                                    </div>
+                                <div class="flex flex-col text-center">
+                                    <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
+                                    <p class="text-sm">Total Yudisium</p>
                                 </div>
+                            </div>
 
                                 {{-- Card Total Mahasiswa --}}
                                 <div

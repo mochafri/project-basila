@@ -7,54 +7,60 @@
 @endphp
 
 @section('content')
-    <div class="grid grid-cols-12 gap-6">
-        <!-- Filter dan Statistik -->
-        <div class="col-span-12 bg-white p-6 rounded-xl shadow-lg">
-            <div class="flex items-center justify-between gap-4">
-                <div class="flex flex-col gap-2">
-                    <div class="flex items-center gap-3">
-                        <label for="semester"
-                            class="text-sm font-medium text-neutral-700 whitespace-nowrap">Semester</label>
-                        <select id="semester" name="semester" class="form-select text-neutral-950 w-48">
-                            <option>Ganjil 2024/2025</option>
-                            <option>Genap 2024/2025</option>
-                            <option>Ganjil 2025/2026</option>
-                            <option>Genap 2025/2026</option>
-                        </select>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Filter dan Statistik -->
+    <div class="col-span-12 bg-white p-6 rounded-xl shadow-lg">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            
+            <!-- Filter -->
+            <div class="flex flex-col gap-3 w-full sm:w-auto">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <label for="semester" class="text-sm font-medium text-neutral-700 whitespace-nowrap">
+                        Semester
+                    </label>
+                    <select id="semester" name="semester" class="form-select text-neutral-950 w-full sm:w-48">
+                        <option>Ganjil 2024/2025</option>
+                        <option>Genap 2024/2025</option>
+                        <option>Ganjil 2025/2026</option>
+                        <option>Genap 2025/2026</option>
+                    </select>
+                </div>
+                <button 
+                    class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-full sm:w-fit">
+                    Tampilkan
+                </button>
+            </div>
+
+            <!-- Statistik -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+                
+                <!-- Card Total Yudisium -->
+                <div class="bg-red-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
+                    <div class="w-16 h-16 bg-red-800 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                     </div>
-                    <button
-                        class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-fit ml-[73px]">
-                        Tampilkan
-                    </button>
+                    <div class="flex flex-col text-center sm:text-left">
+                        <h2 class="text-4xl text-white font-bold">{{$postCount}}</h2>
+                        <p class="text-sm">Total Yudisium</p>
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-4">
-                    {{-- Card Total Yudisium --}}
-                    <div class="bg-red-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
-                        <div class="w-16 h-16 bg-red-800 rounded-full flex items-center justify-center">
-                            <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
-                        </div>
-                        <div class="flex flex-col text-center">
-                            <h2 class="text-4xl text-white font-bold">43</h2>
-                            <p class="text-sm">Total Yudisium</p>
-                        </div>
+                <!-- Card Total Mahasiswa -->
+                <div class="bg-green-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
+                    <div class="w-16 h-16 bg-green-800 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                     </div>
-
-                    {{-- Card Total Mahasiswa --}}
-                    <div
-                        class="bg-green-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
-                        <div class="w-16 h-16 bg-green-800 rounded-full flex items-center justify-center">
-                            <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
-                        </div>
-                        <div class="flex flex-col text-center">
-                            <h2 class="text-4xl text-white font-bold">214</h2>
-                            <p class="text-sm">Total Mahasiswa</p>
-                        </div>
+                    <div class="flex flex-col text-center sm:text-left">
+                        <h2 class="text-4xl text-white font-bold">214</h2>
+                        <p class="text-sm">Total Mahasiswa</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+</div>
+
 
     <div class="grid grid-cols-12 mt-6">
         <div class="col-span-12">
@@ -241,10 +247,12 @@
             </div>
         </div>
     </div>
+    @foreach ($datas as $data)
     <form action="{{ route('yudicium.approve', $data->id) }}" method="POST">
-    @csrf
-    @method('PUT')
-    <button type="submit" class="btn bg-red-500 text-white btn-sm mt-5">Misal Approve</button>
-</form>
+        @csrf
+        @method('PUT')
+        <button type="submit" class="btn bg-red-500 text-white btn-sm mt-5">Approve</button>
+    </form>
+@endforeach
 
 @endsection

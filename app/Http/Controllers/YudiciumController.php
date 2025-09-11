@@ -10,18 +10,20 @@ use App\Models\Post;
 
 class YudiciumController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $datas = DB::table('yudiciums')->get();
-        return view('dashboard.index2', ['datas' => $datas]);
 
-    }
-
-    public function showPostCount()
-    {
-        $postTotalMahasiswa = 245;
+        $routeName = $request->route()->getName();
         $postCount = Post::count();
-        return view('dashboard.index', compact('postCount', 'postTotalMahasiswa'));
+
+        if ($routeName === 'index2' || $routeName === 'index' || $routeName === 'index4' || $routeName === 'index6') {
+            return view("dashboard.$routeName", [
+                'datas' => $datas,
+                'postCount' => $postCount
+            ]);
+        }
+
     }
 
     public function approve($id)
