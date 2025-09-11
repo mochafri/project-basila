@@ -15,9 +15,9 @@
     <!-- Crypto Home Widgets End -->
 
     <div class="grid grid-cols-1 3xl:grid-cols-12 gap-6 mt-6">
-
         <div class="2xl:col-span-12 3xl:col-span-4">
             <div class="grid grid-cols-1 gap-6">
+
                 <div class="card h-full rounded-lg border-0">
                     <div
                         class="card-body yudisium w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-center">
@@ -51,22 +51,22 @@
                                     <button
                                         class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">Tampilkan</button>
 
-                            </div>
-                        </form>
-                    </div>
-                    <div class="right">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
-                            {{-- Card Total Yudisium --}}
-                            <div
-                                class="bg-[#e51411] text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
-                                <div class="w-16 h-16 bg-[#c7110f] rounded-full flex items-center justify-center">
-                                    <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                 </div>
-                                <div class="flex flex-col text-center">
-                                    <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
-                                    <p class="text-sm">Total Yudisium</p>
+                            </form>
+                        </div>
+                        <div class="right">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
+                                {{-- Card Total Yudisium --}}
+                                <div
+                                    class="bg-[#e51411] text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
+                                    <div class="w-16 h-16 bg-[#c7110f] rounded-full flex items-center justify-center">
+                                        <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
+                                    </div>
+                                    <div class="flex flex-col text-center">
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
+                                        <p class="text-sm">Total Yudisium</p>
+                                    </div>
                                 </div>
-                            </div>
 
                                 {{-- Card Total Mahasiswa --}}
                                 <div
@@ -209,13 +209,34 @@
                                                     class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
                                                     <iconify-icon icon="lucide:edit"></iconify-icon>
                                                 </a>
-                                                <a href="javascript:void(0)"
+                                                <a href="javascript:void(0)" onclick="confirmDelete()"
                                                     class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
                                                     <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
                                                 </a>
+                                                <script>
+                                                    function confirmDelete() {
+                                                        Swal.fire({
+                                                            title: "Are you sure?",
+                                                            text: "You won't be able to revert this!",
+                                                            icon: "warning",
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: "#3085d6",
+                                                            cancelButtonColor: "#d33",
+                                                            confirmButtonText: "Yes, delete it!"
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                Swal.fire({
+                                                                    title: "Deleted!",
+                                                                    text: "Your file has been deleted.",
+                                                                    icon: "success"
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                </script>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        {{-- <tr>
                                             <td>
                                                 <div class="form-check style-check flex items-center">
                                                     <input class="form-check-input" type="checkbox">
@@ -362,7 +383,7 @@
                                                     <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
                                                 </a>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
 
                                     </tbody>
                                 </table>

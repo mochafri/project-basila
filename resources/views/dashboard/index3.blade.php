@@ -8,6 +8,7 @@
 @endphp
 
 @section('content')
+    <h1 class="text-2xl font-bold text-neutral-400 mb-5">Penetapan Yudisium / Tambah</h1>
     <div class="bg-white p-6 rounded-xl shadow-md mb-6">
         <h2 class="text-lg font-semibold mb-1">Mahasiswa Yudisium</h2>
         <p class="text-sm text-gray-500 mb-4">Pastikan data yang dipilih telah sesuai untuk menampilkan data mahasiswa</p>
@@ -31,11 +32,10 @@
                     <select class="form-select w-full text-neutral-900 bg-gray-50" name="fakultas">
                         <option value="">-- Pilih Fakultas --</option>
                         <!-- @foreach ($faculties as $faculty)
-                            <option value="{{ $faculty['facultyid'] }}">
-                                {{ $faculty['facultyname'] }}
-                            </option>
-
-                        @endforeach -->
+    <option value="{{ $faculty['facultyid'] }}">
+                                    {{ $faculty['facultyname'] }}
+                                </option>
+    @endforeach -->
                         <option value="Ilmu Terapan">Ilmu Terapan</option>
                         <option value="Informatika">Informatika</option>
                         <option value="Teknik Elektro">Teknik Elektro</option>
@@ -152,48 +152,57 @@
                                             Masa Studi
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
                                             SKS Lulus
-                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
                                             IPK
-                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
                                             Predikat
-                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
                                             Status
-                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
@@ -288,7 +297,7 @@
 
         <!-- Hasil generate kode -->
         <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
-            @if(isset($kode))
+            @if (isset($kode))
                 <input type="text" class="form-input border border-gray-300 rounded w-full md:w-1/3"
                     placeholder="Nomor Yudisium" value="{{ $kode }}" readonly />
             @else

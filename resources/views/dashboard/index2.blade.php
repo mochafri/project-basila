@@ -8,10 +8,11 @@
 
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <h1 class="text-2xl font-bold text-neutral-400 mb-5 lg:col-span-12">Penetapan Yudisium</h1>
     <!-- Filter dan Statistik -->
     <div class="col-span-12 bg-white p-6 rounded-xl shadow-lg">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            
+
             <!-- Filter -->
             <div class="flex flex-col gap-3 w-full sm:w-auto">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -25,7 +26,7 @@
                         <option>Genap 2025/2026</option>
                     </select>
                 </div>
-                <button 
+                <button
                     class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-full sm:w-fit">
                     Tampilkan
                 </button>
@@ -33,7 +34,7 @@
 
             <!-- Statistik -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
-                
+
                 <!-- Card Total Yudisium -->
                 <div class="bg-red-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
                     <div class="w-16 h-16 bg-red-800 rounded-full flex items-center justify-center">

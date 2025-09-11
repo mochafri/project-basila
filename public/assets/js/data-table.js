@@ -26,7 +26,7 @@ if (document.getElementById("selection-table")) {
                     ${props.paging && props.perPageSelect ? `...` : ""}
                 </div>
                 <div class='${props.classes.container}'></div>
-            ${props.paging ? `<div class='${props.classes.info}'></div>` : ""}
+            ${props.paging ? `<div class='${props.classes.info} mt-5'></div>` : ""}
             `,
 
             columns: [
