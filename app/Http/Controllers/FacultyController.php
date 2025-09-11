@@ -12,6 +12,7 @@ class FacultyController extends Controller
         // cek route name
         $routeName = $request->route()->getName();
 
+
         $token = session('token');
 
         // ambil data dari API

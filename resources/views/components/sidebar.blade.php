@@ -27,7 +27,7 @@
                 </a>
                 
             </li>
-            <li class="dropdown mb-4">
+            <!-- <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="fluent:signature-16-regular" class="menu-icon"></iconify-icon>
                     <span>Digital Signature</span>
@@ -91,7 +91,7 @@
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Wallet</a>
                     </li>
                 </ul>
-            </li>
+            </li> -->
             <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="icons8:student" class="menu-icon"></iconify-icon>
@@ -100,7 +100,7 @@
                 <ul class="sidebar-submenu">
                     <li>
                         <a href="{{ route('index') }}"><i
-                                class="ri-circle-fill circle-icon text-dark w-auto"></i> Dashboard</a>
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i> Beranda</a>
                     </li>
                     <li>
                         <a href="{{ route('index2') }}"><i
@@ -110,10 +110,10 @@
                         <a href="{{ route('index4') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Approval Yudisium</a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="{{ route('index5') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Eligibilitas Yudisium</a>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="{{ route('index6') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Laporan</a>
