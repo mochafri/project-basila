@@ -4,19 +4,26 @@
     </button>
     <div>
         <a href="{{ route('index') }}" class="sidebar-logo background-primary flex items-center justify-center">
-            <img src="{{ asset('assets/basila_images/basila_white.png') }}" alt="site logo" class="light-logo" width="120">
+            <img src="{{ asset('assets/basila_images/basila_white.png') }}" alt="site logo" class="light-logo"
+                width="120">
             <img src="{{ asset('assets/images/logo-light.png') }}" alt="site logo" class="dark-logo">
-            <img src="{{ asset('assets/basila_images/logo_basila.png') }}" alt="site logo" class="logo-icon" width="30">
+            <img src="{{ asset('assets/basila_images/logo_basila.png') }}" alt="site logo" class="logo-icon"
+                width="30">
         </a>
     </div>
     <div class="sidebar-menu-area">
         <ul class="sidebar-menu" id="sidebar-menu">
 
             <!-- Penambahan -->
-            <div class="identitas flex flex-col items-center gap-1 my-10">
-                <img src="{{ asset('assets/basila_images/favicon.png')}}" alt="logo basila" width="50" id="logo">
-                <h1 class="uppercase text-xl truncate overflow-hidden whitespace-nowrap max-w-[80%]" id="sidebar-name">{{ session('username') }}</h1>
-                <h5 class="text-sm" id="sidebar-nim">{{session('nim')}}</h5>
+            <div class="identitas flex flex-col items-center gap-3 my-10">
+                <img src="{{ session('profilephoto') }}"
+                    class="border br-white border-width-[2px] w-[200px] h-[200px] rounded-full object-cover mx-auto object-top"
+                    alt="logo basila" id="logo">
+                <div class="flex flex-col items-center w-full">
+                    <h1 class="uppercase text-xl truncate overflow-hidden whitespace-nowrap max-w-[80%]"
+                        id="sidebar-name">{{ session('username') }}</h1>
+                    <h5 class="text-sm" id="sidebar-nim">{{ session('nim') }}</h5>
+                </div>
             </div>
             <!-- Penambahan -->
 
@@ -25,7 +32,7 @@
                     <iconify-icon icon="solar:home-smile-angle-outline" class="menu-icon"></iconify-icon>
                     <span>Dashboard</span>
                 </a>
-                
+
             </li>
             <!-- <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
@@ -53,7 +60,8 @@
             </li>
             <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="streamline-cyber:report-problem-warning-hexagon" class="menu-icon"></iconify-icon>
+                    <iconify-icon icon="streamline-cyber:report-problem-warning-hexagon"
+                        class="menu-icon"></iconify-icon>
                     <span>Neo Feeder</span>
                 </a>
                 <ul class="sidebar-submenu">
@@ -317,7 +325,7 @@
                     <span>Authentication</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    
+
                     <li>
                         <a href="{{ route('signup') }}"><i
                                 class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Sign Up</a>
@@ -397,4 +405,3 @@
         </ul>
     </div>
 </aside>
-

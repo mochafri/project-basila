@@ -37,6 +37,10 @@
 
     <!-- Script sidebar -->
     <script src="{{ asset('assets/js/sidebar.js')}}"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Script dropdown -->
 </body>
 
 </html>
