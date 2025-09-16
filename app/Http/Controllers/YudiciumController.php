@@ -23,9 +23,8 @@ class YudiciumController extends Controller
                 'postCount' => $postCount
             ]);
         }
-
     }
-
+    
     public function approve($id)
     {
         $yudicium = Yudicium::findOrFail($id);
@@ -36,5 +35,4 @@ class YudiciumController extends Controller
 
         return redirect()->back()->with('success', 'Yudicium approved.');
     }
-
 }

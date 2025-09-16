@@ -222,13 +222,23 @@
                                                             showCancelButton: true,
                                                             confirmButtonColor: "#3085d6",
                                                             cancelButtonColor: "#d33",
-                                                            confirmButtonText: "Yes, delete it!"
+                                                            confirmButtonText: "Yes, delete it!",
+                                                            customClass: {
+                                                                confirmButton: "btn btn-primary",
+                                                                cancelButton: "bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2"
+                                                            },
+                                                            buttonStyling: false
                                                         }).then((result) => {
                                                             if (result.isConfirmed) {
                                                                 Swal.fire({
                                                                     title: "Deleted!",
                                                                     text: "Your file has been deleted.",
-                                                                    icon: "success"
+                                                                    icon: "success",
+                                                                    confirmButton: "OK",
+                                                                    customClass: {
+                                                                        confirmButton: "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+                                                                    },
+                                                                    buttonStyling: false
                                                                 });
                                                             }
                                                         });

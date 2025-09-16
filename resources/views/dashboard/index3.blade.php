@@ -4,7 +4,7 @@
     $title = 'Penetapan Yudisium';
     $subTitle = 'Tambah';
     $script = '
-                                                    <script src="' . asset('assets/js/data-table.js') . '"></script>';
+<script src="' . asset('assets/js/data-table.js') . '"></script>';
 @endphp
 
 @section('content')
@@ -23,23 +23,20 @@
             <!-- Form -->
 
 
-            <form action="{{ route('index3.generate') }}" method="POST"
-                class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
+            <form class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
                 @csrf
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-50" name="fakultas">
+                    <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
                         <option value="">-- Pilih Fakultas --</option>
-                        <!-- @foreach ($faculties as $faculty)
-    <option value="{{ $faculty['facultyid'] }}">
-                                    {{ $faculty['facultyname'] }}
-                                </option>
-    @endforeach -->
-                        <option value="Ilmu Terapan">Ilmu Terapan</option>
-                        <option value="Informatika">Informatika</option>
-                        <option value="Teknik Elektro">Teknik Elektro</option>
                     </select>
+                    {{-- <select name="fakultas" class="form-select w-full border rounded p-2">
+                        <option value="">-- Pilih Fakultas --</option>
+                        @foreach ($faculties as $faculty)
+                            <option value="{{ $faculty->facultyid }}">{{ $faculty->facultyname }}</option>
+                        @endforeach
+                    </select> --}}
                 </div>
 
                 <!-- Semester -->
@@ -57,16 +54,11 @@
                 <!-- Program Studi -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Program Studi</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-50" name="prodi">
-                        <option>S1 Informatika</option>
+                    <select id="prodi" name="prodi" class="form-select w-full border rounded p-2">
+                        <option value="">-- Pilih Program Studi --</option>
                     </select>
                 </div>
 
-                <!-- Jumlah Mahasiswa -->
-                <div class="col-span-12 md:col-span-5">
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Jumlah Mahasiswa</label>
-                    <input type="number" name="jumlah" class="form-input w-full text-neutral-900 bg-gray-50" required>
-                </div>
 
                 <!-- Tombol -->
                 <div class="col-span-12 md:col-start-6 md:col-span-2 flex items-end">
@@ -152,9 +144,8 @@
                                             Masa Studi
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="2"
-                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
@@ -304,10 +295,115 @@
                 <input type="text" class="form-input border border-gray-300 rounded w-full md:w-1/3"
                     placeholder="Nomor Yudisium" value="" readonly />
             @endif
-            <button class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
+            <button class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto" onclick="confirmButton()">
                 Tetapkan Yudisium
             </button>
         </div>
-
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fakultasSelect = document.getElementById('fakultas');
+            const prodiSelect = document.getElementById('prodi');
+
+            fetch('{{ route('api.faculties') }}')
+                .then(res => {
+                    if (!res.ok) throw new Error('Status: ' + res.status);
+                    return res.json();
+                })
+                .then(response => {
+                    console.log('Response fakultas:', response);
+
+                    if (response.status === 'success' && Array.isArray(response.data)) {
+                        response.data.forEach(faculty => {
+                            const opt = document.createElement('option');
+                            opt.value = faculty.facultyid;
+                            opt.textContent = faculty.facultyname;
+                            fakultasSelect.appendChild(opt);
+                        });
+                    } else {
+                        console.warn('Data fakultas tidak sesuai format');
+                    }
+                })
+                .catch(err => {
+                    console.error('Gagal memuat fakultas:', err);
+                    const opt = document.createElement('option');
+                    opt.textContent = 'Data fakultas tidak tersedia';
+                    opt.disabled = true;
+                    fakultasSelect.appendChild(opt);
+                });
+
+            fakultasSelect.addEventListener('change', function() {
+                const facultyId = this.value;
+                prodiSelect.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
+
+                if (!facultyId) return;
+
+                fetch(`/api/faculties/${facultyId}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error('Status: ' + res.status);
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log('Response prodi:', data);
+
+                        let prodis = [];
+                        if (data.Success === 'Success' && Array.isArray(data.Data)) {
+                            prodis = data.Data;
+                        }
+
+                        if (prodis.length > 0) {
+                            prodis.forEach(prody => {
+                                const opt = document.createElement('option');
+                                opt.value = prody.studyprogramid; 
+                                opt.textContent = prody.studyprogramname;
+                                prodiSelect.appendChild(opt);
+                            });
+                        } else {
+                            const opt = document.createElement('option');
+                            opt.textContent = 'Data prodi tidak tersedia';
+                            opt.disabled = true;
+                            prodiSelect.appendChild(opt);
+                        }
+                    })
+                .catch(err => {
+                    console.error('Gagal memuat program studi:', err);
+                    const opt = document.createElement('option');
+                    opt.textContent = 'Gagal memuat data prodi';
+                    opt.disabled = true;
+                    prodiSelect.appendChild(opt);
+                });
+            });
+        });
+
+        function confirmButton() {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Anda yakin akan menetapkan yudisium?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Tetapkan!",
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                    cancelButton: "bg-red-600 text-white"
+                },
+                buttonStyling: false,
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Berhasil di tetapkan",
+                        icon: "success",
+                        confirmButton: "OK",
+                        customClass: {
+                            confirmButton: "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700",
+                        },
+                        buttonStyling: false
+                    });
+                }
+            });
+        }
+    </script>
 @endsection
