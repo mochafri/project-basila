@@ -10,6 +10,7 @@
     <script src="{{ asset('assets/js/lib/jquery-ui.min.js') }}"></script>
     <!-- Vector Map js -->
     <script src="{{ asset('assets/js/lib/jquery-jvectormap-2.0.5.min.js') }}"></script>
+
     <script src="{{ asset('assets/js/lib/jquery-jvectormap-world-mill-en.js') }}"></script>
     <!-- Popup js -->
     <script src="{{ asset('assets/js/lib/magnifc-popup.min.js') }}"></script>

@@ -15,9 +15,9 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CryptocurrencyController;
-
 // login
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FacultyController;
 
 Route::get('/yudicium', [YudiciumController::class, 'index']);
 
@@ -133,7 +133,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Dashboard routes
         Route::controller(DashboardController::class)->group(function () {
-            Route::get('/index-5', 'index5')->name('index5');           
+            Route::get('/index-5', 'index5')->name('index5');
             Route::get('/index-7', 'index7')->name('index7');
             Route::get('/index-8', 'index8')->name('index8');
             Route::get('/index-9', 'index9')->name('index9');
@@ -199,6 +199,7 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+// Route::get('/faculties', [FacultyController::class, 'index'])->name('faculties.index');
 
 // routes/web.php
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');

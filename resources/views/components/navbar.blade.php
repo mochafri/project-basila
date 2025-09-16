@@ -17,9 +17,7 @@
         </div>
         <div class="col-auto">
             <div class="flex flex-wrap items-center gap-3">
-                
 
-                
                 <!-- Message Dropdown Start  -->
                 <button data-dropdown-toggle="dropdownMessage"
                     class="has-indicator w-10 h-10  rounded-full flex justify-center items-center" type="button">
@@ -269,10 +267,14 @@
                 <div id="dropdownProfile" class="z-10 hidden bg-white  rounded-lg shadow-lg dropdown-menu-sm p-3">
                     <div
                         class="py-3 px-4 rounded-lg bg-primary-50 dark:bg-primary-600/25 mb-4 flex items-center justify-between gap-2">
-                        <div>
-                            <h6 class="text-lg text-neutral-900 font-semibold mb-0 normal-case">{{ session('username')}}
-                            </h6>
-                            <span class="text-neutral-500">Admin</span>
+                        <div class="flex items-center gap-3">
+                            {{-- <img src="{{ session('profilephoto') }}" alt="image"
+                                class="w-10 h-10 rounded-full"> --}}
+                            <div class="flex flex-col">
+                                <h6 class="text-lg text-neutral-900 font-semibold mb-0 normal-case">
+                                    {{ session('username') }}</h6>
+                                <span class="text-neutral-500">Admin</span>
+                            </div>
                         </div>
                         <button type="button" class="text-red-400 hover:text-danger-600 ">
                             <iconify-icon icon="radix-icons:cross-1" class="icon text-xl"></iconify-icon>
@@ -305,7 +307,6 @@
                                     </button>
                                 </form>
                             </li>
-
                         </ul>
                     </div>
                 </div>

@@ -18,9 +18,9 @@ class Index3Controller extends Controller
         $token = session('token');
 
         // ambil data fakultas dari API
-        $response = Http::withToken($token)
-            ->get('https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69');
-        $faculties = $response->successful() ? $response->json() : [];
+        // $response = Http::withToken($token)
+        //     ->get('https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69');
+        // $faculties = $response->successful() ? $response->json() : [];
 
         // ambil data mahasiswa
         $mahasiswa = Mahasiswa::all();
@@ -35,7 +35,7 @@ class Index3Controller extends Controller
 
 
         if ($routeName === 'index3' || $routeName === 'index4') {
-            return view("dashboard.$routeName", compact('faculties', 'mahasiswa', 'kode', 'postCount'));
+            return view("dashboard.$routeName", compact('mahasiswa', 'kode', 'postCount'));
         }
 
     }
