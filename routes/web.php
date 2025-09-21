@@ -195,11 +195,19 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::put('/yudicium/{id}/approve', [YudiciumController::class, 'approve'])->name('yudicium.approve');
+    // Route::put('/yudicium/{id}/approve', [YudiciumController::class, 'approve'])->name('yudicium.approve');
 
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/filterMhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
+    });
+
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/yudiciumApprove', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
+    });
 });
 
-// Route::get('/faculties', [FacultyController::class, 'index'])->name('faculties.index');
+Route::get('/faculties', [FacultyController::class, 'faculty'])->name('show.faculties');
+Route::get('/faculties/{id}', [FacultyController::class, 'prody'])->name('show.prody');
 
 // routes/web.php
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');
