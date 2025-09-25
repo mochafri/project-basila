@@ -34,7 +34,7 @@
                 </a>
 
             </li>
-            <!-- <li class="dropdown mb-4">
+            {{-- <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="fluent:signature-16-regular" class="menu-icon"></iconify-icon>
                     <span>Digital Signature</span>
@@ -57,8 +57,8 @@
                                 class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Edit</a>
                     </li>
                 </ul>
-            </li>
-            <li class="dropdown mb-4">
+            </li> --}}
+            {{-- <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="streamline-cyber:report-problem-warning-hexagon"
                         class="menu-icon"></iconify-icon>
@@ -86,9 +86,9 @@
                                 class="ri-circle-fill circle-icon text-success-600 w-auto"></i> Video Generator</a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
-            <li class="dropdown mb-4">
+            {{-- <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="icon-park-outline:good-two" class="menu-icon"></iconify-icon>
                     <span>Service Management</span>
@@ -99,7 +99,7 @@
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Wallet</a>
                     </li>
                 </ul>
-            </li> -->
+            </li> --}}
             <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="icons8:student" class="menu-icon"></iconify-icon>
@@ -118,10 +118,10 @@
                         <a href="{{ route('index4') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Approval Yudisium</a>
                     </li>
-                    <!-- <li>
+                    {{-- <li>
                         <a href="{{ route('index5') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Eligibilitas Yudisium</a>
-                    </li> -->
+                    </li> --}}
                     <li>
                         <a href="{{ route('index6') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Laporan</a>

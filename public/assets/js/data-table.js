@@ -20,7 +20,6 @@ if (document.getElementById("selection-table")) {
                             <input class='${props.classes.input}' placeholder='${props.labels.placeholder}' type='search' title='${props.labels.searchTitle}'>
                         </div>
                         ` : ""}
-                <nav class='${props.classes.pagination}'></nav>
                 </div>
                 <div class='${props.classes.top}'>
                     ${props.paging && props.perPageSelect ? `...` : ""}
