@@ -4,26 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class FacultyController extends Controller
 {
-    private $token ;
+    private $token;
 
     public function __construct()
     {
-        $this->token = env('KEY_TOKEN');
+        $this->token = env('GATEWAY_API_TOKEN');
     }
 
     public function faculty()
     {
         try {
-            $response = Http::withToken($this-> token )
+            $response = Http::withToken($this->token)
                 ->get('https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69');
 
             if ($response->successful()) {
                 $faculties = $response->json();
-                Log::info('Faculties data', $faculties);
+                \Log::info('Faculties data', $faculties);
 
                 return response()->json([
                     'status' => 'success',
@@ -35,7 +34,7 @@ class FacultyController extends Controller
                     'message' => 'Token tidak valid atau akses ditolak',
                 ], 403);
             } else {
-                Log::warning('API gagal', [
+                \Log::warning('API gagal', [
                     'status' => $response->status(),
                     'body' => $response->body(),
                 ]);
@@ -45,7 +44,7 @@ class FacultyController extends Controller
                 ], $response->status());
             }
         } catch (\Exception $e) {
-            Log::error('API Exception', [
+            \Log::error('API Exception', [
                 'message' => $e->getMessage(),
             ]);
             return response()->json([
@@ -58,7 +57,7 @@ class FacultyController extends Controller
     public function prody($id)
     {
         try {
-            $response = Http::withToken($this -> token)
+            $response = Http::withToken($this->token)
                 ->get("https://gateway.telkomuniversity.ac.id/b2ac79622cd60bce8dc5a1a7171bfc9c/{$id}");
 
             if ($response->successful() === 403) {

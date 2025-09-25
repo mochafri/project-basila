@@ -1,0 +1,174 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    const fakultasSelect = document.getElementById('fakultas');
+    const prodiSelect = document.getElementById('prodi');
+    const form = document.getElementById('filterForm');
+    const tbody = document.querySelector('#selection-table tbody');
+    const totalEligibleSpan = document.getElementById('totalEligible');
+    const totalTidakEligibleSpan = document.getElementById('totalTidakEligible');
+    const nomorYudisiumInput = document.getElementById('nomorYudisium');
+    const btnTetapkan = document.getElementById('btnTetapkan');
+
+    // 🔹 Load Fakultas
+    try {
+        const res = await fetch(routes.showFaculties);
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error('Token exp : ' + res.statusText);
+        }
+
+        if (data.status === "success" && Array.isArray(data.data)) {
+            data.data.forEach(fakultas => {
+                const opt = document.createElement('option');
+                opt.value = fakultas.facultyid;
+                opt.textContent = fakultas.facultyname;
+                fakultasSelect.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.error('Gagal memuat fakultas:', err);
+        fakultasSelect.innerHTML = '<option value="">Gagal memuat data fakultas</option>';
+    }
+
+    // 🔹 Load Prodi berdasarkan fakultas
+    fakultasSelect.addEventListener('change', async () => {
+        const facultyId = fakultasSelect.value;
+        prodiSelect.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
+        if (!facultyId) return;
+
+        try {
+            const res = await fetch(`/faculties/${facultyId}`);
+            const data = await res.json();
+            if (data.success === "success" && Array.isArray(data.data)) {
+                data.data.forEach(prodi => {
+                    const opt = document.createElement('option');
+                    opt.value = prodi.studyprogramid;
+                    opt.textContent = prodi.studyprogramname;
+                    prodiSelect.appendChild(opt);
+                });
+            }
+        } catch (err) {
+            console.error('Gagal memuat prodi:' + err);
+            prodiSelect.innerHTML = '<option value="">Gagal memuat data prodi</option>';
+        }
+    });
+
+    // 🔹 Submit filter mahasiswa
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const facultyId = fakultasSelect.value;
+        const prodiId = prodiSelect.value;
+
+        if (!facultyId || !prodiId) {
+            alert('Pilih Fakultas dan Program Studi terlebih dahulu');
+            return;
+        }
+
+        try {
+            const res = await fetch(routes.filterMhs, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    fakultas: facultyId,
+                    prodi: prodiId
+                })
+            });
+
+            const data = await res.json();
+
+            tbody.innerHTML = '';
+            let totalEligible = 0;
+            let totalTidakEligible = 0;
+
+            if (Array.isArray(data.mahasiswa) && data.mahasiswa.length > 0) {
+                data.mahasiswa.forEach((mhs, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${idx + 1}</td>
+                        <td>${mhs.nim}</td>
+                        <td>${mhs.name}</td>
+                        <td>${mhs.study_period} Semester</td>
+                        <td>${mhs.pass_sks}</td>
+                        <td>${mhs.ipk}</td>
+                        <td>${mhs.predikat}</td>
+                        <td>
+                            ${mhs.status === "Eligible"
+                            ? `<span class="bg-success-100 text-success-600 px-6 py-1.5 rounded-full font-medium text-sm">Eligible</span>`
+                            : `<span class="bg-danger-100 text-danger-600 px-6 py-1.5 rounded-full font-medium text-sm">Tidak Eligible</span>`
+                        }
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
+                                <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
+                            </a>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+
+                    if (mhs.status === "Eligible") totalEligible++;
+                    else totalTidakEligible++;
+                });
+            }
+
+            totalEligibleSpan.textContent = totalEligible;
+            totalTidakEligibleSpan.textContent = totalTidakEligible;
+
+            document.querySelector('input[name="fakultas"]').value = facultyId;
+            document.querySelector('input[name="prodi"]').value = prodiId;
+            document.querySelector('input[name="total_mahasiswa"]').value = totalEligible;
+
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    // 🔹 Tetapkan Yudisium
+    btnTetapkan.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            const facultyId = parseInt(fakultasSelect.value);
+            const prodiId = parseInt(prodiSelect.value);
+
+            const res = await fetch(routes.approveYudisium, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    fakultas: facultyId,
+                    prodi: prodiId
+                })
+            });
+
+            if (!res.ok) {
+                throw new Error("Ini error nya : " + res.statusText);
+            }
+
+            const data = await res.json();
+            nomorYudisiumInput.value = data.nomor_yudisium;
+
+            if (data.success) {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Yudisium berhasil ditetapkan.',
+                    icon: 'success'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: data.message || 'Terjadi kesalahan.',
+                    icon: 'error'
+                });
+            }
+        } catch (err) {
+            console.log("Error:" + err);
+        }
+    });
+});
