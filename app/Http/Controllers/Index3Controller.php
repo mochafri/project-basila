@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Models\Mahasiswa;
 use App\Models\Yudicium;
 use App\Models\Post;
 
@@ -40,41 +40,26 @@ class Index3Controller extends Controller
 
     }
 
-    public function generate(Request $request)
+    public function filterMhs(Request $request)
     {
-        $request->validate([
-            'fakultas' => 'required',
-            'semester' => 'required',
-            'prodi' => 'required',
-        ]);
+        try {
+            $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status')
+                ->where('fakultas_id', $request->fakultas)
+                ->where('prody_id', $request->prodi)
+                ->get();
 
-        // Ambil auto_increment terakhir
-        $last = Yudicium::max('id') ?? 0;
-        $nextNo = $last + 1;
-
-
-        // Map fakultas ke inisial
-        $map = [
-            'Informatika' => 'IF',
-            'Sistem Informasi' => 'SI',
-            'Teknik Elektro' => 'TE',
-            'Ilmu Terapan' => 'IT',
-            'Ekonomi dan Bisnis' => 'EB',
-            'Komunikasi dan Bisnis' => 'KB',
-        ];
-        $fakultasInitial = $map[$request->fakultas] ?? strtoupper(substr($request->fakultas, 0, 2));
-
-        // Ambil tahun awal dari semester (contoh: "Ganjil 2024/2025" → 2024)
-        preg_match('/\d{4}/', $request->semester, $match);
-        $tahun = $match[0] ?? date('Y');
-
-        // Susun nomor yudisium
-        $kode = $nextNo . '/AKD100' . '/' . $fakultasInitial . '-DEK/' . $tahun;
-
-        // Redirect balik ke index3 dengan membawa kode
-        return redirect()->route('index3')->with('kode', $kode);
+            return response()->json([
+                'success' => true,
+                'mahasiswa' => $mahasiswa
+            ]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
-
 
     /**
      * Simpan data mahasiswa baru
@@ -135,5 +120,4 @@ class Index3Controller extends Controller
 
         return redirect()->back()->with('success', 'Data mahasiswa berhasil dihapus');
     }
-
 }

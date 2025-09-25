@@ -29,12 +29,13 @@
                                         <label for="fakultas" class="text-neutral-800">Fakultas</label>
                                         <select name="fakultas" id="fakultas"
                                             class="text-neutral-800 uppercase w-[55%] form-select text-sm">
-                                            <option value="">-- Pilih Fakultas --</option>
+                                            {{-- <option value="">-- Pilih Fakultas --</option>
                                             @foreach ($faculties as $faculty)
                                                 <option value="{{ $faculty['facultyid'] }}">
                                                     {{ $faculty['facultyname'] }}
                                                 </option>
-                                            @endforeach
+                                            @endforeach --}}
+
                                         </select>
                                     </div>
 
@@ -214,6 +215,37 @@
                                                     <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
                                                 </a>
                                                 <script>
+                                                    document.addEventListener('DOMContentLoaded', () => {
+                                                        const fakultasSelect = document.getElementById('fakultas');
+
+                                                        fetch('{{ route('show.faculties') }}')
+                                                            .then(res => {
+                                                                if (!res.ok) throw new Error('Status: ' + res.status);
+                                                                return res.json();
+                                                            })
+                                                            .then(response => {
+                                                                console.log('Response fakultas:', response);
+
+                                                                if (response.status === 'success' && Array.isArray(response.data)) {
+                                                                    response.data.forEach(faculty => {
+                                                                        const opt = document.createElement('option');
+                                                                        opt.value = faculty.facultyid;
+                                                                        opt.textContent = faculty.facultyname;
+                                                                        fakultasSelect.appendChild(opt);
+                                                                    });
+                                                                } else {
+                                                                    console.warn('Data fakultas tidak sesuai format');
+                                                                }
+                                                            })
+                                                            .catch(err => {
+                                                                console.error('Gagal memuat fakultas:', err);
+                                                                const opt = document.createElement('option');
+                                                                opt.textContent = 'Data fakultas tidak tersedia';
+                                                                opt.disabled = true;
+                                                                fakultasSelect.appendChild(opt);
+                                                            });
+                                                    });
+
                                                     function confirmDelete() {
                                                         Swal.fire({
                                                             title: "Are you sure?",

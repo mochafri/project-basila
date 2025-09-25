@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('mhs_yudiciums', function (Blueprint $table) {
             $table->id();
             $table->string('nim')->unique();
+            $table->integer('fakultas_id');
+            $table->integer('prody_id');
             $table->string('name');
             $table->integer('study_period');
             $table->integer('pass_sks');

@@ -25,7 +25,7 @@
             <!-- Form -->
 
 
-            <form id = "form-yudisium" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
+            <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
                 @csrf
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
@@ -33,12 +33,6 @@
                     <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
                         <option value="">-- Pilih Fakultas --</option>
                     </select>
-                    {{-- <select name="fakultas" class="form-select w-full border rounded p-2">
-                        <option value="">-- Pilih Fakultas --</option>
-                        @foreach ($faculties as $faculty)
-                            <option value="{{ $faculty->facultyid }}">{{ $faculty->facultyname }}</option>
-                        @endforeach
-                    </select> --}}
                 </div>
 
                 <!-- Semester -->
@@ -61,7 +55,6 @@
                     </select>
                 </div>
 
-
                 <!-- Tombol -->
                 <div class="col-span-12 md:col-start-6 md:col-span-2 flex items-end">
                     <button class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded shadow w-full"
@@ -70,8 +63,6 @@
                     </button>
                 </div>
             </form>
-
-
         </div>
     </div>
     <!-- Daftar Mahasiswa -->
@@ -88,23 +79,13 @@
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                             <span class="text-sm text-neutral-950">Total Eligible</span>
-                            @foreach ($mahasiswa as $mhs)
-                                @if ($mhs->status == 'Eligible')
-                                    @php
-                                        $totalEligible = isset($totalEligible) ? $totalEligible + 1 : 1;
-                                    @endphp
-                                @elseif ($mhs->status == 'Tidak Eligible')
-                                    @php
-                                        $totalTidakEligible = isset($totalTidakEligible) ? $totalTidakEligible + 1 : 1;
-                                    @endphp
-                                @endif
-                            @endforeach
-                            <span class="font-semibold text-neutral-950">{{ $totalEligible ?? 0 }}</span>
+                            <span id="totalEligible" class="font-semibold text-neutral-950">0</span>
                         </div>
+
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-red-500 rounded-full"></div>
                             <span class="text-sm text-neutral-950">Total Tidak Eligible</span>
-                            <span class="font-semibold text-neutral-950">{{ $totalTidakEligible ?? 0 }}</span>
+                            <span id="totalTidakEligible" class="font-semibold text-neutral-950">0</span>
                         </div>
                     </div>
 
@@ -207,203 +188,235 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($mahasiswa as $mhs)
-                                    <tr>
-                                        <td>
-                                            <div class="form-check style-check flex items-center">
-                                                <input class="form-check-input" type="checkbox">
-                                                <label class="ms-2 form-check-label">
-                                                    {{ $loop->iteration }}
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td><a href="javascript:void(0)" class="text-primary-600">
-                                                {{ $mhs->nim }}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <div class="flex items-center">
-                                                <h6 class="text-base mb-0 ">
-                                                    {{ $mhs->name }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="flex items-center">
-                                                <h6>
-                                                    {{ $mhs->study_period }} semester
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <h6>
-                                                    {{ $mhs->pass_sks }}
-                                                </h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="flex items-center">
-                                                <h6>{{ $mhs->ipk }}</h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="flex items-center">
-                                                {{ $mhs->predikat }}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="flex items-center">
-                                                @if ($mhs->status == 'Eligible')
-                                                    <span
-                                                        class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Eligible</span>
-                                                @else
-                                                    <span
-                                                        class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Tidak
-                                                        Eligible</span>
-                                                @endif
 
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="javascript:void(0)"
-                                                class="w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center">
-                                                <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                            </a>
-                                            <a href="javascript:void(0)"
-                                                class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
-                                                <iconify-icon icon="lucide:edit"></iconify-icon>
-                                            </a>
-                                            <a href="javascript:void(0)"
-                                                class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
-                                                <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Hasil generate kode -->
         <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
-        <input type="text" 
-            id="nomor_yudisium"
-            name="nomor_yudisium" 
-            class="form-input border border-gray-300 rounded w-full md:w-1/3"
-            readonly />
-            <button id="btnTetapkan" class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto" onclick="confirmButton()">
+            <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
+                placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" />
+
+            <button type="buttton" id="btnTetapkan"
+                class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
                 Tetapkan Yudisium
             </button>
         </div>
+
+        // Debug lewat php
+
+        {{-- <form action="{{ route('yudicium.generate') }}" method="POST">
+            @csrf
+
+            <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
+                <input type="hidden" name="fakultas" value="{{ old('fakultas', $selectedFakultas ?? '') }}">
+                <input type="hidden" name="prodi" value="{{ old('prodi', $selectedProdi ?? '') }}">
+                <input type="hidden" name="total_mahasiswa" value="{{ $totalMahasiswa ?? 0 }}">
+
+                <input type="text" id="nomorYudisium"
+                    class="form-input border border-gray-300 rounded w-full md:w-1/3" placeholder="Nomor Yudisium"
+                    readonly value="{{ old('no_yudicium') }}" />
+
+                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
+                    Tetapkan Yudisium
+                </button>
+            </div>
+        </form>
+        @if (session('success'))
+            <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                {{ session('error') }}
+            </div>
+        @endif --}}
+        
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const fakultasSelect = document.getElementById('fakultas');
             const prodiSelect = document.getElementById('prodi');
+            const form = document.getElementById('filterForm');
+            const tbody = document.querySelector('#selection-table tbody');
+            const totalEligibleSpan = document.getElementById('totalEligible');
+            const totalTidakEligibleSpan = document.getElementById('totalTidakEligible');
+            const nomorYudisiumInput = document.getElementById('nomorYudisium');
+            const btnTetapkan = document.getElementById('btnTetapkan');
 
-            fetch('{{ route('api.faculties') }}')
-                .then(res => {
-                    if (!res.ok) throw new Error('Status: ' + res.status);
-                    return res.json();
-                })
-                .then(response => {
-                    console.log('Response fakultas:', response);
+            try {
+                const res = await fetch("{{ route('show.faculties') }}");
+                const data = await res.json();
 
-                    if (response.status === 'success' && Array.isArray(response.data)) {
-                        response.data.forEach(faculty => {
-                            const opt = document.createElement('option');
-                            opt.value = faculty.facultyid;
-                            opt.textContent = faculty.facultyname;
-                            fakultasSelect.appendChild(opt);
-                        });
-                    } else {
-                        console.warn('Data fakultas tidak sesuai format');
-                    }
-                })
-                .catch(err => {
-                    console.error('Gagal memuat fakultas:', err);
-                    const opt = document.createElement('option');
-                    opt.textContent = 'Data fakultas tidak tersedia';
-                    opt.disabled = true;
-                    fakultasSelect.appendChild(opt);
-                });
+                if (!res.ok) {
+                    throw new Error('Token exp : ' + res.statusText);
+                }
 
-            fakultasSelect.addEventListener('change', function() {
-                const facultyId = this.value;
-                prodiSelect.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
-
-                if (!facultyId) return;
-
-                fetch(`/api/faculties/${facultyId}`)
-                    .then(res => {
-                        if (!res.ok) throw new Error('Status: ' + res.status);
-                        return res.json();
-                    })
-                    .then(data => {
-                        console.log('Response prodi:', data);
-
-                        let prodis = [];
-                        if (data.Success === 'Success' && Array.isArray(data.Data)) {
-                            prodis = data.Data;
-                        }
-
-                        if (prodis.length > 0) {
-                            prodis.forEach(prody => {
-                                const opt = document.createElement('option');
-                                opt.value = prody.studyprogramid; 
-                                opt.textContent = prody.studyprogramname;
-                                prodiSelect.appendChild(opt);
-                            });
-                        } else {
-                            const opt = document.createElement('option');
-                            opt.textContent = 'Data prodi tidak tersedia';
-                            opt.disabled = true;
-                            prodiSelect.appendChild(opt);
-                        }
-                    })
-                .catch(err => {
-                    console.error('Gagal memuat program studi:', err);
-                    const opt = document.createElement('option');
-                    opt.textContent = 'Gagal memuat data prodi';
-                    opt.disabled = true;
-                    prodiSelect.appendChild(opt);
-                });
-            });
-        });
-
-        function confirmButton() {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "Anda yakin akan menetapkan yudisium?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Tetapkan!",
-                customClass: {
-                    confirmButton: "btn btn-primary",
-                    cancelButton: "bg-red-600 text-white"
-                },
-                buttonStyling: false,
-
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: "Success!",
-                        text: "Berhasil di tetapkan",
-                        icon: "success",
-                        confirmButton: "OK",
-                        customClass: {
-                            confirmButton: "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700",
-                        },
-                        buttonStyling: false
+                if (data.status === "success" && Array.isArray(data.data)) {
+                    data.data.forEach(fakultas => {
+                        const opt = document.createElement('option');
+                        opt.value = fakultas.facultyid;
+                        opt.textContent = fakultas.facultyname;
+                        fakultasSelect.appendChild(opt);
                     });
                 }
+            } catch (err) {
+                console.error('Gagal memuat fakultas:', err);
+                fakultasSelect.innerHTML = '<option value="">Gagal memuat data fakultas</option>';
+            }
+
+            fakultasSelect.addEventListener('change', async () => {
+                const facultyId = fakultasSelect.value;
+                prodiSelect.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
+                if (!facultyId) return;
+
+                try {
+                    const res = await fetch(`/faculties/${facultyId}`);
+                    const data = await res.json();
+                    if (data.success === "success" && Array.isArray(data.data)) {
+                        data.data.forEach(prodi => {
+                            const opt = document.createElement('option');
+                            opt.value = prodi.studyprogramid;
+                            opt.textContent = prodi.studyprogramname;
+                            prodiSelect.appendChild(opt);
+                        });
+                    }
+                } catch (err) {
+                    console.error('Gagal memuat prodi:' + err);
+                    prodiSelect.innerHTML = '<option value="">Gagal memuat data prodi</option>';
+                }
             });
-        }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const facultyId = fakultasSelect.value;
+                const prodiId = prodiSelect.value;
+
+                if (!facultyId || !prodiId) {
+                    alert('Pilih Fakultas dan Program Studi terlebih dahulu');
+                    return;
+                }
+
+                console.log("URL fetch:", "{{ route('filterMhs') }}");
+
+                try {
+                    const res = await fetch("{{ route('filterMhs') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector(
+                                'meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            fakultas: facultyId,
+                            prodi: prodiId
+                        })
+                    });
+
+                    console.log("Response:", res);
+
+                    const data = await res.json();
+                    console.log("Data:", data);
+
+                    tbody.innerHTML = '';
+                    let totalEligible = 0;
+                    let totalTidakEligible = 0;
+
+                    if (Array.isArray(data.mahasiswa) && data.mahasiswa.length > 0) {
+                        data.mahasiswa.forEach((mhs, idx) => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                            <td>${idx + 1}</td>
+                            <td>${mhs.nim}</td>
+                            <td>${mhs.name}</td>
+                            <td>${mhs.study_period} Semester</td>
+                            <td>${mhs.pass_sks}</td>
+                            <td>${mhs.ipk}</td>
+                            <td>${mhs.predikat}</td>
+                            <td>
+                                ${mhs.status === "Eligible"
+                                    ? `<span class="bg-success-100 text-success-600 px-6 py-1.5 rounded-full font-medium text-sm">Eligible</span>`
+                                    : `<span class="bg-danger-100 text-danger-600 px-6 py-1.5 rounded-full font-medium text-sm">Tidak Eligible</span>`
+                                }
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
+                                    <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
+                                </a>
+                            </td>
+                        `;
+                            tbody.appendChild(tr);
+
+                            if (mhs.status === "Eligible") totalEligible++;
+                            else totalTidakEligible++;
+                        });
+                    }
+
+                    totalEligibleSpan.textContent = totalEligible;
+                    totalTidakEligibleSpan.textContent = totalTidakEligible;
+
+                    document.querySelector('input[name="fakultas"]').value = facultyId;
+                    document.querySelector('input[name="prodi"]').value = prodiId;
+                    document.querySelector('input[name="total_mahasiswa"]').value = totalEligible;
+
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+            btnTetapkan.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    const url = "{{ route('yudicium.approve') }}";
+                    console.log("URL fetch:", url);
+
+                    const facultyId = parseInt(fakultasSelect.value);
+                    const prodiId = parseInt(prodiSelect.value);
+
+                    const res = await fetch("{{ route('yudicium.approve') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector(
+                                'meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            fakultas: facultyId,
+                            prodi: prodiId
+                        })
+                    });
+
+                    if (!res.ok) {
+                        throw new Error("Ini error nya : " + res.statusText);
+                    }
+
+                    console.log("Response : ", res);
+                    const data = await res.json();
+                    console.log("Data : ", data);
+
+                    nomorYudisiumInput.value = data.nomor_yudisium;
+
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Yudisium berhasil ditetapkan.',
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: data.message || 'Terjadi kesalahan.',
+                            icon: 'error'
+                        });
+                    }
+                } catch (err) {
+                    console.log("Error:" + err);
+                }
+            });
+        });
     </script>
 @endsection
