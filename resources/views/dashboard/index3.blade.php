@@ -28,7 +28,7 @@
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
-                    <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
+                    <select id="fakultas" name="fakultas" class="form-select w-full text-neutral-900 bg-gray-100">
                         <option value="">-- Pilih Fakultas --</option>
                     </select>
                 </div>
@@ -48,7 +48,7 @@
                 <!-- Program Studi -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Program Studi</label>
-                    <select id="prodi" name="prodi" class="form-select w-full border rounded p-2">
+                    <select id="prodi" name="prodi" class="form-select w-full text-neutral-900 bg-gray-100">
                         <option value="">-- Pilih Program Studi --</option>
                     </select>
                 </div>
@@ -203,7 +203,7 @@
             </button>
         </div>
 
-        // Debug lewat php
+        {{-- Debug lewat php --}}
 
         {{-- <form action="{{ route('yudicium.generate') }}" method="POST">
             @csrf
@@ -233,7 +233,7 @@
                 {{ session('error') }}
             </div>
         @endif --}}
-        
+
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
@@ -402,7 +402,12 @@
                         Swal.fire({
                             title: 'Berhasil!',
                             text: 'Yudisium berhasil ditetapkan.',
-                            icon: 'success'
+                            icon: 'success',
+                            confirmButtonText : 'OK',
+                            customClass: {
+                                confirmButton : 'bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-green-700'
+                            },
+                            buttonsStyling: false
                         });
                     } else {
                         Swal.fire({
