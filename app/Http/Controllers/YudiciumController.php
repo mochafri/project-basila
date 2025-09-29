@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa;
 use App\Models\Yudicium;
+use App\Models\MhsYud;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
-use Carbon\Carbon;
 
 class YudiciumController extends Controller
 {
@@ -54,29 +55,62 @@ class YudiciumController extends Controller
                 'prodi' => 'required|integer',
             ]);
 
-            $periode = Carbon::now()->format('d-m-y');
+            $lastId = Yudicium::max('id');
+            $nextId = $lastId ? $lastId + 1 : 1;
+            $mappingFaculties = [3 => 'IT', 4 => 'IK', 5 => 'TE', 6 => 'RI', 7 => 'IF', 8 => 'EB', 9 => 'KB', 10 => 'SBY', 11 => 'PWT'];
+            $fakultasInitial = $mappingFaculties[$validate['fakultas']] ?? 'XX';
+            $tahun = date('Y');
+            $nomorYudisium = $nextId . '/AKD100/' . $fakultasInitial . '/' . $tahun;
 
             $yudicium = Yudicium::create([
                 'fakultas' => $validate['fakultas'],
                 'prodi' => $validate['prodi'],
-                'periode' => $periode,
+                'periode' => $tahun,
+                'no_yudicium' => $nomorYudisium
             ]);
 
-            $mappingFaculties = [3 => 'IT', 4 => 'IK', 5 => 'TE', 6 => 'RI', 7 => 'IF', 8 => 'EB', 9 => 'KB', 10 => 'SBY', 11 => 'PWT'];
-            $fakultasInitial = $mappingFaculties[$validate['fakultas']] ?? 'XX';
-            $tahun = date('Y');
+            $listMahasiswa = Mahasiswa::where('fakultas_id', $validate['fakultas'])
+                ->where('prody_id', $validate['prodi'])
+                ->get();
 
-            $nomorYudisium = $yudicium->id . '/AKD100/' . $fakultasInitial . '-DEK/' . $tahun;
-            $yudicium->update(['no_yudicium' => $nomorYudisium]);
+            $eligibleMhs = [];
 
-            // return redirect()->back()->with('success', 'Yudicium berhasil ditetapkan');
+            foreach ($listMahasiswa as $mhs) {
+                $status = (new Mahasiswa)->hitungStatus($mhs->study_period, $mhs->pass_sks, $mhs->ipk);
 
-            return response()->json([
-                'success' => true,
-                'nomor_yudisium' => $nomorYudisium
-            ]);
+                if ($status === "Eligible") {
+                    $eligibleMhs[] = [
+                        'nim' => $mhs->nim,
+                        'fakultas_id' => $mhs->fakultas_id,
+                        'prody_id' => $mhs->prody_id,
+                        'name' => $mhs->name,
+                        'study_period' => $mhs->study_period,
+                        'pass_sks' => $mhs->pass_sks,
+                        'ipk' => $mhs->ipk,
+                        'status' => $mhs->status,
+                        'yudicium_id' => $yudicium->id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            if (!empty($eligibleMhs)) {
+                MhsYud::insert($eligibleMhs);
+            }
+
+            return redirect()->back()->with('success', 'Yudicium berhasil ditetapkan');
+
+            // return response()->json([
+            //     'success' => true,
+            //     'nomor_yudisium' => $nomorYudisium
+            // ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'line' => $e->getLine()
+            ], 500);
         }
     }
 }

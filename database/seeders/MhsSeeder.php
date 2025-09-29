@@ -30,6 +30,6 @@ class MhsSeeder extends Seeder
                 'updated_at'   => now(),
             ];
         }
-        DB::table('mhs_yudiciums')->insert($data);
+        DB::table('mahasiswa')->insert($data);
     }
 }

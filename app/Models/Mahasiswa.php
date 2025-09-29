@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Model
 {
-    protected $table = "mhs_yudiciums";
+    protected $table = "mahasiswa";
     protected $fillable = ["nim", "name", "study_period", "pass_sks", "ipk", "predikat", "status"];
 
     // Event listener untuk setiap penyimpanan data
@@ -31,7 +31,7 @@ class Mahasiswa extends Model
         return 'Fair (Cukup)';
     }
 
-    private function hitungStatus($studyPeriod, $sks, $ipk)
+    public function hitungStatus($studyPeriod, $sks, $ipk)
     {
         if ($studyPeriod <= 8 && $sks >= 110 && $ipk >= 3.01) {
             return 'Eligible';

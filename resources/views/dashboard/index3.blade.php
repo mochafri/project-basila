@@ -94,7 +94,6 @@
                                 <tr>
                                     <th scope="col" class="text-neutral-800 dark:text-white">
                                         <div class="form-check style-check flex items-center">
-                                            <input class="form-check-input" id="serial" type="checkbox">
                                             <label class="ms-2 text-neutral-950 form-check-label" for="serial">
                                                 No
                                             </label>
@@ -193,19 +192,16 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
-            <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
-                placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" />
-
+        {{-- <div class="flex flex-col md:flex-row items-center gap-4 ml-6">
             <button type="buttton" id="btnTetapkan"
                 class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
                 Tetapkan Yudisium
             </button>
-        </div>
+        </div> --}}
 
         {{-- Debug lewat php --}}
 
-        {{-- <form action="{{ route('yudicium.generate') }}" method="POST">
+        <form action="{{ route('yudicium.approve') }}" method="POST">
             @csrf
 
             <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
@@ -232,7 +228,7 @@
             <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
                 {{ session('error') }}
             </div>
-        @endif --}}
+        @endif
 
     </div>
     <script>
@@ -324,7 +320,7 @@
                     tbody.innerHTML = '';
                     let totalEligible = 0;
                     let totalTidakEligible = 0;
-
+                    
                     if (Array.isArray(data.mahasiswa) && data.mahasiswa.length > 0) {
                         data.mahasiswa.forEach((mhs, idx) => {
                             const tr = document.createElement('tr');
@@ -366,60 +362,65 @@
                     console.error(err);
                 }
             });
-            btnTetapkan.addEventListener('click', async (e) => {
-                e.preventDefault();
-                try {
-                    const url = "{{ route('yudicium.approve') }}";
-                    console.log("URL fetch:", url);
+            // btnTetapkan.addEventListener('click', async (e) => {
+            //     e.preventDefault();
+            //     try {
+            //         const url = "{{ route('yudicium.approve') }}";
+            //         console.log("URL fetch:", url);
 
-                    const facultyId = parseInt(fakultasSelect.value);
-                    const prodiId = parseInt(prodiSelect.value);
+            //         const facultyId = parseInt(fakultasSelect.value);
+            //         const prodiId = parseInt(prodiSelect.value);
 
-                    const res = await fetch("{{ route('yudicium.approve') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector(
-                                'meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify({
-                            fakultas: facultyId,
-                            prodi: prodiId
-                        })
-                    });
+            //         const res = await fetch("{{ route('yudicium.approve') }}", {
+            //             method: "POST",
+            //             headers: {
+            //                 "Content-Type": "application/json",
+            //                 "X-CSRF-TOKEN": document.querySelector(
+            //                     'meta[name="csrf-token"]').content
+            //             },
+            //             body: JSON.stringify({
+            //                 fakultas: facultyId,
+            //                 prodi: prodiId
+            //             })
+            //         });
 
-                    if (!res.ok) {
-                        throw new Error("Ini error nya : " + res.statusText);
-                    }
+            //         if (!res.ok) {
+            //             throw new Error("Ini error nya : " + res.statusText);
+            //         }
 
-                    console.log("Response : ", res);
-                    const data = await res.json();
-                    console.log("Data : ", data);
+            //         console.log("Response : ", res);
+            //         const data = await res.json();
+            //         console.log("Data : ", data);
 
-                    nomorYudisiumInput.value = data.nomor_yudisium;
+            //         nomorYudisiumInput.value = data.nomor_yudisium;
 
-                    if (data.success) {
-                        Swal.fire({
-                            title: 'Berhasil!',
-                            text: 'Yudisium berhasil ditetapkan.',
-                            icon: 'success',
-                            confirmButtonText : 'OK',
-                            customClass: {
-                                confirmButton : 'bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-green-700'
-                            },
-                            buttonsStyling: false
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Gagal!',
-                            text: data.message || 'Terjadi kesalahan.',
-                            icon: 'error'
-                        });
-                    }
-                } catch (err) {
-                    console.log("Error:" + err);
-                }
-            });
+            //         if (data.success) {
+            //             Swal.fire({
+            //                 title: 'Berhasil!',
+            //                 text: 'Yudisium berhasil ditetapkan.',
+            //                 icon: 'success',
+            //                 confirmButtonText: 'OK',
+            //                 customClass: {
+            //                     confirmButton: 'bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-green-700'
+            //                 },
+            //                 buttonsStyling: false
+            //             });
+            //         } else {
+            //             Swal.fire({
+            //                 title: 'Gagal!',
+            //                 text: data.message || 'Terjadi kesalahan.',
+            //                 icon: 'error'
+            //             });
+            //         }
+            //     } catch (err) {
+            //         console.error("Error:", err.message);
+            //         Swal.fire({
+            //             title: 'Gagal!',
+            //             text: err.message,
+            //             icon: 'error'
+            //         });
+            //     }
+            // });
         });
     </script>
 @endsection
