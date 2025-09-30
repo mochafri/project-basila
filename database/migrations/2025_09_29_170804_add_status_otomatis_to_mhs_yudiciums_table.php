@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('mhs_yudiciums', function (Blueprint $table) {
             $table->string('status_otomatis')->nullable()->after('predikat');
-            $table->text('alasan_status')->nullable()->change(); // kalau belum ada
+            $table->text('alasan_status')->nullable()->after('status_otomatis');
         });
     }
 
@@ -18,6 +18,7 @@ return new class extends Migration
     {
         Schema::table('mhs_yudiciums', function (Blueprint $table) {
             $table->dropColumn('status_otomatis');
+            $table->dropColumn('alasan_status');
         });
     }
 };
