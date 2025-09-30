@@ -146,6 +146,9 @@ Route::middleware(['auth'])->group(function () {
     ->name('yudisium.generateNomor');
 
 
+    // ubah status 
+    Route::post('/ubahStatus', [Index3Controller::class, 'ubahStatus'])->name('ubahStatus');
+
 
     // Forms
     Route::prefix('forms')->group(function () {

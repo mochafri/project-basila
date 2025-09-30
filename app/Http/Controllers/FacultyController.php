@@ -61,7 +61,7 @@ class FacultyController extends Controller
                 ->get("https://gateway.telkomuniversity.ac.id/b2ac79622cd60bce8dc5a1a7171bfc9c/{$id}");
 
             if ($response->successful() === 403) {
-                Log::info('Token tidak valid');
+                \Log::info('Token tidak valid');
                 return response()->json([
                     'success' => 'failed',
                     'message' => 'Token tidak valid'
@@ -75,7 +75,7 @@ class FacultyController extends Controller
                 'data' => $prody
             ], 200);
         } catch (\Exception $e) {
-            Log::error('API Exception', [
+            \Log::error('API Exception', [
                 'message' => $e->getMessage(),
             ]);
             return response()->json([
