@@ -3,64 +3,68 @@
 @php
     $title = 'Penetapan Yudisium';
     $subTitle = 'Daftar Yudisium';
-    $script = '<script src="' . asset('assets/js/data-table.js') . '"></script>';
+    $script = '
+        <script src="' . asset('assets/js/data-table.js') . '" defer></script>
+    ';
 @endphp
 
 @section('content')
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-    <h1 class="text-2xl font-bold text-neutral-400 mb-5 lg:col-span-12">Penetapan Yudisium</h1>
-    <!-- Filter dan Statistik -->
-    <div class="col-span-12 bg-white p-6 rounded-xl shadow-lg">
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <h1 class="text-2xl font-bold text-neutral-400 mb-5 lg:col-span-12">Penetapan Yudisium</h1>
+        <!-- Filter dan Statistik -->
+        <div class="col-span-12 bg-white p-6 rounded-xl shadow-lg">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
 
-            <!-- Filter -->
-            <div class="flex flex-col gap-3 w-full sm:w-auto">
-                <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                    <label for="semester" class="text-sm font-medium text-neutral-700 whitespace-nowrap">
-                        Semester
-                    </label>
-                    <select id="semester" name="semester" class="form-select text-neutral-950 w-full sm:w-48">
-                        <option>Ganjil 2024/2025</option>
-                        <option>Genap 2024/2025</option>
-                        <option>Ganjil 2025/2026</option>
-                        <option>Genap 2025/2026</option>
-                    </select>
-                </div>
-                <button
-                    class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-full sm:w-fit">
-                    Tampilkan
-                </button>
-            </div>
-
-            <!-- Statistik -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
-
-                <!-- Card Total Yudisium -->
-                <div class="bg-red-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
-                    <div class="w-16 h-16 bg-red-800 rounded-full flex items-center justify-center">
-                        <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
+                <!-- Filter -->
+                <div class="flex flex-col gap-3 w-full sm:w-auto">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <label for="semester" class="text-sm font-medium text-neutral-700 whitespace-nowrap">
+                            Semester
+                        </label>
+                        <select id="semester" name="semester" class="form-select text-neutral-950 w-full sm:w-48">
+                            <option>Ganjil 2024/2025</option>
+                            <option>Genap 2024/2025</option>
+                            <option>Ganjil 2025/2026</option>
+                            <option>Genap 2025/2026</option>
+                        </select>
                     </div>
-                    <div class="flex flex-col text-center sm:text-left">
-                        <h2 class="text-4xl text-white font-bold">{{$postCount}}</h2>
-                        <p class="text-sm">Total Yudisium</p>
-                    </div>
+                    <button
+                        class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-full sm:w-fit">
+                        Tampilkan
+                    </button>
                 </div>
 
-                <!-- Card Total Mahasiswa -->
-                <div class="bg-green-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
-                    <div class="w-16 h-16 bg-green-800 rounded-full flex items-center justify-center">
-                        <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
-                    </div>
-                    <div class="flex flex-col text-center sm:text-left">
-                        <h2 class="text-4xl text-white font-bold">214</h2>
-                        <p class="text-sm">Total Mahasiswa</p>
-                    </div>
-                </div>
+                <!-- Statistik -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
 
+                    <!-- Card Total Yudisium -->
+                    <div
+                        class="bg-red-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
+                        <div class="w-16 h-16 bg-red-800 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
+                        </div>
+                        <div class="flex flex-col text-center sm:text-left">
+                            <h2 class="text-4xl text-white font-bold">{{ $postCount }}</h2>
+                            <p class="text-sm">Total Yudisium</p>
+                        </div>
+                    </div>
+
+                    <!-- Card Total Mahasiswa -->
+                    <div
+                        class="bg-green-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
+                        <div class="w-16 h-16 bg-green-800 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
+                        </div>
+                        <div class="flex flex-col text-center sm:text-left">
+                            <h2 class="text-4xl text-white font-bold">214</h2>
+                            <p class="text-sm">Total Mahasiswa</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <div class="grid grid-cols-12 mt-6">
@@ -79,12 +83,11 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <table id="selection-table" class="border border-neutral-200  rounded-lg border-separate	">
+                    <table id="selection-table" class="border border-neutral-200  rounded-lg border-separate">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-neutral-800 dark:text-white">
                                     <div class="form-check style-check flex items-center">
-                                        <input class="form-check-input" id="serial" type="checkbox">
                                         <label class="ms-2 text-neutral-950 form-check-label" for="serial">
                                             No
                                         </label>
@@ -172,7 +175,7 @@
                                 <tr> <!-- class="{{ $loop->odd ? 'bg-blue-100' : 'bg-white' }}"  untuk membedakan background row-->
                                     <td>
                                         <div class="form-check style-check flex items-center">
-                                            <input class="form-check-input" type="checkbox">
+                                            {{-- <input class="form-check-input" type="checkbox"> --}}
                                             <label class="ms-2 form-check-label">
                                                 {{ $data->id }}
                                             </label>
@@ -207,7 +210,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @if($data->approval_status === 'approved')
+                                        @if ($data->approval_status === 'approved')
                                             <div class="flex items-center">
                                                 <span
                                                     class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Approved</span>
@@ -215,7 +218,8 @@
                                         @else
                                             <div class="flex items-center">
                                                 <span
-                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Not Approved</span>
+                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Not
+                                                    Approved</span>
                                             </div>
                                         @endif
                                     </td>
@@ -226,10 +230,11 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <a href="javascript:void(0)"
-                                            class="w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center">
+                                        <button
+                                            class="btn-popup w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center"
+                                            data-id="1">
                                             <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                        </a>
+                                        </button>
                                         <a href="javascript:void(0)"
                                             class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
                                             <iconify-icon icon="lucide:edit"></iconify-icon>
@@ -241,19 +246,132 @@
                                     </td>
                                 </tr>
                             @endforeach
-
                         </tbody>
                     </table>
+
+                    {{-- PopUp table --}}
+
+                    <div id="popup"
+                        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div
+                            class="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-6xl max-h-[90%] overflow-y-auto relative text-center">
+                            <h2 class="text-2xl font-bold mb-4">Detail Mahasiswa</h2>
+                            <button id="popup-close" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
+                                <iconify-icon icon="mdi:close" class="text-2xl"></iconify-icon>
+                            </button>
+
+                            <table id="popup-table" class="border border-neutral-200  rounded-lg border-separate">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-neutral-800 dark:text-white">
+                                            <div class="form-check style-check flex items-center">
+                                                <label class="ms-2 text-neutral-950 form-check-label" for="serial">
+                                                    No
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="text-neutral-950">
+                                            <div class="flex items-center gap-2">
+                                                NIM
+                                                <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="text-neutral-950">
+                                            <div class="flex items-center gap-2">
+                                                Nama
+                                                <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="text-neutral-950">
+                                            <div class="flex items-center gap-2">
+                                                Masa Studi
+                                                <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="text-neutral-950">
+                                            <div class="flex items-center gap-2">
+                                                SKS Lulus
+                                                <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="text-neutral-950">
+                                            <div class="flex items-center gap-2">
+                                                IPK
+                                                <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="text-neutral-950">
+                                            <div class="flex items-center gap-2">
+                                                Predikat
+                                                <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="text-neutral-950">
+                                            <div class="flex items-center gap-2">
+                                                Status
+                                                <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                </svg>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="popup-body">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        {{-- @foreach ($datas as $data)
+        <form action="{{ route('yudicium.approve', $data->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <button type="submit" class="btn bg-red-500 text-white btn-sm mt-5">Approve</button>
+        </form>
+    @endforeach --}}
     </div>
-    @foreach ($datas as $data)
-    <form action="{{ route('yudicium.approve', $data->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <button type="submit" class="btn bg-red-500 text-white btn-sm mt-5">Approve</button>
-    </form>
-@endforeach
-
+    <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
 @endsection

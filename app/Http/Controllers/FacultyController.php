@@ -68,6 +68,10 @@ class FacultyController extends Controller
                 ], 403);
             }
 
+            if(!$id){
+                return ;
+            }
+
             $prody = $response->json();
 
             return response()->json([

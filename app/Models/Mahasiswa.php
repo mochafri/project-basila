@@ -34,7 +34,7 @@ class Mahasiswa extends Model
         return 'Fair (Cukup)';
     }
 
-    private function hitungStatus($studyPeriod, $sks, $ipk)
+    public function hitungStatus($studyPeriod, $sks, $ipk)
     {
         if ($studyPeriod <= 8 && $sks >= 110 && $ipk >= 3.01) {
             return 'Eligible';

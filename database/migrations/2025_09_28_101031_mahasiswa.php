@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mhs_yudiciums', function (Blueprint $table) {
+        Schema::create('mahasiswa', function (Blueprint $table) {
             $table->id();
-            $table->string('nim');
+            $table->string('nim')->unique();
             $table->integer('fakultas_id');
             $table->integer('prody_id');
             $table->string('name');
@@ -22,7 +22,6 @@ return new class extends Migration
             $table->decimal('ipk', 3, 2);
             $table->string('predikat')->nullable();
             $table->string('status')->nullable();
-            $table->foreignId('yudicium_id')->constrained('yudiciums', 'id');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mhs_yudiciums');
+        //
     }
 };
