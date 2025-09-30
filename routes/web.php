@@ -201,6 +201,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/filterMhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
     });
 
+    Route::get('/yudicium/{id}/mahasiswa', [YudiciumController::class, 'getMahasiswa'])
+        ->name('yudicium.mahasiswa');
+
     Route::middleware(['auth'])->group(function () {
         Route::post('/yudiciumApprove', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
     });

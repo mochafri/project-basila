@@ -26,7 +26,6 @@ class YudiciumController extends Controller
             ]);
         } elseif ($routeName === 'index2') {
             $datas = DB::table('yudiciums')
-                ->whereNotNull('no_yudicium')
                 ->get();
 
             return view("dashboard.$routeName", [
@@ -112,5 +111,21 @@ class YudiciumController extends Controller
                 'line' => $e->getLine()
             ], 500);
         }
+    }
+
+    public function getMahasiswa($id)
+    {
+        $mahasiswa = MhsYud::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status')
+            ->where('yudicium_id', $id)
+            ->get();
+
+        foreach($mahasiswa as $mhs){
+            $mhs->predikat = (new MhsYud)->hitungPredikat($mhs->ipk);
+        }
+
+        return response()->json([
+            'success' => true,
+            'mahasiswa' => $mahasiswa
+        ]);
     }
 }

@@ -1,64 +1,34 @@
-if (document.getElementById("selection-table")) {
+// file: public/assets/js/data-tables.js
+document.addEventListener('DOMContentLoaded', function () {
 
-    let multiSelect = false;
-    let rowNavigation = false;
-    let table = null;
+    function initTable(tableId) {
+        const tableEl = document.getElementById(tableId);
+        if (!tableEl) return null;
 
-    const resetTable = function () {
-        if (table) {
-            table.destroy();
-        }
-
-        const options = {
+        const table = new simpleDatatables.DataTable(`#${tableId}`, {
             searchable: true,
             perPageSelect: false,
-
-            template: (props) => `
-            <div class='${props.classes.left}'>
-                    ${props.searchable ? `
-                        <div class='${props.classes.search}'>
-                            <input class='${props.classes.input}' placeholder='${props.labels.placeholder}' type='search' title='${props.labels.searchTitle}'>
-                        </div>
-                        ` : ""}
-                </div>
-                <div class='${props.classes.top}'>
-                    ${props.paging && props.perPageSelect ? `...` : ""}
-                </div>
-                <div class='${props.classes.container}'></div>
-            ${props.paging ? `<div class='${props.classes.info} mt-5'></div>` : ""}
-            `,
-
             columns: [
-                { select: [0, 6], sortable: false } // Disable sorting pada kolom No & Status
+                { select: [0, 6], sortable: false } // Kolom No & Status tidak sortable
             ],
-            rowRender: (row, tr, _index) => {
-                if (!tr.attributes) {
-                    tr.attributes = {};
-                }
-                if (!tr.attributes.class) {
-                    tr.attributes.class = "";
-                }
+            rowRender: (row, tr) => {
+                if (!tr.attributes) tr.attributes = {};
+                if (!tr.attributes.class) tr.attributes.class = "";
+
                 if (row.selected) {
                     tr.attributes.class += " selected";
                 } else {
                     tr.attributes.class = tr.attributes.class.replace(" selected", "");
                 }
+
                 return tr;
             }
-        };
-        if (rowNavigation) {
-            options.rowNavigation = true;
-            options.tabIndex = 1;
-        }
-
-        table = new simpleDatatables.DataTable("#selection-table", options);
-
-        // Mark all rows as unselected
-        table.data.data.forEach(data => {
-            data.selected = false;
         });
 
-        // Klik checkbox per row
+        // Mark all rows as unselected
+        table.data.data.forEach(data => data.selected = false);
+
+        // Klik per row
         table.on("datatable.selectrow", (rowIndex, event) => {
             event.preventDefault();
             const row = table.data.data[rowIndex];
@@ -66,43 +36,21 @@ if (document.getElementById("selection-table")) {
             table.update();
         });
 
-        // --- Tambahin fungsi select all ---
-        const headerCheckbox = document.querySelector("#selection-table thead input[type='checkbox']");
-        if (headerCheckbox) {
-            headerCheckbox.addEventListener("change", function () {
-                const checked = this.checked;
-
-                // Set semua row selected sesuai kondisi header
-                table.data.data.forEach(data => {
-                    data.selected = checked;
-                });
-
-                // Update semua checkbox row
-                document.querySelectorAll("#selection-table tbody input[type='checkbox']").forEach(cb => {
-                    cb.checked = checked;
-                });
-
-                table.update();
-            });
-        }
-    };
-
-    // Row navigation makes no sense on mobile
-    const isMobile = window.matchMedia("(any-pointer:coarse)").matches;
-    if (isMobile) {
-        rowNavigation = false;
+        return table;
     }
 
-    resetTable();
+    const selectionTable = initTable("selection-table");
 
+    const popupTable = initTable("popup-table");
+
+    // Checkbox master untuk selection-table
     const masterCheckBox = document.getElementById("serial");
-    if(masterCheckBox){
+    if (masterCheckBox && selectionTable) {
         masterCheckBox.addEventListener("change", () => {
-            const checked = document.querySelectorAll("#selection-table input[type=checkbox]");
-            checked.forEach(ele => {
-                ele.checked = masterCheckBox.checked;
-            })
+            const checked = masterCheckBox.checked;
+            selectionTable.data.data.forEach(row => row.selected = checked);
+            document.querySelectorAll("#selection-table tbody input[type=checkbox]").forEach(cb => cb.checked = checked);
+            selectionTable.update();
         });
     }
-}
-
+});

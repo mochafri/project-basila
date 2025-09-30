@@ -24,10 +24,12 @@ class Mahasiswa extends Model
 
     private function hitungPredikat($ipk)
     {
-        if ($ipk >= 3.51)
+        if ($ipk >= 3.51){
             return 'Very Good (Sangat Memuaskan)';
-        if ($ipk >= 3.01)
+        }
+        if ($ipk >= 3.01){
             return 'Good (Memuaskan)';
+        }
         return 'Fair (Cukup)';
     }
 

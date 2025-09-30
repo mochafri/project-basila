@@ -23,4 +23,15 @@ class MhsYud extends Model
         'status',
         'yudicium_id'
     ];
+
+    public function hitungPredikat($ipk)
+    {
+        if ($ipk >= 3.51){
+            return 'Very Good (Sangat Memuaskan)';
+        }
+        if ($ipk >= 3.01){
+            return 'Good (Memuaskan)';
+        }
+        return 'Fair (Cukup)';
+    }
 }
