@@ -76,6 +76,7 @@ class YudiciumController extends Controller
 
             foreach ($listMahasiswa as $mhs) {
                 $status = (new Mahasiswa)->hitungStatus($mhs->study_period, $mhs->pass_sks, $mhs->ipk);
+                $prediket = (new Mahasiswa)->hitungPredikat( $mhs->ipk);
 
                 if ($status === "Eligible") {
                     $eligibleMhs[] = [
@@ -86,7 +87,8 @@ class YudiciumController extends Controller
                         'study_period' => $mhs->study_period,
                         'pass_sks' => $mhs->pass_sks,
                         'ipk' => $mhs->ipk,
-                        'status' => $mhs->status,
+                        'status' => $status,
+                        'predikat' => $prediket,
                         'yudicium_id' => $yudicium->id,
                         'created_at' => now(),
                         'updated_at' => now(),
@@ -121,6 +123,7 @@ class YudiciumController extends Controller
 
         foreach($mahasiswa as $mhs){
             $mhs->predikat = (new MhsYud)->hitungPredikat($mhs->ipk);
+            $mhs->status = (new Mahasiswa)->hitungStatus($mhs->study_period, $mhs->pass_sks, $mhs->ipk);
         }
 
         return response()->json([

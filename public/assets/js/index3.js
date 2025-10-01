@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (Array.isArray(data.mahasiswa) && data.mahasiswa.length > 0) {
                 data.mahasiswa.forEach((mhs, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
                 <td>${idx + 1}</td>
                 <td>${mhs.nim}</td>
                 <td>${mhs.name}</td>
@@ -97,21 +97,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${mhs.ipk}</td>
                 <td>${mhs.predikat}</td>
                 <td>
-                    <span 
+                    <span
                         class="statusSpan ${mhs.status === "Eligible"
                             ? "bg-success-100 text-success-600"
                             : "bg-danger-100 text-danger-600"
                         } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
-                        data-nim="${mhs.nim}" 
+                        data-nim="${mhs.nim}"
                         data-status="${mhs.status}">
                         ${mhs.status}
                     </span>
                 </td>
                 <td>
-                    ${mhs.alasan_status 
-                        ? `<span class="text-xs text-gray-500">${mhs.alasan_status}</span>` 
-                        : '-'
-                    }
+                    ${mhs.alasan_status
+                            ? `<span class="text-xs text-gray-500">${mhs.alasan_status}</span>`
+                            : '-'
+                        }
                 </td>
                 <td>
                     <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
@@ -184,53 +184,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Event delegation: klik span status
-                    tbody.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('statusSpan')) {
-                            document.getElementById('modalNim').value = e.target.dataset.nim;
-                            document.getElementById('modalStatus').value = e.target.dataset.status;
-                            document.getElementById('modalAlasan').value = '';
-                            document.getElementById('statusModal').classList.remove('hidden');
-                        }
-                    });
-                    // Tutup modal
-                    document.getElementById('closeModal').addEventListener('click', () => {
-                        document.getElementById('statusModal').classList.add('hidden');
-                    });
+    tbody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('statusSpan')) {
+            document.getElementById('modalNim').value = e.target.dataset.nim;
+            document.getElementById('modalStatus').value = e.target.dataset.status;
+            document.getElementById('modalAlasan').value = '';
+            document.getElementById('statusModal').classList.remove('hidden');
+        }
+    });
+    // Tutup modal
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('statusModal').classList.add('hidden');
+    });
 
-                    // Submit form modal
-                    document.getElementById('statusForm').addEventListener('submit', async (e) => {
-                        e.preventDefault();
+    // Submit form modal
+    document.getElementById('statusForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-                        const nim = document.getElementById('modalNim').value;
-                        const status = document.getElementById('modalStatus').value;
-                        const alasan = document.getElementById('modalAlasan').value;
+        const nim = document.getElementById('modalNim').value;
+        const status = document.getElementById('modalStatus').value;
+        const alasan = document.getElementById('modalAlasan').value;
 
-                        try {
-                            const res = await fetch(routes.ubahStatus, { // ganti sesuai route update status
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                                },
-                                body: JSON.stringify({ nim, status, alasan })
-                            });
+        try {
+            const res = await fetch(routes.ubahStatus, { // ganti sesuai route update status
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ nim, status, alasan })
+            });
 
-                            const data = await res.json();
-                            if (data.success) {
-                                Swal.fire("Berhasil!", "Status berhasil diubah", "success");
-                                document.getElementById('statusModal').classList.add('hidden');
-                                form.dispatchEvent(new Event("submit")); // reload data tabel
-                            } else {
-                                Swal.fire("Gagal!", data.message || "Terjadi kesalahan", "error");
-                            }
-                        } catch (err) {
-                            console.error(err);
-                            Swal.fire("Error!", "Tidak bisa mengubah status", "error");
-                        }
-                    });
-                    // Tutup modal
-                    document.getElementById('closeModal').addEventListener('click', () => {
-                        document.getElementById('statusModal').classList.add('hidden');
-                    });
-
+            const data = await res.json();
+            if (data.success) {
+                Swal.fire("Berhasil!", "Status berhasil diubah", "success");
+                document.getElementById('statusModal').classList.add('hidden');
+                form.dispatchEvent(new Event("submit")); // reload data tabel
+            } else {
+                Swal.fire("Gagal!", data.message || "Terjadi kesalahan", "error");
+            }
+        } catch (err) {
+            console.error(err);
+            Swal.fire("Error!", "Tidak bisa mengubah status", "error");
+        }
+    });
+    // Tutup modal
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('statusModal').classList.add('hidden');
+    });
 });

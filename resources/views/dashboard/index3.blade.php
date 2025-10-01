@@ -5,6 +5,7 @@ $title = 'Penetapan Yudisium';
 $subTitle = 'Tambah';
 $script = '
 <script src="' . asset('assets/js/data-table.js') . '"></script>
+<script src="' . asset('assets/js/index3.js') . '"></script>
 ';
 @endphp
 
@@ -206,7 +207,7 @@ $script = '
             <form id="statusForm">
                 @csrf
                 <input type="hidden" id="modalNim" name="nim">
-                
+
                 <!-- Pilih Status -->
                 <label class="block text-sm font-medium text-gray-700 mb-1">Status Baru</label>
                 <select id="modalStatus" name="status" class="form-select w-full border rounded p-2 mb-4" required>
@@ -276,173 +277,4 @@ $script = '
         ubahStatus: "{{ route('ubahStatus') }}"
     };
 </script>
-<script src="{{ asset('assets/js/index3.js') }}"></script>
-
-<script>
-            fakultasSelect.addEventListener('change', async () => {
-                const facultyId = fakultasSelect.value;
-                prodiSelect.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
-                if (!facultyId) return;
-
-                try {
-                    const res = await fetch(`/faculties/${facultyId}`);
-                    const data = await res.json();
-                    if (data.success === "success" && Array.isArray(data.data)) {
-                        data.data.forEach(prodi => {
-                            const opt = document.createElement('option');
-                            opt.value = prodi.studyprogramid;
-                            opt.textContent = prodi.studyprogramname;
-                            prodiSelect.appendChild(opt);
-                        });
-                    }
-                } catch (err) {
-                    console.error('Gagal memuat prodi:' + err);
-                    prodiSelect.innerHTML = '<option value="">Gagal memuat data prodi</option>';
-                }
-            });
-
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const facultyId = fakultasSelect.value;
-                const prodiId = prodiSelect.value;
-
-                if (!facultyId || !prodiId) {
-                    alert('Pilih Fakultas dan Program Studi terlebih dahulu');
-                    return;
-                }
-
-                console.log("URL fetch:", "{{ route('filterMhs') }}");
-
-                try {
-                    const res = await fetch("{{ route('filterMhs') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector(
-                                'meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify({
-                            fakultas: facultyId,
-                            prodi: prodiId
-                        })
-                    });
-
-                    console.log("Response:", res);
-
-                    const data = await res.json();
-                    console.log("Data:", data);
-
-                    tbody.innerHTML = '';
-                    let totalEligible = 0;
-                    let totalTidakEligible = 0;
-
-                    if (Array.isArray(data.mahasiswa) && data.mahasiswa.length > 0) {
-                        data.mahasiswa.forEach((mhs, idx) => {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td>${idx + 1}</td>
-                                <td>${mhs.nim}</td>
-                                <td>${mhs.name}</td>
-                                <td>${mhs.study_period} Semester</td>
-                                <td>${mhs.pass_sks}</td>
-                                <td>${mhs.ipk}</td>
-                                <td>${mhs.predikat}</td>
-                                <td>
-                                    ${mhs.status === "Eligible"
-                                        ? `<span class="bg-success-100 text-success-600 px-6 py-1.5 rounded-full font-medium text-sm">Eligible</span>`
-                                        : `<span class="bg-danger-100 text-danger-600 px-6 py-1.5 rounded-full font-medium text-sm">Tidak Eligible</span>`
-                                    }
-                                </td>
-                                <td>
-                                    <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
-                                        <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                    </a>
-                                </td>
-                        `;
-                            tbody.appendChild(tr);
-
-                            if (mhs.status === "Eligible") totalEligible++;
-                            else totalTidakEligible++;
-                        });
-                    }
-
-                    totalEligibleSpan.textContent = totalEligible;
-                    totalTidakEligibleSpan.textContent = totalTidakEligible;
-
-                    document.querySelector('input[name="fakultas"]').value = facultyId;
-                    document.querySelector('input[name="prodi"]').value = prodiId;
-                    document.querySelector('input[name="total_mahasiswa"]').value = totalEligible;
-
-                } catch (err) {
-                    console.error(err);
-                }
-            });
-
-            try {
-
-            } catch (err) {
-                console.error("Error:", err.message);
-            }
-
-            // btnTetapkan.addEventListener('click', async (e) => {
-            //     e.preventDefault();
-            //     try {
-            //         const url = "{{ route('yudicium.approve') }}";
-            //         console.log("URL fetch:", url);
-
-            //         const facultyId = parseInt(fakultasSelect.value);
-            //         const prodiId = parseInt(prodiSelect.value);
-
-            //         const res = await fetch("{{ route('yudicium.approve') }}", {
-            //             method: "POST",
-            //             headers: {
-            //                 "Content-Type": "application/json",
-            //                 "X-CSRF-TOKEN": document.querySelector(
-            //                     'meta[name="csrf-token"]').content
-            //             },
-            //             body: JSON.stringify({
-            //                 fakultas: facultyId,
-            //                 prodi: prodiId
-            //             })
-            //         });
-
-            //         if (!res.ok) {
-            //             throw new Error("Ini error nya : " + res.statusText);
-            //         }
-
-            //         console.log("Response : ", res);
-            //         const data = await res.json();
-            //         console.log("Data : ", data);
-
-            //         nomorYudisiumInput.value = data.nomor_yudisium;
-
-            //         if (data.success) {
-            //             Swal.fire({
-            //                 title: 'Berhasil!',
-            //                 text: 'Yudisium berhasil ditetapkan.',
-            //                 icon: 'success',
-            //                 confirmButtonText: 'OK',
-            //                 customClass: {
-            //                     confirmButton: 'bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-green-700'
-            //                 },
-            //                 buttonsStyling: false
-            //             });
-            //         } else {
-            //             Swal.fire({
-            //                 title: 'Gagal!',
-            //                 text: data.message || 'Terjadi kesalahan.',
-            //                 icon: 'error'
-            //             });
-            //         }
-            //     } catch (err) {
-            //         console.error("Error:", err.message);
-            //         Swal.fire({
-            //             title: 'Gagal!',
-            //             text: err.message,
-            //             icon: 'error'
-            //         });
-            //     }
-            // });
-    </script>
 @endsection

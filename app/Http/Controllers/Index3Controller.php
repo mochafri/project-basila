@@ -43,7 +43,7 @@ class Index3Controller extends Controller
     public function filterMhs(Request $request)
     {
         try {
-            $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status','alasan_status')
+            $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat','status','alasan_status')
                 ->where('fakultas_id', $request->fakultas)
                 ->where('prody_id', $request->prodi)
                 ->get();
@@ -145,7 +145,7 @@ class Index3Controller extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Status berhasil diperbarui'
-                
+
             ]);
         } catch (\Exception $e) {
             return response()->json([

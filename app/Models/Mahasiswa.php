@@ -6,19 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Model
 {
-    protected $table = "mhs_yudiciums";
+    protected $table = "mahasiswa";
     protected $fillable = [
-        "nim", "name", "study_period", "pass_sks", "ipk", 
+        "nim", "name", "study_period", "pass_sks", "ipk",
         "predikat", "status", "alasan_status", "status_otomatis"
     ];
 
     protected static function booted()
     {
         static::saving(function ($mahasiswa) {
-            // Predikat selalu dihitung otomatis
+
             $mahasiswa->predikat = $mahasiswa->hitungPredikat($mahasiswa->ipk);
 
-            // Status otomatis selalu dihitung setiap kali save
             $mahasiswa->status_otomatis = $mahasiswa->hitungStatus(
                 $mahasiswa->study_period,
                 $mahasiswa->pass_sks,
@@ -29,8 +28,12 @@ class Mahasiswa extends Model
 
     private function hitungPredikat($ipk)
     {
-        if ($ipk >= 3.51) return 'Very Good (Sangat Memuaskan)';
-        if ($ipk >= 3.01) return 'Good (Memuaskan)';
+        if ($ipk >= 3.51){
+            return 'Very Good (Sangat Memuaskan)';
+        }
+        if ($ipk >= 3.01){
+            return 'Good (Memuaskan)';
+        }
         return 'Fair (Cukup)';
     }
 
