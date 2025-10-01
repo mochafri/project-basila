@@ -142,11 +142,11 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // generate nomor
-   Route::post('/yudisium/generate-nomor', [App\Http\Controllers\NoYudiciumController::class, 'ajaxGenerateNomor'])
-    ->name('yudisium.generateNomor');
+    Route::post('/yudisium/generate-nomor', [App\Http\Controllers\NoYudiciumController::class, 'ajaxGenerateNomor'])
+        ->name('yudisium.generateNomor');
 
 
-    // ubah status 
+    // ubah status
     Route::post('/ubahStatus', [Index3Controller::class, 'ubahStatus'])->name('ubahStatus');
 
 
@@ -212,12 +212,18 @@ Route::middleware(['auth'])->group(function () {
         ->name('yudicium.mahasiswa');
 
     Route::middleware(['auth'])->group(function () {
+        Route::get('/faculties', [FacultyController::class, 'faculty'])->name('show.faculties');
+    });
+    
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/faculties/{id}', [FacultyController::class, 'prody'])->name('show.prody');
+    });
+
+    Route::middleware(['auth'])->group(function () {
         Route::post('/yudiciumApprove', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
     });
 });
 
-Route::get('/faculties', [FacultyController::class, 'faculty'])->name('show.faculties');
-Route::get('/faculties/{id}', [FacultyController::class, 'prody'])->name('show.prody');
 
 // routes/web.php
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');

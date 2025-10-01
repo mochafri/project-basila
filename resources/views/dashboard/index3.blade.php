@@ -98,7 +98,6 @@ $script = '
                             <tr>
                                 <th scope="col" class="text-neutral-800 dark:text-white">
                                     <div class="form-check style-check flex items-center">
-                                        <input class="form-check-input" id="serial" type="checkbox">
                                         <label class="ms-2 text-neutral-950 form-check-label" for="serial">
                                             No
                                         </label>

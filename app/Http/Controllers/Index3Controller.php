@@ -109,7 +109,6 @@ class Index3Controller extends Controller
 
         return redirect()->back()->with('success', 'Data mahasiswa berhasil diperbarui');
     }
-
     /**
      * Hapus data mahasiswa
      */
@@ -120,6 +119,7 @@ class Index3Controller extends Controller
 
         return redirect()->back()->with('success', 'Data mahasiswa berhasil dihapus');
     }
+
     public function ubahStatus(Request $request)
     {
     $request->validate([
@@ -145,7 +145,7 @@ class Index3Controller extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Status berhasil diperbarui'
-                
+
             ]);
         } catch (\Exception $e) {
             return response()->json([

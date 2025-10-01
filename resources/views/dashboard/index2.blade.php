@@ -200,13 +200,13 @@
                                     <td>
                                         <div>
                                             <h6>
-                                                {{ $data->fakultas }}
+                                                {{ $data->facultyname }}
                                             </h6>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="flex items-center">
-                                            <h6>{{ $data->prodi }}</h6>
+                                            <h6>{{ $data->prodyname }}</h6>
                                         </div>
                                     </td>
                                     <td>

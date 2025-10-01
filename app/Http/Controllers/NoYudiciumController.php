@@ -35,61 +35,61 @@ class NoYudiciumController extends Controller
     }
 
     public function index(Request $request)
-{
-    $faculty = $request->faculty; // dari dropdown
-    $prodi   = $request->prodi;
-    $semester = $request->semester;
-    $tahun = date('Y');
+    {
+        $faculty = $request->faculty; // dari dropdown
+        $prodi = $request->prodi;
+        $semester = $request->semester;
+        $tahun = date('Y');
 
-    // Ambil daftar mahasiswa eligible (sesuai logic kamu)
-    $mahasiswa = []; // query atau API
+        // Ambil daftar mahasiswa eligible (sesuai logic kamu)
+        $mahasiswa = []; // query atau API
 
-    // Cari nomor terakhir di DB
-    $lastYudisium = \DB::table('yudisiums')
-        ->whereYear('created_at', $tahun)
-        ->orderBy('id', 'desc')
-        ->first();
+        // Cari nomor terakhir di DB
+        $lastYudisium = \DB::table('yudisiums')
+            ->whereYear('created_at', $tahun)
+            ->orderBy('id', 'desc')
+            ->first();
 
-    $lastNumber = 0;
-    if ($lastYudisium && $lastYudisium->nomor_yudisium) {
-        // Ambil 2 digit pertama sebelum '/'
-        $lastNumber = (int) explode('/', $lastYudisium->nomor_yudisium)[0];
+        $lastNumber = 0;
+        if ($lastYudisium && $lastYudisium->nomor_yudisium) {
+            // Ambil 2 digit pertama sebelum '/'
+            $lastNumber = (int) explode('/', $lastYudisium->nomor_yudisium)[0];
+        }
+
+        // Generate nomor baru
+        $nomorYudisium = $this->generateNomorYudisium($faculty, $tahun, $lastNumber);
+
+        return view('yudisium.index', compact(
+            'mahasiswa',
+            'faculty',
+            'prodi',
+            'semester',
+            'nomorYudisium'
+        ));
     }
 
-    // Generate nomor baru
-    $nomorYudisium = $this->generateNomorYudisium($faculty, $tahun, $lastNumber);
+    public function ajaxGenerateNomor(Request $request)
+    {
+        $faculty = $request->faculty;
+        $tahun = date('Y');
 
-    return view('yudisium.index', compact(
-        'mahasiswa',
-        'faculty',
-        'prodi',
-        'semester',
-        'nomorYudisium'
-    ));
-}
+        // Cari nomor terakhir dari DB
+        $lastYudisium = \DB::table('mhs_yudiciums')
+            ->whereYear('created_at', $tahun)
+            ->orderBy('id', 'desc')
+            ->first();
 
-public function ajaxGenerateNomor(Request $request)
-{
-    $faculty = $request->faculty;
-    $tahun   = date('Y');
+        $lastNumber = 0;
+        if ($lastYudisium && $lastYudisium->nomor_yudisium) {
+            $lastNumber = (int) explode('/', $lastYudisium->nomor_yudisium)[0];
+        }
 
-    // Cari nomor terakhir dari DB
-    $lastYudisium = \DB::table('mhs_yudiciums')
-        ->whereYear('created_at', $tahun)
-        ->orderBy('id', 'desc')
-        ->first();
+        // Panggil function generate nomor
+        $nomorYudisium = $this->generateNomorYudisium($faculty, $tahun, $lastNumber);
 
-    $lastNumber = 0;
-    if ($lastYudisium && $lastYudisium->nomor_yudisium) {
-        $lastNumber = (int) explode('/', $lastYudisium->nomor_yudisium)[0];
+        return response()->json([
+            'nomor_yudisium' => $nomorYudisium
+        ]);
     }
-
-    // Panggil function generate nomor
-    $nomorYudisium = $this->generateNomorYudisium($faculty, $tahun, $lastNumber);
-
-    return response()->json([
-        'nomor_yudisium' => $nomorYudisium
-    ]);
-}
 
 }

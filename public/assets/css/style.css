@@ -1394,7 +1394,7 @@ input:checked + .toggle-bg {
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
     background-color: #f9fafb;
-    min-width: 16rem;
+    min-width: 18rem;
 }
 .dark .datatable-wrapper .datatable-search .datatable-input,
 .dark .datatable-wrapper .datatable-input {

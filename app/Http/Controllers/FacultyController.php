@@ -11,7 +11,7 @@ class FacultyController extends Controller
 
     public function __construct()
     {
-        $this->token = env('GATEWAY_API_TOKEN');
+        $this->token = env('KEY_TOKEN'); 
     }
 
     public function faculty()

@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->id(); // kolom id auto increment (primary key)
             $table->string('no_yudicium')->unique()->nullable(); // nomor yudicium, dibuat unik
             $table->string('periode'); // periode yudicium (misalnya "2025/2026")
-            $table->integer('fakultas'); // nama fakultas
-            $table->integer('prodi'); // nama program studi
+            $table->integer('fakultas_id'); // nama fakultas
+            $table->integer('prodi_id'); // nama program studi
             $table->enum('approval_status', ['not_approved', 'approved'])->default('not_approved');
             $table->unsignedBigInteger('approved_by')->nullable(); // optional
             $table->timestamp('approved_at')->nullable(); // optional

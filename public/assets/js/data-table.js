@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
             searchable: true,
             perPageSelect: false,
             columns: [
-                { select: [0, 6], sortable: false } // Kolom No & Status tidak sortable
+                { select: [0, 6], sortable: false }
             ],
             rowRender: (row, tr) => {
                 if (!tr.attributes) tr.attributes = {};
@@ -25,32 +25,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Mark all rows as unselected
-        table.data.data.forEach(data => data.selected = false);
-
-        // Klik per row
-        table.on("datatable.selectrow", (rowIndex, event) => {
-            event.preventDefault();
-            const row = table.data.data[rowIndex];
-            row.selected = !row.selected;
-            table.update();
-        });
-
         return table;
     }
 
     const selectionTable = initTable("selection-table");
 
     const popupTable = initTable("popup-table");
-
-    // Checkbox master untuk selection-table
-    const masterCheckBox = document.getElementById("serial");
-    if (masterCheckBox && selectionTable) {
-        masterCheckBox.addEventListener("change", () => {
-            const checked = masterCheckBox.checked;
-            selectionTable.data.data.forEach(row => row.selected = checked);
-            document.querySelectorAll("#selection-table tbody input[type=checkbox]").forEach(cb => cb.checked = checked);
-            selectionTable.update();
-        });
-    }
 });

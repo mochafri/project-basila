@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     popup.addEventListener("click", (e) => {
-        if (e.target === popup) popup.classList.add("hidden");
+        if (e.target === popup)
+            popup.classList.add("hidden");
     });
 });
