@@ -141,6 +141,13 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    // generate nomor
+   Route::post('/yudisium/generate-nomor', [App\Http\Controllers\NoYudiciumController::class, 'ajaxGenerateNomor'])
+    ->name('yudisium.generateNomor');
+
+
+    // ubah status 
+    Route::post('/ubahStatus', [Index3Controller::class, 'ubahStatus'])->name('ubahStatus');
 
 
     // Forms

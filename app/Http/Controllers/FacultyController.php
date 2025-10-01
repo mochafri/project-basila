@@ -7,17 +7,17 @@ use Illuminate\Support\Facades\Http;
 
 class FacultyController extends Controller
 {
-    private $token ;
+    private $token;
 
     public function __construct()
     {
-        $this->token = env('KEY_TOKEN');
+        $this->token = env('GATEWAY_API_TOKEN');
     }
 
     public function faculty()
     {
         try {
-            $response = Http::withToken($this-> token )
+            $response = Http::withToken($this->token)
                 ->get('https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69');
 
             if ($response->successful()) {
@@ -57,11 +57,11 @@ class FacultyController extends Controller
     public function prody($id)
     {
         try {
-            $response = Http::withToken($this -> token)
+            $response = Http::withToken($this->token)
                 ->get("https://gateway.telkomuniversity.ac.id/b2ac79622cd60bce8dc5a1a7171bfc9c/{$id}");
 
             if ($response->successful() === 403) {
-                Log::info('Token tidak valid');
+                \Log::info('Token tidak valid');
                 return response()->json([
                     'success' => 'failed',
                     'message' => 'Token tidak valid'
@@ -79,7 +79,7 @@ class FacultyController extends Controller
                 'data' => $prody
             ], 200);
         } catch (\Exception $e) {
-            Log::error('API Exception', [
+            \Log::error('API Exception', [
                 'message' => $e->getMessage(),
             ]);
             return response()->json([

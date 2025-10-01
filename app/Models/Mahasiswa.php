@@ -9,12 +9,12 @@ class Mahasiswa extends Model
     protected $table = "mahasiswa";
     protected $fillable = ["nim", "name", "study_period", "pass_sks", "ipk", "predikat", "status"];
 
-    // Event listener untuk setiap penyimpanan data
     protected static function booted()
     {
         static::saving(function ($mahasiswa) {
             $mahasiswa->predikat = $mahasiswa->hitungPredikat($mahasiswa->ipk);
-            $mahasiswa->status = $mahasiswa->hitungStatus(
+
+            $mahasiswa->status_otomatis = $mahasiswa->hitungStatus(
                 $mahasiswa->study_period,
                 $mahasiswa->pass_sks,
                 $mahasiswa->ipk

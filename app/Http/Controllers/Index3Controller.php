@@ -43,7 +43,7 @@ class Index3Controller extends Controller
     public function filterMhs(Request $request)
     {
         try {
-            $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status')
+            $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status','alasan_status')
                 ->where('fakultas_id', $request->fakultas)
                 ->where('prody_id', $request->prodi)
                 ->get();
@@ -119,5 +119,39 @@ class Index3Controller extends Controller
         $mahasiswa->delete();
 
         return redirect()->back()->with('success', 'Data mahasiswa berhasil dihapus');
+    }
+    public function ubahStatus(Request $request)
+    {
+    $request->validate([
+        'nim' => 'required|string',
+        'status' => 'required|in:Eligible,Tidak Eligible',
+        'alasan' => 'required|string|max:255',
+    ]);
+
+        try {
+            $mahasiswa = Mahasiswa::where('nim', $request->nim)->first();
+
+            if (!$mahasiswa) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mahasiswa tidak ditemukan'
+                ], 404);
+            }
+
+            $mahasiswa->status = $request->status;
+            $mahasiswa->alasan_status = $request->alasan;
+            $mahasiswa->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status berhasil diperbarui'
+                
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

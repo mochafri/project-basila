@@ -107,8 +107,8 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('index') }}"><i class="ri-circle-fill circle-icon text-dark w-auto"></i>
-                            Dashboard</a>
+                        <a href="{{ route('index') }}"><i
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i> Beranda</a>
                     </li>
                     <li>
                         <a href="{{ route('index2') }}"><i

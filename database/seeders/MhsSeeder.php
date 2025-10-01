@@ -25,7 +25,7 @@ class MhsSeeder extends Seeder
                 'pass_sks'     => rand(110, 144),
                 'ipk'          => number_format(rand(200, 395) / 100, 2),
                 'predikat'     => null,
-                'status'       => 'aktif',
+                'status'       => 'Tidak Eligible',
                 'created_at'   => now(),
                 'updated_at'   => now(),
             ];
