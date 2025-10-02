@@ -68,8 +68,8 @@ class FacultyController extends Controller
                 ], 403);
             }
 
-            if(!$id){
-                return ;
+            if (!$id) {
+                return;
             }
 
             $prody = $response->json();
@@ -80,6 +80,47 @@ class FacultyController extends Controller
             ], 200);
         } catch (\Exception $e) {
             \Log::error('API Exception', [
+                'message' => $e->getMessage(),
+            ]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan pada server',
+            ], 500);
+        }
+    }
+
+    public function getStudentsByProdi($id)
+    {
+        try {
+            $url = "https://webservice-feeder.telkomuniversity.ac.id/apidikti/getRegpd.php?stt=7&id={$id}";
+
+            $response = Http::withToken($this->token)->get($url);
+
+            if ($response->successful()) {
+                $students = $response->json();
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $students,
+                ], 200);
+            } elseif ($response->status() === 403) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Token tidak valid atau akses ditolak',
+                ], 403);
+            } else {
+                \Log::warning('API gagal ambil mahasiswa', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal mengambil data mahasiswa',
+                ], $response->status());
+            }
+        } catch (\Exception $e) {
+            \Log::error('API Exception getStudentsByProdi', [
                 'message' => $e->getMessage(),
             ]);
             return response()->json([
