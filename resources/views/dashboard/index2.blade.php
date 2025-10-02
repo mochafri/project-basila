@@ -66,7 +66,6 @@
         </div>
     </div>
 
-
     <div class="grid grid-cols-12 mt-6">
         <div class="col-span-12">
             <div class="card border-0 overflow-hidden">
@@ -232,7 +231,7 @@
                                     <td>
                                         <button
                                             class="btn-popup w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center"
-                                            data-id="1">
+                                            data-id={{ $data->id }}>
                                             <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
                                         </button>
                                         <a href="javascript:void(0)"

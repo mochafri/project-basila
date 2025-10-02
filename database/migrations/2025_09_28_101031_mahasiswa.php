@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('pass_sks');
             $table->decimal('ipk', 3, 2);
             $table->string('predikat')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status_otomatis')->nullable();
             $table->timestamps();
         });
     }

@@ -43,7 +43,7 @@ class Index3Controller extends Controller
     public function filterMhs(Request $request)
     {
         try {
-            $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status','alasan_status')
+            $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status_otomatis')
                 ->where('fakultas_id', $request->fakultas)
                 ->where('prody_id', $request->prodi)
                 ->get();
@@ -122,6 +122,7 @@ class Index3Controller extends Controller
 
     public function ubahStatus(Request $request)
     {
+        
     $request->validate([
         'nim' => 'required|string',
         'status' => 'required|in:Eligible,Tidak Eligible',

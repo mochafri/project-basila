@@ -4,7 +4,7 @@
 $title = 'Penetapan Yudisium';
 $subTitle = 'Tambah';
 $script = '
-<script src="' . asset('assets/js/data-table.js') . '"></script>
+    <script src="' . asset('assets/js/data-table.js') . '"></script>
 ';
 @endphp
 

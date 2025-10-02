@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Mahasiswa extends Model
 {
     protected $table = "mahasiswa";
-    protected $fillable = ["nim", "name", "study_period", "pass_sks", "ipk", "predikat", "status"];
+    protected $fillable = ["nim", "name", "study_period", "pass_sks", "ipk", "predikat", "status_otomatis"];
 
     protected static function booted()
     {

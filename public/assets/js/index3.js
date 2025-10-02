@@ -97,13 +97,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <td>${mhs.predikat}</td>
                         <td>
                             <span
-                                class="statusSpan ${mhs.status === "Eligible"
+                                class="statusSpan ${mhs.status_otomatis === "Eligible"
                                     ? "bg-success-100 text-success-600"
                                     : "bg-danger-100 text-danger-600"
                                 } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
                                 data-nim="${mhs.nim}"
-                                data-status="${mhs.status}">
-                                ${mhs.status}
+                                data-status="${mhs.status_otomatis}">
+                                ${mhs.status_otomatis}
                             </span>
                         </td>
                         <td>
