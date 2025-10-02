@@ -26,7 +26,7 @@ class Mahasiswa extends Model
         });
     }
 
-    private function hitungPredikat($ipk)
+    public function hitungPredikat($ipk)
     {
         if ($ipk >= 3.51){
             return 'Very Good (Sangat Memuaskan)';

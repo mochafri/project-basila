@@ -139,49 +139,105 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // 🔹 Tetapkan Yudisium
-    btnTetapkan.addEventListener('click', async (e) => {
-        e.preventDefault();
-        try {
-            const facultyId = parseInt(fakultasSelect.value);
-            const prodiId = parseInt(prodiSelect.value);
+btnTetapkan.addEventListener('click', async (e) => {
+    e.preventDefault();
 
-            const res = await fetch(routes.approveYudisium, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector(
-                        'meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({
-                    fakultas: facultyId,
-                    prodi: prodiId
-                })
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Yudisium akan ditetapkan untuk fakultas & prodi yang dipilih.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Tetapkan!',
+        cancelButtonText: 'Batal',
+        buttonsStyling: false,
+        reverseButtons: true,
+        customClass: {
+        confirmButton: 'btn-tetapkan',
+        cancelButton: 'btn-batal'
+    }
+    
+
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const facultyId = parseInt(fakultasSelect.value);
+                const prodiId = parseInt(prodiSelect.value);
+
+                const res = await fetch(routes.approveYudisium, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector(
+                            'meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        fakultas: facultyId,
+                        prodi: prodiId
+                    })
+                });
+
+                if (!res.ok) {
+                    throw new Error("Ini error nya : " + res.statusText);
+                }
+
+                const data = await res.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: data.message || 'Yudisium berhasil ditetapkan.',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK',
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: 'btn-ok'
+                        }
+                        
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: data.message || 'Terjadi kesalahan.',
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK',
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: 'btn-ok'
+                        }
+                    });
+                }
+            } catch (err) {
+                console.log("Error:", err);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat mengirim data.',
+                    icon: 'error',
+                    showCancelButton: false,
+                        confirmButtonText: 'OK',
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: 'btn-ok'
+                        }
+                });
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire({
+                title: 'Dibatalkan',
+                text: 'Penetapan yudisium dibatalkan.',
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonText: 'OK',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn-ok'
+                }
             });
-
-            if (!res.ok) {
-                throw new Error("Ini error nya : " + res.statusText);
-            }
-
-            const data = await res.json();
-            nomorYudisiumInput.value = data.nomor_yudisium;
-
-            if (data.success) {
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: 'Yudisium berhasil ditetapkan.',
-                    icon: 'success'
-                });
-            } else {
-                Swal.fire({
-                    title: 'Gagal!',
-                    text: data.message || 'Terjadi kesalahan.',
-                    icon: 'error'
-                });
-            }
-        } catch (err) {
-            console.log("Error:" + err);
         }
     });
+});
+
 
     // Event delegation: klik span status
     tbody.addEventListener('click', (e) => {
@@ -217,11 +273,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const data = await res.json();
             if (data.success) {
-                Swal.fire("Berhasil!", "Status berhasil diubah", "success");
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Status berhasil diubah',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK',
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn-ok'
+                    }
+                });
                 document.getElementById('statusModal').classList.add('hidden');
-                form.dispatchEvent(new Event("submit")); // reload data tabel
+                form.dispatchEvent(new Event("submit")); 
             } else {
-                Swal.fire("Gagal!", data.message || "Terjadi kesalahan", "error");
+                Swal.fire("Gagal!", 
+                    data.message || "Terjadi kesalahan", "error");
             }
         } catch (err) {
             console.error(err);

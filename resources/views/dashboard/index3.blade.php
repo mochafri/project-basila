@@ -230,8 +230,8 @@ $script = '
     </div>
 
     <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
-        <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
-            placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" />
+        <!-- <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
+            placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
 
         <button type="buttton" id="btnTetapkan" class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
             Tetapkan Yudisium

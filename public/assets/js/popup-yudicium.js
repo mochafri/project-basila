@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
 
         const yudId = button.dataset.id;
+        //mendebug id mhs yud
+        console.log("ID : ", yudId);
 
         try {
             const res = await fetch(`/yudicium/${yudId}/mahasiswa`);
@@ -35,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <td>${mhs.ipk}</td>
                             <td>${mhs.predikat}</td>
                             <td>${mhs.status}</td>
+                            <td>${mhs.alasan_status}</td>
                         </tr>
                     `).join('')}
                 `;

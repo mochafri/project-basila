@@ -73,12 +73,13 @@ class YudiciumController extends Controller
                 ->get();
 
             $eligibleMhs = [];
-
             foreach ($listMahasiswa as $mhs) {
-                $status = (new Mahasiswa)->hitungStatus($mhs->study_period, $mhs->pass_sks, $mhs->ipk);
-                $prediket = (new Mahasiswa)->hitungPredikat( $mhs->ipk);
+                $statusHitung = (new Mahasiswa)->hitungStatus($mhs->study_period, $mhs->pass_sks, $mhs->ipk);
 
-                if ($status === "Eligible") {
+                // pakai status manual kalau ada, kalau tidak ya pakai hasil hitungan
+                $finalStatus = $mhs->status ?? $statusHitung;
+
+                if ($finalStatus === "Eligible") {
                     $eligibleMhs[] = [
                         'nim' => $mhs->nim,
                         'fakultas_id' => $mhs->fakultas_id,
@@ -87,8 +88,9 @@ class YudiciumController extends Controller
                         'study_period' => $mhs->study_period,
                         'pass_sks' => $mhs->pass_sks,
                         'ipk' => $mhs->ipk,
-                        'status' => $status,
-                        'predikat' => $prediket,
+                        'status' => $finalStatus, // simpan hasil final
+                        'predikat' => (new Mahasiswa)->hitungPredikat($mhs->ipk),
+                        'alasan_status' => $mhs->alasan_status,
                         'yudicium_id' => $yudicium->id,
                         'created_at' => now(),
                         'updated_at' => now(),
@@ -100,12 +102,12 @@ class YudiciumController extends Controller
                 MhsYud::insert($eligibleMhs);
             }
 
-            return redirect()->back()->with('success', 'Yudicium berhasil ditetapkan');
+            // return redirect()->back()->with('success', 'Yudicium berhasil ditetapkan');
 
-            // return response()->json([
-            //     'success' => true,
-            //     'nomor_yudisium' => $nomorYudisium
-            // ]);
+            return response()->json([
+                'success' => true,
+                'nomor_yudisium' => $nomorYudisium
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -117,13 +119,15 @@ class YudiciumController extends Controller
 
     public function getMahasiswa($id)
     {
-        $mahasiswa = MhsYud::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status')
+        $mahasiswa = MhsYud::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status', 'alasan_status')
             ->where('yudicium_id', $id)
             ->get();
 
-        foreach($mahasiswa as $mhs){
-            $mhs->predikat = (new MhsYud)->hitungPredikat($mhs->ipk);
-            $mhs->status = (new Mahasiswa)->hitungStatus($mhs->study_period, $mhs->pass_sks, $mhs->ipk);
+        foreach ($mahasiswa as $mhs) {
+            $mhs->predikat = (new Mahasiswa)->hitungPredikat($mhs->ipk);
+            if (empty($mhs->alasan_status)) {
+                $mhs->alasan_status = '-';
+            }
         }
 
         return response()->json([
