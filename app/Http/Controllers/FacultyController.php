@@ -11,7 +11,7 @@ class FacultyController extends Controller
 
     public function __construct()
     {
-        $this->token = env('KEY_TOKEN'); 
+        $this->token = env('KEY_TOKEN');
     }
 
     public function faculty()
@@ -68,8 +68,8 @@ class FacultyController extends Controller
                 ], 403);
             }
 
-            if(!$id){
-                return ;
+            if (!$id) {
+                return;
             }
 
             $prody = $response->json();

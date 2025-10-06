@@ -11,9 +11,8 @@ class Yudicium extends Model
     protected $table = 'yudiciums';
     protected $fillable = [
         'no_yudicium',
-        'fakultas',
-        'prodi',
+        'fakultas_id',
+        'prodi_id',
         'periode',
-        'total_mahasiswa',
     ];
 }

@@ -24,14 +24,14 @@ class MhsYud extends Model
         'yudicium_id'
     ];
 
-    public function hitungPredikat($ipk)
+    public function getPredikat($gpa)
     {
-        if ($ipk >= 3.51){
-            return 'Very Good (Sangat Memuaskan)';
-        }
-        if ($ipk >= 3.01){
-            return 'Good (Memuaskan)';
-        }
-        return 'Fair (Cukup)';
+        if ($gpa >= 3.51)
+            return 'Cumlaude';
+        if ($gpa >= 3.00)
+            return 'Sangat Memuaskan';
+        if ($gpa >= 2.75)
+            return 'Memuaskan';
+        return 'Cukup';
     }
 }

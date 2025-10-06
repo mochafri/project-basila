@@ -4,7 +4,8 @@
 $title = 'Penetapan Yudisium';
 $subTitle = 'Tambah';
 $script = '
-    <script src="' . asset('assets/js/data-table.js') . '"></script>
+<script src="' . asset('assets/js/data-table.js') . '"></script>
+<script src="' . asset('assets/js/index3.js') . '"></script>
 ';
 @endphp
 
@@ -27,15 +28,15 @@ $script = '
         <!-- Form -->
 
 
-            <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
-                @csrf
-                <!-- Fakultas -->
-                <div class="col-span-12 md:col-span-5">
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
-                    <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
-                        <option value="">-- Pilih Fakultas --</option>
-                    </select>
-                </div>
+        <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
+            @csrf
+            <!-- Fakultas -->
+            <div class="col-span-12 md:col-span-5">
+                <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
+                <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
+                    <option value="">-- Pilih Fakultas --</option>
+                </select>
+            </div>
 
             <!-- Semester -->
             <div class="col-span-12 md:col-span-5">
@@ -227,11 +228,44 @@ $script = '
         </div>
     </div>
 
-    <div class="flex flex-col md:flex-row items-center gap-4">
+    <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
+        <!-- <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
+            placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
+
         <button type="buttton" id="btnTetapkan" class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
             Tetapkan Yudisium
         </button>
     </div>
+
+    <!-- Debug lewat php -->
+
+    {{-- <form action="{{ route('yudicium.generate') }}" method="POST">
+        @csrf
+
+        <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
+            <input type="hidden" name="fakultas" value="{{ old('fakultas', $selectedFakultas ?? '') }}">
+            <input type="hidden" name="prodi" value="{{ old('prodi', $selectedProdi ?? '') }}">
+            <input type="hidden" name="total_mahasiswa" value="{{ $totalMahasiswa ?? 0 }}">
+
+            <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
+                placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" />
+
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
+                Tetapkan Yudisium
+            </button>
+        </div>
+    </form>
+    @if (session('success'))
+    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if (session('error'))
+    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+        {{ session('error') }}
+    </div>
+    @endif --}}
 
 </div>
 <script>
@@ -239,10 +273,8 @@ $script = '
         showFaculties: "{{ route('show.faculties') }}",
         filterMhs: "{{ route('filterMhs') }}",
         approveYudisium: "{{ route('yudicium.approve') }}",
-        ubahStatus: "{{ route('ubahStatus') }}"
+        ubahStatus: "{{ route('ubahStatus') }}",
+        getAllMhs : "{{ route('getAllMhs') }}"
     };
 </script>
-<script src="{{ asset('assets/js/index3.js') }}"></script>
-
-
 @endsection

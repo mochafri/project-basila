@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
 
         const yudId = button.dataset.id;
+        console.log("ID : ", yudId);
 
         try {
             const res = await fetch(`/yudicium/${yudId}/mahasiswa`);
@@ -34,7 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             <td>${mhs.pass_sks}</td>
                             <td>${mhs.ipk}</td>
                             <td>${mhs.predikat}</td>
-                            <td>${mhs.status}</td>
+                            <td>${mhs.status && mhs.status.trim() !== ""
+                                ? mhs.status
+                                : mhs.status_otomatis
+                            }</td>
+                            <td>${mhs.alasan_status || '-'}</td>
                         </tr>
                     `).join('')}
                 `;

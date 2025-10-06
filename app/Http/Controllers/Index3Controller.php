@@ -10,6 +10,13 @@ use App\Models\Post;
 
 class Index3Controller extends Controller
 {
+    public $url;
+
+    public function __construct()
+    {
+        $this->url = 'https://webservice-feeder.telkomuniversity.ac.id/apidikti/getRegpd.php?stt=7';
+    }
+
     public function index(Request $request)
     {
         // cek route name
@@ -37,122 +44,98 @@ class Index3Controller extends Controller
         if ($routeName === 'index3' || $routeName === 'index4') {
             return view("dashboard.$routeName", compact('mahasiswa', 'kode', 'postCount'));
         }
-
     }
 
     public function filterMhs(Request $request)
     {
         try {
-            $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status_otomatis')
-                ->where('fakultas_id', $request->fakultas)
-                ->where('prody_id', $request->prodi)
-                ->get();
+            $prodiId = $request->prodi;
 
-            return response()->json([
-                'success' => true,
-                'mahasiswa' => $mahasiswa
-            ]);
+            $url = $this->url . '&id=' . $prodiId;
+            $response = Http::get($url);
+
+            $mahasiswa = [];
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                \Log::info('Data mahasiswa', $data);
+
+                $mahasiswa = collect($data ?? [])
+                    ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
+                    ->map(function ($mhs) {
+                        return [
+                            'nim' => $mhs['STUDENTID'] ?? '-',
+                            'name' => $mhs['FULLNAME'] ?? '-',
+                            'study_period' => $mhs['MASA_STUDI'] ?? '-',
+                            'pass_sks' => $mhs['PASS_CREDIT'] ?? '-',
+                            'ipk' => $mhs['GPA'] ?? '-',
+                            'predikat' => $this->getPredikat($mhs['GPA']),
+                            'status' => ucfirst(strtolower($mhs['STATUS'])),
+                            'alasan_status' => $mhs['STATUS'] === 'ELIGIBLE' ? null : 'Tidak memenuhi syarat',
+                        ];
+                    })
+                    ->toArray();
+
+                \Log::info('Data mahasiswa', $mahasiswa);
+
+                return response()->json([
+                    'success' => true,
+                    'mahasiswa' => $mahasiswa
+                ]);
+            }
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => 'Terjadi kesalahan pada server'
             ], 500);
         }
     }
 
-    /**
-     * Simpan data mahasiswa baru
-     */
-    public function store(Request $request)
+    public function getAllMhs()
     {
-        $request->validate([
-            'nim' => 'required|string|max:20|unique:mhs_yudiciums,nim',
-            'name' => 'required|string|max:100',
-            'study_period' => 'required|integer|min:1',
-            'pass_sks' => 'required|integer|min:0',
-            'ipk' => 'required|numeric|between:0,4.00',
-        ]);
+        $url = $this->url;
 
-        // Predikat & Status otomatis dihitung oleh model (mutator setIpkAttribute)
-        Mahasiswa::create([
-            'nim' => $request->nim,
-            'name' => $request->name,
-            'study_period' => $request->study_period,
-            'pass_sks' => $request->pass_sks,
-            'ipk' => $request->ipk,
-        ]);
+        $response = Http::get($url);
 
-        return redirect()->back()->with('success', 'Data mahasiswa berhasil ditambahkan');
-    }
-
-    /**
-     * Update data mahasiswa
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:100',
-            'study_period' => 'required|integer|min:1',
-            'pass_sks' => 'required|integer|min:0',
-            'ipk' => 'required|numeric|between:0,4.00',
-        ]);
-
-        $mahasiswa = Mahasiswa::findOrFail($id);
-
-        $mahasiswa->update([
-            'name' => $request->name,
-            'study_period' => $request->study_period,
-            'pass_sks' => $request->pass_sks,
-            'ipk' => $request->ipk, // otomatis trigger mutator -> predikat + status update
-        ]);
-
-        return redirect()->back()->with('success', 'Data mahasiswa berhasil diperbarui');
-    }
-    /**
-     * Hapus data mahasiswa
-     */
-    public function destroy($id)
-    {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-        $mahasiswa->delete();
-
-        return redirect()->back()->with('success', 'Data mahasiswa berhasil dihapus');
-    }
-
-    public function ubahStatus(Request $request)
-    {
-        
-    $request->validate([
-        'nim' => 'required|string',
-        'status' => 'required|in:Eligible,Tidak Eligible',
-        'alasan' => 'required|string|max:255',
-    ]);
-
-        try {
-            $mahasiswa = Mahasiswa::where('nim', $request->nim)->first();
-
-            if (!$mahasiswa) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Mahasiswa tidak ditemukan'
-                ], 404);
-            }
-
-            $mahasiswa->status = $request->status;
-            $mahasiswa->alasan_status = $request->alasan;
-            $mahasiswa->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Status berhasil diperbarui'
-
-            ]);
-        } catch (\Exception $e) {
+        $mahasiswa = [];
+        if (!$response->successful()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+                'message' => 'Terjadi kesalahan pada server'
+            ], 400);
         }
+
+        $data = $response->json();
+        $mahasiswa = collect($data ?? [])
+            ->map(function ($mhs) {
+                return [
+                    'nim' => $mhs['STUDENTID'] ?? '-',
+                    'name' => $mhs['FULLNAME'] ?? '-',
+                    'study_period' => $mhs['MASA_STUDI'] ?? '-',
+                    'pass_sks' => $mhs['PASS_CREDIT'] ?? '-',
+                    'ipk' => $mhs['GPA'] ?? '-',
+                    'predikat' => $this->getPredikat($mhs['GPA']),
+                    'status' => ucfirst(strtolower($mhs['STATUS'])),
+                    'alasan_status' => $mhs['STATUS'] === 'ELIGIBLE' ? null : 'Tidak memenuhi syarat',
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'mahasiswa' => $mahasiswa
+        ], 200);
+    }
+
+    private function getPredikat($gpa)
+    {
+        if ($gpa >= 3.51)
+            return 'Cumlaude';
+        if ($gpa >= 3.00)
+            return 'Sangat Memuaskan';
+        if ($gpa >= 2.75)
+            return 'Memuaskan';
+        return 'Cukup';
     }
 }

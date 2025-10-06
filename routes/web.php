@@ -205,6 +205,10 @@ Route::middleware(['auth'])->group(function () {
     // Route::put('/yudicium/{id}/approve', [YudiciumController::class, 'approve'])->name('yudicium.approve');
 
     Route::middleware(['auth'])->group(function () {
+        Route::get('/getAllMhs', [Index3Controller::class, 'getAllMhs'])->name('getAllMhs');
+    });
+
+    Route::middleware(['auth'])->group(function () {
         Route::post('/filterMhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
     });
 
@@ -214,7 +218,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/faculties', [FacultyController::class, 'faculty'])->name('show.faculties');
     });
-    
+
     Route::middleware(['auth'])->group(function () {
         Route::get('/faculties/{id}', [FacultyController::class, 'prody'])->name('show.prody');
     });

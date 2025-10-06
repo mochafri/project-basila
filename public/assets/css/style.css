@@ -8023,6 +8023,47 @@ h6,
     color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
+.btn-tetapkan {
+    background-color: #28a745 !important; /* hijau */
+    color: #fff !important;
+    border-radius: 6px;
+    padding: 8px 16px;
+    border: none;
+    margin-left: 10px;
+}
+.btn-tetapkan:hover {
+    background-color: #218838 !important; 
+}
+
+.btn-batal {
+    background-color: #6c757d !important; 
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 16px;
+    border: none;
+    margin-right: 10px;
+}
+
+.btn-batal:hover {
+    background-color: #5a6268 !important;
+}
+
+.btn-ok{
+ background-color: #7066e0 !important;
+  color: #fff !important;
+  border-radius: 6px;
+    padding: 8px 16px;
+    border: none;
+}
+
+.btn-ok:hover {
+    background-color: #5e55c0 !important; 
+}
+
+
+
+
+
 .hover\:text-gray-900:hover {
     --tw-text-opacity: 1;
     color: rgb(17 24 39 / var(--tw-text-opacity));
