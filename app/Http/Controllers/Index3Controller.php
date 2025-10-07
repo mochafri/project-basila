@@ -6,6 +6,7 @@ use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Yudicium;
+use App\Models\TempStatus;
 use App\Models\Post;
 
 class Index3Controller extends Controller
@@ -64,6 +65,14 @@ class Index3Controller extends Controller
                 $mahasiswa = collect($data ?? [])
                     ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
                     ->map(function ($mhs) {
+                        $tempStatus = TempStatus::select('status','alasan')
+                            ->where('nim', $mhs['STUDENTID']);
+
+                        $statusFromTemp = $tempStatus->value('status');
+                        $alasanFromTemp = $tempStatus->value('alasan');
+
+                        $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
+
                         return [
                             'nim' => $mhs['STUDENTID'] ?? '-',
                             'name' => $mhs['FULLNAME'] ?? '-',
@@ -71,8 +80,8 @@ class Index3Controller extends Controller
                             'pass_sks' => $mhs['PASS_CREDIT'] ?? '-',
                             'ipk' => $mhs['GPA'] ?? '-',
                             'predikat' => $this->getPredikat($mhs['GPA']),
-                            'status' => ucfirst(strtolower($mhs['STATUS'])),
-                            'alasan_status' => $mhs['STATUS'] === 'ELIGIBLE' ? null : 'Tidak memenuhi syarat',
+                            'status' => !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi,
+                            'alasan_status' => !empty($alasanFromTemp) ? $alasanFromTemp : '-',
                         ];
                     })
                     ->toArray();

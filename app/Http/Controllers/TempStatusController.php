@@ -15,11 +15,13 @@ class TempStatusController extends Controller
             'nim' => 'required|string',
         ]);
 
-        $status = TempStatus::create([
-            'status' => $validate['status'],
-            'alasan' => $validate['alasan'],
-            'nim' => $validate['nim'],
-        ]);
+        $status = TempStatus::updateOrCreate(
+            ['nim' => $validate['nim']],
+            [
+                'status' => $validate['status'],
+                'alasan' => $validate['alasan'],
+            ]
+        );
 
         \Log::info('Status berhasil disimpan', $status->toArray());
 
