@@ -65,7 +65,7 @@ class Index3Controller extends Controller
                 $mahasiswa = collect($data ?? [])
                     ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
                     ->map(function ($mhs) {
-                        $tempStatus = TempStatus::select('status','alasan')
+                        $tempStatus = TempStatus::select('status', 'alasan')
                             ->where('nim', $mhs['STUDENTID']);
 
                         $statusFromTemp = $tempStatus->value('status');
@@ -86,13 +86,8 @@ class Index3Controller extends Controller
                     })
                     ->toArray();
 
-            \Log::info('Data mahasiswa', $mahasiswa);
-
+                \Log::info('Data mahasiswa', $mahasiswa);
             }
-            // $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status', 'alasan_status')
-            //     ->where('fakultas_id', $request->fakultas)
-            //     ->where('prody_id', $request->prodi)
-            //     ->get();
 
             return response()->json([
                 'success' => true,
@@ -105,41 +100,6 @@ class Index3Controller extends Controller
                 'message' => 'Terjadi kesalahan pada server'
             ], 500);
         }
-    }
-
-    public function getAllMhs()
-    {
-        $url = $this->url;
-
-        $response = Http::get($url);
-
-        $mahasiswa = [];
-        if (!$response->successful()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan pada server'
-            ], 400);
-        }
-
-        $data = $response->json();
-        $mahasiswa = collect($data ?? [])
-            ->map(function ($mhs) {
-                return [
-                    'nim' => $mhs['STUDENTID'] ?? '-',
-                    'name' => $mhs['FULLNAME'] ?? '-',
-                    'study_period' => $mhs['MASA_STUDI'] ?? '-',
-                    'pass_sks' => $mhs['PASS_CREDIT'] ?? '-',
-                    'ipk' => $mhs['GPA'] ?? '-',
-                    'predikat' => $this->getPredikat($mhs['GPA']),
-                    'status' => ucfirst(strtolower($mhs['STATUS'])),
-                    'alasan_status' => $mhs['STATUS'] === 'ELIGIBLE' ? null : 'Tidak memenuhi syarat',
-                ];
-            });
-
-        return response()->json([
-            'success' => true,
-            'mahasiswa' => $mahasiswa
-        ], 200);
     }
 
     private function getPredikat($gpa)

@@ -63,9 +63,8 @@ class YudiciumController extends Controller
                     } else {
                         $item->prodyname = 'Unknown';
                     }
-                } else {
-                    $item->prodyname = 'Unknown';
                 }
+
                 return $item;
             });
 
@@ -103,8 +102,6 @@ class YudiciumController extends Controller
             \Log::info('Response : ' . $response->body());
             $listMahasiswa = $response->json();
             \Log::info('List Mahasiswa : ', $listMahasiswa);
-
-
 
             // Baru data mahasiswa setiap mahasiswa yang ikut yudicium
             $eligibleMhs = [];

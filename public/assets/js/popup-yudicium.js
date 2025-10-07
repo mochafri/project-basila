@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeButton = document.getElementById("popup-close");
 
     if (!popup || !popupBody || !closeButton) {
+        console.log("Popup : ", popup);
+        console.log("Popup Body : ", popupBody);
+        console.log("Close Button : ", closeButton);
         console.error("Popup elements not found")
         return;
     }

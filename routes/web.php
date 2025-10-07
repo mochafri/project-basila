@@ -3,6 +3,7 @@
 use App\Http\Controllers\Index3Controller;
 use App\Http\Controllers\TempStatusController;
 use App\Http\Controllers\YudiciumController;
+use App\Http\Controllers\AproveYudicium;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AiapplicationController;
@@ -230,6 +231,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['auth'])->group(function () {
         Route::post('/yudicium-approve', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
+    });
+
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/yudicium-filter', [AproveYudicium::class, 'filterYudisium'])->name('yudicium.filter');
     });
 });
 

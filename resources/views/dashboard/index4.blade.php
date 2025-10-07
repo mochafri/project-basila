@@ -3,9 +3,9 @@
     $title = 'Approval Yudisium';
     $subTitle = 'Cryptocracy';
     $script = '
-<script src="' . asset('assets/js/homeFourChart.js') . '"></script>
-<script src="' . asset('assets/js/data-table.js') . '"></script>
-';
+        <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
+        <script src="' . asset('assets/js/data-table.js') . '" defer></script>
+    ';
 @endphp
 
 @section('content')
@@ -49,9 +49,10 @@
                                             <option value="ganjil25">Ganjil 2025/2026 </option>
                                         </select>
                                     </div>
-                                    <button
-                                        class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">Tampilkan</button>
-
+                                    <button id="filterButton"
+                                        class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">
+                                        Tampilkan
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -99,7 +100,6 @@
                                             <th scope="col" class="text-neutral-800 dark:text-white"
                                                 style="color: black;">
                                                 <div class="form-check style-check flex items-center">
-                                                    <input class="form-check-input" id="serial" type="checkbox">
                                                     <label class="ms-2 form-check-label" for="serial">
                                                         No
                                                     </label>
@@ -179,262 +179,156 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="form-check style-check flex items-center">
-                                                    <input class="form-check-input" type="checkbox">
-                                                    <label class="ms-2 form-check-label">
-                                                        01
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td><a href="javascript:void(0)" class="text-primary-600">#526534</a></td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <img src="{{ asset('assets/images/user-list/user-list1.png') }}"
-                                                        alt="" class="shrink-0 me-3 rounded-lg">
-                                                    <h6 class="text-base mb-0 font-medium grow">Kathryn Murphy</h6>
-                                                </div>
-                                            </td>
-                                            <td>25 Jan 2025</td>
-                                            <td>$200.00</td>
-                                            <td> <span
-                                                    class="bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 px-6 py-1.5 rounded-full font-medium text-sm">Paid</span>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="lucide:edit"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)" onclick="confirmDelete()"
-                                                    class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
-                                                </a>
-                                                <script>
-                                                    document.addEventListener('DOMContentLoaded', () => {
-                                                        const fakultasSelect = document.getElementById('fakultas');
-
-                                                        fetch('{{ route('show.faculties') }}')
-                                                            .then(res => {
-                                                                if (!res.ok) throw new Error('Status: ' + res.status);
-                                                                return res.json();
-                                                            })
-                                                            .then(response => {
-                                                                console.log('Response fakultas:', response);
-
-                                                                if (response.status === 'success' && Array.isArray(response.data)) {
-                                                                    response.data.forEach(faculty => {
-                                                                        const opt = document.createElement('option');
-                                                                        opt.value = faculty.facultyid;
-                                                                        opt.textContent = faculty.facultyname;
-                                                                        fakultasSelect.appendChild(opt);
-                                                                    });
-                                                                } else {
-                                                                    console.warn('Data fakultas tidak sesuai format');
-                                                                }
-                                                            })
-                                                            .catch(err => {
-                                                                console.error('Gagal memuat fakultas:', err);
-                                                                const opt = document.createElement('option');
-                                                                opt.textContent = 'Data fakultas tidak tersedia';
-                                                                opt.disabled = true;
-                                                                fakultasSelect.appendChild(opt);
-                                                            });
-                                                    });
-
-                                                    function confirmDelete() {
-                                                        Swal.fire({
-                                                            title: "Are you sure?",
-                                                            text: "You won't be able to revert this!",
-                                                            icon: "warning",
-                                                            showCancelButton: true,
-                                                            confirmButtonColor: "#3085d6",
-                                                            cancelButtonColor: "#d33",
-                                                            confirmButtonText: "Yes, delete it!",
-                                                            customClass: {
-                                                                confirmButton: "btn btn-primary",
-                                                                cancelButton: "bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2"
-                                                            },
-                                                            buttonStyling: false
-                                                        }).then((result) => {
-                                                            if (result.isConfirmed) {
-                                                                Swal.fire({
-                                                                    title: "Deleted!",
-                                                                    text: "Your file has been deleted.",
-                                                                    icon: "success",
-                                                                    confirmButton: "OK",
-                                                                    customClass: {
-                                                                        confirmButton: "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-                                                                    },
-                                                                    buttonStyling: false
-                                                                });
-                                                            }
-                                                        });
-                                                    }
-                                                </script>
-                                            </td>
-                                        </tr>
-                                        {{-- <tr>
-                                            <td>
-                                                <div class="form-check style-check flex items-center">
-                                                    <input class="form-check-input" type="checkbox">
-                                                    <label class="ms-2 form-check-label">
-                                                        02
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td><a href="javascript:void(0)" class="text-primary-600">#696589</a></td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <img src="{{ asset('assets/images/user-list/user-list2.png') }}"
-                                                        alt="" class="shrink-0 me-3 rounded-lg">
-                                                    <h6 class="text-base mb-0 font-medium grow">Annette Black</h6>
-                                                </div>
-                                            </td>
-                                            <td>25 Jan 2025</td>
-                                            <td>$200.00</td>
-                                            <td> <span
-                                                    class="bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 px-6 py-1.5 rounded-full font-medium text-sm">Paid</span>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="lucide:edit"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="form-check style-check flex items-center">
-                                                    <input class="form-check-input" type="checkbox">
-                                                    <label class="ms-2 form-check-label">
-                                                        03
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td><a href="javascript:void(0)" class="text-primary-600">#256584</a></td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <img src="{{ asset('assets/images/user-list/user-list3.png') }}"
-                                                        alt="" class="shrink-0 me-3 rounded-lg">
-                                                    <h6 class="text-base mb-0 font-medium grow">Ronald Richards</h6>
-                                                </div>
-                                            </td>
-                                            <td>10 Feb 2025</td>
-                                            <td>$200.00</td>
-                                            <td> <span
-                                                    class="bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 px-6 py-1.5 rounded-full font-medium text-sm">Paid</span>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="lucide:edit"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="form-check style-check flex items-center">
-                                                    <input class="form-check-input" type="checkbox">
-                                                    <label class="ms-2 form-check-label">
-                                                        04
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td><a href="javascript:void(0)" class="text-primary-600">#526587</a></td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <img src="{{ asset('assets/images/user-list/user-list4.png') }}"
-                                                        alt="" class="shrink-0 me-3 rounded-lg">
-                                                    <h6 class="text-base mb-0 font-medium grow">Eleanor Pena</h6>
-                                                </div>
-                                            </td>
-                                            <td>10 Feb 2025</td>
-                                            <td>$150.00</td>
-                                            <td> <span
-                                                    class="bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 px-6 py-1.5 rounded-full font-medium text-sm">Paid</span>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="lucide:edit"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="form-check style-check flex items-center">
-                                                    <input class="form-check-input" type="checkbox">
-                                                    <label class="ms-2 form-check-label">
-                                                        05
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td><a href="javascript:void(0)" class="text-primary-600">#105986</a></td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <img src="{{ asset('assets/images/user-list/user-list5.png') }}"
-                                                        alt="" class="shrink-0 me-3 rounded-lg">
-                                                    <h6 class="text-base mb-0 font-medium grow">Leslie Alexander</h6>
-                                                </div>
-                                            </td>
-                                            <td>15 March 2025</td>
-                                            <td>$150.00</td>
-                                            <td> <span
-                                                    class="bg-warning-100 dark:bg-warning-600/25 text-warning-600 dark:text-warning-400 px-6 py-1.5 rounded-full font-medium text-sm">Pending</span>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="lucide:edit"></iconify-icon>
-                                                </a>
-                                                <a href="javascript:void(0)"
-                                                    class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
-                                                    <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
-                                                </a>
-                                            </td>
-                                        </tr> --}}
 
                                     </tbody>
                                 </table>
+                            </div>
+                            {{-- PopUp table --}}
+
+                            <div id="popup"
+                                class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                <div
+                                    class="bg-white p-6 rounded-lg shadow-lg w-[40%] max-w-6xl max-h-[100%] overflow-y-auto relative text-center">
+                                    <h2 class="text-2xl font-bold mb-4">Detail Mahasiswa</h2>
+                                    <button id="popup-close"
+                                        class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
+                                        <iconify-icon icon="mdi:close" class="text-2xl"></iconify-icon>
+                                    </button>
+
+                                    <table id="popup-table" class="border border-neutral-200 rounded-lg border-separate">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-neutral-800 dark:text-white">
+                                                    <div class="form-check style-check flex items-center">
+                                                        <label class="ms-2 text-neutral-950 form-check-label"
+                                                            for="serial">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-neutral-950">
+                                                    <div class="flex items-center gap-2">
+                                                        NIM
+                                                        <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                        </svg>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-neutral-950">
+                                                    <div class="flex items-center gap-2">
+                                                        Nama
+                                                        <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                        </svg>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-neutral-950">
+                                                    <div class="flex items-center gap-2">
+                                                        Masa Studi
+                                                        <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                        </svg>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-neutral-950">
+                                                    <div class="flex items-center gap-2">
+                                                        SKS Lulus
+                                                        <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                        </svg>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-neutral-950">
+                                                    <div class="flex items-center gap-2">
+                                                        IPK
+                                                        <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                        </svg>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-neutral-950">
+                                                    <div class="flex items-center gap-2">
+                                                        Predikat
+                                                        <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                        </svg>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-neutral-950">
+                                                    <div class="flex items-center gap-2">
+                                                        Status
+                                                        <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                        </svg>
+                                                    </div>
+                                                </th>
+                                                <th scope="col" class="text-neutral-950">
+                                                    <div class="flex items-center gap-2">
+                                                        Alasan
+                                                        <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                        </svg>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="popup-body">
+
+                                        </tbody>
+                                    </table>
+                                    <div class="flex flex-col items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 gap-5">
+                                        <select class="form-select w-full text-neutral-900 bg-gray-100">
+                                            <option>Approve</option>
+                                            <option>Not Approve</option>
+                                        </select>
+                                        <input type="text" class="form-input w-full text-neutral-900 bg-gray-100" placeholder="Alasan">
+                                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
+    <script>
+        const routes = {
+            showFaculties: "{{ route('show.faculties') }}",
+            filterYudisium: "{{ route('yudicium.filter') }}"
+        };
+    </script>
+    <script src="{{ asset('assets/js/approveYudcium.js') }}" defer></script>
 @endsection

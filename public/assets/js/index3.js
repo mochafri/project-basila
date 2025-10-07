@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         console.log("Clicked");
 
-        if (!facultyId) return;
+        if (!facultyId)
+            return;
 
         try {
             const res = await fetch(`/faculties/${facultyId}`);
