@@ -7,9 +7,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     const totalTidakEligibleSpan = document.getElementById('totalTidakEligible');
     const btnTetapkan = document.getElementById('btnTetapkan');
 
+    // Ambil data fakultas dari API
+    try {
+        const res = await fetch(routes.showFaculties);
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error('Token exp : ' + res.statusText);
+        }
+
+        if (data.status === "success" && Array.isArray(data.data)) {
+            data.data.forEach(fakultas => {
+                const opt = document.createElement('option');
+                opt.value = fakultas.facultyid;
+                opt.textContent = fakultas.facultyname;
+                fakultasSelect.appendChild(opt);
+            });
+        }
+
+    } catch (err) {
+        console.error('Gagal memuat fakultas:', err);
+        fakultasSelect.innerHTML = '<option value="">Gagal memuat data fakultas</option>';
+    }
+
+    // Ambil data prodi dari API
     fakultasSelect.addEventListener('change', async () => {
         const facultyId = fakultasSelect.value;
         prodiSelect.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
+
+        console.log("Clicked");
+
         if (!facultyId) return;
 
         try {
@@ -29,11 +56,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Fetch data dari api academic lewat filter fakutlas dan prodi
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const facultyId = fakultasSelect.value;
         const prodiId = prodiSelect.value;
+
+        console.log("Clicked");
 
         if (!facultyId || !prodiId) {
             alert('Pilih Fakultas dan Program Studi terlebih dahulu');
@@ -111,9 +141,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Listener Event buat button tetapkan
     btnTetapkan.addEventListener('click', async (e) => {
-        e.preventDefault();
-
         const status = document.getElementById('modalStatus').value;
         const alasan = document.getElementById('modalAlasan').value;
 
@@ -206,6 +235,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    // Modal atau pop up dari ubah status
     tbody.addEventListener('click', (e) => {
         if (e.target.classList.contains('statusSpan')) {
             document.getElementById('modalNim').value = e.target.dataset.nim;
@@ -219,8 +249,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('statusModal').classList.add('hidden');
     });
 
+    // Submit ke database buat status sama alasan nya
     // document.getElementById('statusForm').addEventListener('submit', async (e) => {
     //     e.preventDefault();
+
+    //     const status = document.getElementById('modalStatus').value;
+    //     const alasan = document.getElementById('modalAlasan').value;
+    //     const nim = document.getElementById('modalNim').value;
 
     //     try {
     //         const res = await fetch(routes.ubahStatus, {
@@ -229,7 +264,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     //                 "Content-Type": "application/json",
     //                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
     //             },
-    //             body: JSON.stringify({ nim, status, alasan })
+    //             body: JSON.stringify({
+    //                 status: status,
+    //                 alasan: alasan,
+    //                 nim: nim
+    //             })
     //         });
 
     //         const data = await res.json();
@@ -257,6 +296,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     //     }
     // });
 
+    // Submit by variable lewat request waktu tetapkan No Yudisium
     document.getElementById('statusForm').addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -276,72 +316,70 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('statusModal').classList.add('hidden');
     });
 
-    document.getElementById('closeModal').addEventListener('click', () => {
-        document.getElementById('statusModal').classList.add('hidden');
-    });
 
-    try {
-        const res = await fetch(routes.getAllMhs);
-        const data = await res.json();
+    // Buat fetch semua mahasiswa dari API academic
+    // try {
+    //     const res = await fetch(routes.getAllMhs);
+    //     const data = await res.json();
 
-        if (res.ok && data.success && Array.isArray(data.mahasiswa)) {
-            await renderMahasiswa(data.mahasiswa);
-        } else {
-            tbody.innerHTML = '<tr><td colspan="10" class="text-center text-red-500">Gagal memuat data mahasiswa</td></tr>';
-        }
-    } catch (err) {
-        console.error('Gagal memuat data default mahasiswa:', err);
-        tbody.innerHTML = '<tr><td colspan="10" class="text-center text-red-500">Error memuat data</td></tr>';
-    }
+    //     if (res.ok && data.success && Array.isArray(data.mahasiswa)) {
+    //         await renderMahasiswa(data.mahasiswa);
+    //     } else {
+    //         tbody.innerHTML = '<tr><td colspan="10" class="text-center text-red-500">Gagal memuat data mahasiswa</td></tr>';
+    //     }
+    // } catch (err) {
+    //     console.error('Gagal memuat data default mahasiswa:', err);
+    //     tbody.innerHTML = '<tr><td colspan="10" class="text-center text-red-500">Error memuat data</td></tr>';
+    // }
 
-    async function renderMahasiswa(mahasiswa) {
-        tbody.innerHTML = '';
-        let totalEligible = 0;
-        let totalTidakEligible = 0;
+    // async function renderMahasiswa(mahasiswa) {
+    //     tbody.innerHTML = '';
+    //     let totalEligible = 0;
+    //     let totalTidakEligible = 0;
 
-        if (Array.isArray(mahasiswa) && mahasiswa.length > 0) {
-            mahasiswa.forEach((mhs, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td>${mhs.nim}</td>
-                <td>${mhs.name}</td>
-                <td>${mhs.study_period} Semester</td>
-                <td>${mhs.pass_sks}</td>
-                <td>${mhs.ipk}</td>
-                <td>${mhs.predikat}</td>
-                <td>
-                    <span
-                        class="statusSpan ${mhs.status === "Eligible"
-                        ? "bg-success-100 text-success-600"
-                        : "bg-danger-100 text-danger-600"}
-                            px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
-                        data-nim="${mhs.nim}"
-                        data-status="${mhs.status}">
-                        ${mhs.status}
-                    </span>
-                </td>
-                <td>
-                    ${mhs.alasan_status
-                        ? `<span class="text-xs text-gray-500">${mhs.alasan_status}</span>`
-                        : '-'}
-                </td>
-                <td>
-                    <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
-                        <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                    </a>
-                </td>
-            `;
-                tbody.appendChild(tr);
+    //     if (Array.isArray(mahasiswa) && mahasiswa.length > 0) {
+    //         mahasiswa.forEach((mhs, idx) => {
+    //             const tr = document.createElement('tr');
+    //             tr.innerHTML = `
+    //             <td>${idx + 1}</td>
+    //             <td>${mhs.nim}</td>
+    //             <td>${mhs.name}</td>
+    //             <td>${mhs.study_period} Semester</td>
+    //             <td>${mhs.pass_sks}</td>
+    //             <td>${mhs.ipk}</td>
+    //             <td>${mhs.predikat}</td>
+    //             <td>
+    //                 <span
+    //                     class="statusSpan ${mhs.status === "Eligible"
+    //                     ? "bg-success-100 text-success-600"
+    //                     : "bg-danger-100 text-danger-600"}
+    //                         px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
+    //                     data-nim="${mhs.nim}"
+    //                     data-status="${mhs.status}">
+    //                     ${mhs.status}
+    //                 </span>
+    //             </td>
+    //             <td>
+    //                 ${mhs.alasan_status
+    //                     ? `<span class="text-xs text-gray-500">${mhs.alasan_status}</span>`
+    //                     : '-'}
+    //             </td>
+    //             <td>
+    //                 <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
+    //                     <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
+    //                 </a>
+    //             </td>
+    //         `;
+    //             tbody.appendChild(tr);
 
-                if (mhs.status === "Eligible") totalEligible++;
-                else totalTidakEligible++;
-            });
-        } else {
-            tbody.innerHTML = '<tr><td colspan="10" class="text-center">Tidak ada data</td></tr>';
-        }
+    //             if (mhs.status === "Eligible") totalEligible++;
+    //             else totalTidakEligible++;
+    //         });
+    //     } else {
+    //         tbody.innerHTML = '<tr><td colspan="10" class="text-center">Tidak ada data</td></tr>';
+    //     }
 
-        totalEligibleSpan.textContent = totalEligible;
-        totalTidakEligibleSpan.textContent = totalTidakEligible;
-    }
+    //     totalEligibleSpan.textContent = totalEligible;
+    //     totalTidakEligibleSpan.textContent = totalTidakEligible;
+    // }
 });

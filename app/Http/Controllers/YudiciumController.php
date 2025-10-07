@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Mahasiswa;
 use App\Models\Yudicium;
 use App\Models\MhsYud;
 use Illuminate\Support\Facades\Http;
@@ -13,7 +12,7 @@ use App\Models\Post;
 
 class YudiciumController extends Controller
 {
-    public $url ;
+    public $url;
 
     public function __construct()
     {
@@ -97,6 +96,47 @@ class YudiciumController extends Controller
                 'alasan' => 'string|nullable'
             ]);
 
+            // Consume data api academic
+            $prodi_id = $validate['prodi_id'];
+            $url = $this->url . '&id=' . $prodi_id;
+
+            $response = Http::get($url);
+            \Log::info('Response : ' . $response->body());
+            $listMahasiswa = $response->json();
+            \Log::info('List Mahasiswa : ', $listMahasiswa);
+
+            // Baru data mahasiswa setiap mahasiswa yang ikut yudicium
+            $eligibleMhs = [];
+
+            foreach ($listMahasiswa as $mhs) {
+
+                $statusToCheck = !empty($validate['status']) ? $validate['status'] : ucfirst(strtolower($mhs['STATUS']));
+                if ($statusToCheck === 'Eligible') {
+                    $eligibleMhs[] = [
+                        'nim' => $mhs['STUDENTID'],
+                        'fakultas_id' => $mhs['FACULTYID'],
+                        'prody_id' => $mhs['STUDYPROGRAMID'],
+                        'name' => $mhs['FULLNAME'],
+                        'study_period' => $mhs['MASA_STUDI'],
+                        'pass_sks' => $mhs['PASS_CREDIT'],
+                        'ipk' => $mhs['GPA'],
+                        'status_otomatis' => ucfirst(strtolower($mhs['STATUS'])),
+                        'status' => $validate['status'] ?? null,
+                        'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
+                        'alasan_status' => $validate['alasan'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            if (empty($eligibleMhs)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada mahasiswa yang Eligible, silahkan coba lagi.'
+                ], 403);
+            }
+
             $lastId = Yudicium::max('id');
             $nextId = $lastId ? $lastId + 1 : 1;
             $mappingFaculties = [3 => 'IT', 4 => 'IK', 5 => 'TE', 6 => 'RI', 7 => 'IF', 8 => 'EB', 9 => 'KB', 10 => 'SBY', 11 => 'PWT'];
@@ -104,69 +144,29 @@ class YudiciumController extends Controller
             $tahun = date('Y');
             $nomorYudisium = $nextId . '/AKD100/' . $fakultasInitial . '/' . $tahun;
 
-            // Consume data api academic
-            $prodi_id = $validate['prodi_id'];
-            $url = $this->url .  '&id=' . $prodi_id;
-
-            $response = Http::get($url);
-            \Log::info('Response : ' . $response->body());
-            $listMahasiswa = $response->json();
-            \Log::info('List Mahasiswa : ', $listMahasiswa);
-
-            // Cek dlu buat status yang bakal di pakai
-            $finalStatus = !empty($validate['status']) ? $validate['status'] : ucfirst(strtolower($listMahasiswa[0]['STATUS']));
-
             \Log::info('Nomor Yudisium : ' . $nomorYudisium);
             \Log::info('Periode : ' . $tahun);
             \Log::info('Map Fakultas : ', $mappingFaculties);
             \Log::info('Fakultas id : ' . $validate['fakultas_id']);
 
-            if ($finalStatus === 'Tidak Eligible') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Tidak ada mahasiswa yang Eligible,Silahkan coba lagi.'
-                ], 403);
+            $yudicium = Yudicium::create([
+                'fakultas_id' => $validate['fakultas_id'],
+                'prodi_id' => $validate['prodi_id'],
+                'periode' => $tahun,
+                'no_yudicium' => $nomorYudisium
+            ]);
+
+            foreach ($eligibleMhs as &$mhs) {
+                $mhs['yudicium_id'] = $yudicium->id;
+            }
+            unset($mhs);
+
+            if (!empty($eligibleMhs)) {
+                MhsYud::insert($eligibleMhs);
             }
 
-            if ($finalStatus === 'Eligible') {
+            \Log::info('Yudicium : ', $yudicium->toArray());
 
-                // Buat untuk row yudicium terlebih dahulu
-                $yudicium = Yudicium::create([
-                    'fakultas_id' => $validate['fakultas_id'],
-                    'prodi_id' => $validate['prodi_id'],
-                    'periode' => $tahun,
-                    'no_yudicium' => $nomorYudisium
-                ]);
-
-                // Baru data mahasiswa setiap mahasiswa yang ikut yudicium
-                $eligibleMhs = [];
-                foreach ($listMahasiswa as $mhs) {
-                    if ($finalStatus === 'Eligible') {
-                        $eligibleMhs[] = [
-                            'nim' => $mhs['STUDENTID'],
-                            'fakultas_id' => $mhs['FACULTYID'],
-                            'prody_id' => $mhs['STUDYPROGRAMID'],
-                            'name' => $mhs['FULLNAME'],
-                            'study_period' => $mhs['MASA_STUDI'],
-                            'pass_sks' => $mhs['PASS_CREDIT'],
-                            'ipk' => $mhs['GPA'],
-                            'status_otomatis' => ucfirst(strtolower($mhs['STATUS'])),
-                            'status' => $validate['status'] ?? null,
-                            'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
-                            'alasan_status' => $validate['alasan'],
-                            'yudicium_id' => $yudicium->id,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
-                    }
-                }
-
-                if (!empty($eligibleMhs)) {
-                    MhsYud::insert($eligibleMhs);
-                }
-
-                \Log::info('Yudicium : ', $yudicium->toArray());
-            }
             // return redirect()->back()->with('success', 'Yudicium berhasil ditetapkan');
 
             return response()->json([
