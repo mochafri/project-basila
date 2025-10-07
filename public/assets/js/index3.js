@@ -250,72 +250,71 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Submit ke database buat status sama alasan nya
-    // document.getElementById('statusForm').addEventListener('submit', async (e) => {
-    //     e.preventDefault();
-
-    //     const status = document.getElementById('modalStatus').value;
-    //     const alasan = document.getElementById('modalAlasan').value;
-    //     const nim = document.getElementById('modalNim').value;
-
-    //     try {
-    //         const res = await fetch(routes.ubahStatus, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-    //             },
-    //             body: JSON.stringify({
-    //                 status: status,
-    //                 alasan: alasan,
-    //                 nim: nim
-    //             })
-    //         });
-
-    //         const data = await res.json();
-    //         if (data.success) {
-    //             Swal.fire({
-    //                 title: 'Berhasil!',
-    //                 text: 'Status berhasil diubah',
-    //                 icon: 'success',
-    //                 showCancelButton: false,
-    //                 confirmButtonText: 'OK',
-    //                 buttonsStyling: false,
-    //                 customClass: {
-    //                     confirmButton: 'btn-ok'
-    //                 }
-    //             });
-    //             document.getElementById('statusModal').classList.add('hidden');
-    //             form.dispatchEvent(new Event("submit"));
-    //         } else {
-    //             Swal.fire("Gagal!",
-    //                 data.message || "Terjadi kesalahan", "error");
-    //         }
-    //     } catch (err) {
-    //         console.error(err);
-    //         Swal.fire("Error!", "Tidak bisa mengubah status", "error");
-    //     }
-    // });
-
-    // Submit by variable lewat request waktu tetapkan No Yudisium
-    document.getElementById('statusForm').addEventListener('submit', (e) => {
+    document.getElementById('statusForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const status = document.getElementById('modalStatus').value;
         const alasan = document.getElementById('modalAlasan').value;
+        const nim = document.getElementById('modalNim').value;
 
-        const statusSpans = tbody.querySelectorAll('.statusSpan');
-        statusSpans.forEach(span => {
-            span.textContent = status;
-            span.className = `statusSpan ${status === "Eligible" ? "bg-success-100 text-success-600" : "bg-danger-100 text-danger-600"
-                } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer`;
+        try {
+            const res = await fetch(routes.ubahStatus, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    status: status,
+                    alasan: alasan,
+                    nim: nim
+                })
+            });
 
-            const alasanCell = span.closest('tr').children[8];
-            alasanCell.innerHTML = alasan ? `<span class="text-xs text-gray-500">${alasan}</span>` : '-';
-        });
-
-        document.getElementById('statusModal').classList.add('hidden');
+            const data = await res.json();
+            if (data.success) {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Status berhasil diubah',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK',
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn-ok'
+                    }
+                });
+                document.getElementById('statusModal').classList.add('hidden');
+                form.dispatchEvent(new Event("submit"));
+            } else {
+                Swal.fire("Gagal!",
+                    data.message || "Terjadi kesalahan", "error");
+            }
+        } catch (err) {
+            console.error(err);
+            Swal.fire("Error!", "Tidak bisa mengubah status", "error");
+        }
     });
 
+    // // Submit by variable lewat request waktu tetapkan No Yudisium
+    // document.getElementById('statusForm').addEventListener('submit', (e) => {
+    //     e.preventDefault();
+
+    //     const status = document.getElementById('modalStatus').value;
+    //     const alasan = document.getElementById('modalAlasan').value;
+
+    //     const statusSpans = tbody.querySelectorAll('.statusSpan');
+    //     statusSpans.forEach(span => {
+    //         span.textContent = status;
+    //         span.className = `statusSpan ${status === "Eligible" ? "bg-success-100 text-success-600" : "bg-danger-100 text-danger-600"
+    //             } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer`;
+
+    //         const alasanCell = span.closest('tr').children[8];
+    //         alasanCell.innerHTML = alasan ? `<span class="text-xs text-gray-500">${alasan}</span>` : '-';
+    //     });
+
+    //     document.getElementById('statusModal').classList.add('hidden');
+    // });
 
     // Buat fetch semua mahasiswa dari API academic
     // try {

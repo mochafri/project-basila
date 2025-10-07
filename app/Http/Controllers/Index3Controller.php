@@ -77,13 +77,18 @@ class Index3Controller extends Controller
                     })
                     ->toArray();
 
-                \Log::info('Data mahasiswa', $mahasiswa);
+            \Log::info('Data mahasiswa', $mahasiswa);
 
-                return response()->json([
-                    'success' => true,
-                    'mahasiswa' => $mahasiswa
-                ]);
             }
+            // $mahasiswa = Mahasiswa::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status', 'alasan_status')
+            //     ->where('fakultas_id', $request->fakultas)
+            //     ->where('prody_id', $request->prodi)
+            //     ->get();
+
+            return response()->json([
+                'success' => true,
+                'mahasiswa' => $mahasiswa
+            ]);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return response()->json([

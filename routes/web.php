@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Index3Controller;
+use App\Http\Controllers\TempStatusController;
 use App\Http\Controllers\YudiciumController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -205,11 +206,15 @@ Route::middleware(['auth'])->group(function () {
     // Route::put('/yudicium/{id}/approve', [YudiciumController::class, 'approve'])->name('yudicium.approve');
 
     Route::middleware(['auth'])->group(function () {
-        Route::get('/getAllMhs', [Index3Controller::class, 'getAllMhs'])->name('getAllMhs');
+        Route::get('/get-all-mhs', [Index3Controller::class, 'getAllMhs'])->name('getAllMhs');
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::post('/filterMhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
+        Route::post('/temp-status', [TempStatusController::class, 'postStatus'])->name('tempStatus');
+    });
+
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/filter-mhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
     });
 
     Route::get('/yudicium/{id}/mahasiswa', [YudiciumController::class, 'getMahasiswa'])
@@ -224,7 +229,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::post('/yudiciumApprove', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
+        Route::post('/yudicium-approve', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
     });
 });
 

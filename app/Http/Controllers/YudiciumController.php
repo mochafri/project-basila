@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Yudicium;
 use App\Models\MhsYud;
+use App\Models\TempStatus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -92,8 +93,6 @@ class YudiciumController extends Controller
             $validate = $request->validate([
                 'fakultas_id' => 'required|integer',
                 'prodi_id' => 'required|integer',
-                'status' => 'string|nullable',
-                'alasan' => 'string|nullable'
             ]);
 
             // Consume data api academic
@@ -105,13 +104,21 @@ class YudiciumController extends Controller
             $listMahasiswa = $response->json();
             \Log::info('List Mahasiswa : ', $listMahasiswa);
 
+
+
             // Baru data mahasiswa setiap mahasiswa yang ikut yudicium
             $eligibleMhs = [];
 
             foreach ($listMahasiswa as $mhs) {
+                $tempStatus = TempStatus::select('status','alasan')
+                    ->where('nim', $mhs['STUDENTID']);
 
-                $statusToCheck = !empty($validate['status']) ? $validate['status'] : ucfirst(strtolower($mhs['STATUS']));
-                if ($statusToCheck === 'Eligible') {
+                $statusFromTemp = $tempStatus->value('status');
+                $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
+
+                $finalStatus = !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi;
+
+                if ($finalStatus === 'Eligible') {
                     $eligibleMhs[] = [
                         'nim' => $mhs['STUDENTID'],
                         'fakultas_id' => $mhs['FACULTYID'],
@@ -121,9 +128,9 @@ class YudiciumController extends Controller
                         'pass_sks' => $mhs['PASS_CREDIT'],
                         'ipk' => $mhs['GPA'],
                         'status_otomatis' => ucfirst(strtolower($mhs['STATUS'])),
-                        'status' => $validate['status'] ?? null,
+                        'status' => $statusFromTemp ?? null,
                         'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
-                        'alasan_status' => $validate['alasan'],
+                        'alasan_status' => $tempStatus->value('alasan') ?? null,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
