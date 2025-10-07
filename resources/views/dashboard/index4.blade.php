@@ -76,7 +76,7 @@
                                         <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">214</h2>
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
                                         <p class="text-sm">Total Mahasiswa</p>
                                     </div>
                                 </div>

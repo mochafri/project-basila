@@ -39,24 +39,24 @@
 
                     <!-- Card Total Yudisium -->
                     <div
-                        class="bg-red-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
-                        <div class="w-16 h-16 bg-red-800 rounded-full flex items-center justify-center">
-                            <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
-                        </div>
-                        <div class="flex flex-col text-center sm:text-left">
-                            <h2 class="text-4xl text-white font-bold">{{ $postCount }}</h2>
-                            <p class="text-sm">Total Yudisium</p>
-                        </div>
-                    </div>
+                                    class="bg-[#e51411] text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
+                                    <div class="w-16 h-16 bg-[#c7110f] rounded-full flex items-center justify-center">
+                                        <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
+                                    </div>
+                                    <div class="flex flex-col text-center">
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
+                                        <p class="text-sm">Total Yudisium</p>
+                                    </div>
+                                </div>
 
                     <!-- Card Total Mahasiswa -->
                     <div
-                        class="bg-green-600 text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
-                        <div class="w-16 h-16 bg-green-800 rounded-full flex items-center justify-center">
+                        class="bg-[#3ea83f] text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4 w-full sm:w-auto">
+                        <div class="w-16 h-16 bg-[#2f812f] rounded-full flex items-center justify-center">
                             <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                         </div>
                         <div class="flex flex-col text-center sm:text-left">
-                            <h2 class="text-4xl text-white font-bold">214</h2>
+                            <h2 class="text-4xl text-white font-bold">{{ $totalMhsYud }}</h2>
                             <p class="text-sm">Total Mahasiswa</p>
                         </div>
                     </div>

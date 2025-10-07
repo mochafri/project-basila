@@ -27,27 +27,94 @@ class YudiciumController extends Controller
 
         $routeName = $request->route()->getName();
         $postCount = Post::count();
+        $totalMhsYud = MhsYud::count();
 
+        // Ambil data fakultas dari API
         $facultyRes = Http::withToken($this->token)
             ->get('https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69');
         $faculties = $facultyRes->successful() ? collect($facultyRes->json()) : collect();
 
         $prodyCache = [];
 
+        // === ROUTE: index (Dashboard utama) ===
         if ($routeName === 'index' || $routeName === 'index4' || $routeName === 'index6') {
+
+            // ===============================
+            // 1️⃣ Hitung jumlah per predikat
+            // ===============================
+            $predikatCounts = MhsYud::select('predikat', DB::raw('COUNT(*) as total'))
+                ->groupBy('predikat')
+                ->get();
+
+            $predikatList = [
+                'Istimewa (Summa Cumlaude)',
+                'Dengan Pujian (Cumlaude)',
+                'Sangat Memuaskan (Very Good)',
+                'Memuaskan (Good)',
+                'Tanpa Predikat',
+            ];
+
+            $dataPredikat = [];
+            foreach ($predikatList as $label) {
+                $found = $predikatCounts->firstWhere('predikat', $label);
+                $jumlah = $found ? $found->total : 0;
+                $persen = $totalMhsYud > 0 ? round(($jumlah / $totalMhsYud) * 100, 1) : 0;
+
+                $dataPredikat[] = [
+                    'label' => $label,
+                    'jumlah' => $jumlah,
+                    'persen' => $persen,
+                ];
+            }
+
+            // ===============================
+            // 2️⃣ Hitung jumlah yudisium per fakultas
+            // ===============================
+            $fakultasCounts = MhsYud::select('fakultas_id', DB::raw('COUNT(*) as total'))
+                ->groupBy('fakultas_id')
+                ->get();
+
+            $dataFakultas = [];
+
+            foreach ($faculties as $faculty) {
+                $found = $fakultasCounts->firstWhere('fakultas_id', $faculty['facultyid']);
+                $jumlah = $found ? $found->total : 0;
+                $persen = $totalMhsYud > 0 ? round(($jumlah / $totalMhsYud) * 100, 1) : 0;
+
+                $dataFakultas[] = [
+                    'label' => $faculty['facultyname'],
+                    'jumlah' => $jumlah,
+                    'persen' => $persen,
+                ];
+            }
+
+            // // Urutkan fakultas berdasarkan jumlah terbanyak
+            // usort($dataFakultas, fn($a, $b) => $b['jumlah'] <=> $a['jumlah']);
+
+            // ===============================
+            // Return ke view dashboard
+            // ===============================
             return view("dashboard.$routeName", [
                 'datas' => $datas,
-                'postCount' => $postCount
+                'postCount' => $postCount,
+                'totalMhsYud' => $totalMhsYud,
+                'dataPredikat' => $dataPredikat,
+                'dataFakultas' => $dataFakultas,
             ]);
-        } elseif ($routeName === 'index2') {
+        }
+
+        // === ROUTE: index2 (data mahasiswa dengan fakultas/prodi) ===
+        elseif ($routeName === 'index2') {
 
             $datas->transform(function ($item) use ($faculties, &$prodyCache) {
 
+                // Cocokkan fakultas dari API
                 $faculty = $faculties->firstWhere('facultyid', $item->fakultas_id);
                 $item->facultyname = $faculty['facultyname'] ?? 'Unknown';
                 $facultyId = $faculty['facultyid'] ?? null;
 
                 if ($facultyId) {
+                    // Cache agar tidak panggil API berulang
                     if (!isset($prodyCache[$facultyId])) {
                         $prodyRes = Http::withToken(env('KEY_TOKEN'))
                             ->get("https://gateway.telkomuniversity.ac.id/b2ac79622cd60bce8dc5a1a7171bfc9c/{$facultyId}");
@@ -56,7 +123,6 @@ class YudiciumController extends Controller
                     }
 
                     $prody = $prodyCache[$facultyId];
-
                     if ($prody->isNotEmpty()) {
                         $program = $prody->firstWhere('studyprogramid', (string) $item->prodi_id);
                         $item->prodyname = $program['studyprogramname'] ?? 'Unknown';
@@ -66,15 +132,18 @@ class YudiciumController extends Controller
                 } else {
                     $item->prodyname = 'Unknown';
                 }
+
                 return $item;
             });
 
             return view("dashboard.$routeName", [
                 'datas' => $datas,
-                'postCount' => $postCount
+                'postCount' => $postCount,
+                'totalMhsYud' => $totalMhsYud,
             ]);
         }
     }
+
 
     public function approve($id)
     {

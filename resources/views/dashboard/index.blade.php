@@ -47,7 +47,7 @@
             <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
         </div>
         <div class="flex flex-col text-center">
-            <h2 class="text-4xl text-white font-bold leading-tight">214</h2>
+            <h2 class="text-4xl text-white font-bold leading-tight">{{$totalMhsYud }}</h2>
             <p class="text-sm">Total Mahasiswa</p>
         </div>
     </div>
@@ -104,50 +104,46 @@
 
 
     <div class="bg-white p-6 rounded-lg shadow mb-6">
-    <!-- Header Section -->
-    <div class="flex justify-between items-start mb-6">
-        <div>
-            <h3 class="text-xl font-bold text-gray-900">Predikat Mahasiswa</h3>
-            <p class="text-xs text-gray-500">Berikut detail predikat mahasiswa periode ganjil 2024/2025</p>
-        </div>
-        <div class="flex items-center space-x-2">
-            <div class="bg-green-600 p-3 rounded-full">
-                <iconify-icon icon="ph:student-fill" class="text-white text-xl"></iconify-icon>
+        <!-- Header Section -->
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">Predikat Mahasiswa</h3>
+                <p class="text-xs text-gray-500">Berikut detail predikat mahasiswa periode ganjil 2024/2025</p>
             </div>
-            <div class="flex flex-col justify-center items-center text-center">
-                <h2 class="text-3xl font-bold text-green-600 leading-tight">214</h2>
-                <p class="text-xs text-green-600">Total Yudisium</p>
+            <div class="flex items-center space-x-2">
+                <div class="bg-green-600 p-3 rounded-full">
+                    <iconify-icon icon="ph:student-fill" class="text-white text-xl"></iconify-icon>
+                </div>
+                <div class="flex flex-col justify-center items-center text-center">
+                    <h2 class="text-3xl font-bold text-green-600 leading-tight">{{ $totalMhsYud }}</h2>
+                    <p class="text-xs text-green-600">Total Mahasiswa</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Progress Bars + Label -->
-    @foreach ([
-        ['label' => 'Istimewa (Summa Cumlaude)', 'value' => 24.8],
-        ['label' => 'Dengan Pujian (Cumlaude)', 'value' => 24.8],
-        ['label' => 'Sangat Memuaskan (Very Good)', 'value' => 24.8],
-        ['label' => 'Memuaskan (Good)', 'value' => 24.8],
-        ['label' => 'Tanpa Predikat', 'value' => 24.8],
-    ] as $item)
+        <!-- Progress Bars + Label -->
+        @foreach ($dataPredikat as $item)
         <div class="flex flex-col gap-1 mb-4">
             <!-- Progress Bar -->
             <div class="flex items-center gap-3">
                 <div class="w-[100px] bg-red-500 text-white text-xs font-semibold text-center rounded-full py-0.5">
-                    {{ $item['value'] }}%
+                    {{ $item['persen'] }}%
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-red-500 h-2 rounded-full" style="width: {{ $item['value'] }}%"></div>
+                    <div class="bg-red-500 h-2 rounded-full"
+                        style="width: {{ $item['persen'] }}%">
+                    </div>
                 </div>
             </div>
 
             <!-- Label Keterangan -->
             <div class="flex justify-between text-sm text-gray-700">
                 <span>{{ $item['label'] }}</span>
-                <span>20 / 214</span>
+                <span>{{ $item['jumlah'] }} / {{ $totalMhsYud }}</span>
             </div>
         </div>
     @endforeach
-</div>
+    </div>
 
 </div>
 
@@ -184,4 +180,13 @@
         </ul>
     </div>
 </div>
+
+<script>
+    // Kirim data dari PHP ke JS
+    const dataFakultas = @json($dataFakultas);
+
+    // Ambil label & data
+    const fakultasLabels = dataFakultas.map(item => item.label);
+    const fakultasData = dataFakultas.map(item => item.jumlah);
+</script>
 @endsection

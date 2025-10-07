@@ -1,5 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var options = {
+    // Pastikan data dari Blade sudah ada
+    if (typeof fakultasLabels === 'undefined' || typeof fakultasData === 'undefined') {
+        console.error("Data fakultas belum tersedia");
+        return;
+    }
+
+    // 🏷️ Mapping alias fakultas → singkatan
+    const fakultasAlias = {
+        "TEKNIK ELEKTRO": "FTE",
+        "REKAYASA INDUSTRI": "FRI",
+        "INFORMATIKA": "FIF",
+        "EKONOMI DAN BISNIS": "FEB",
+        "KOMUNIKASI DAN ILMU SOSIAL": "FKS",
+        "INDUSTRI KREATIF": "FIK",
+        "ILMU TERAPAN": "FIT",
+        "DIREKTORAT KAMPUS SURABAYA": "Kampus Surabaya",
+        "DIREKTORAT KAMPUS PURWOKERTO": "Kampus Purwokerto"
+    };
+
+    // 🔁 Ubah label fakultas dari API menjadi singkatan
+    const fakultasLabelsAlias = fakultasLabels.map(label => fakultasAlias[label.toUpperCase()] || label);
+
+    // Konfigurasi chart
+    const options = {
         chart: {
             type: 'bar',
             height: 300,
@@ -7,11 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         series: [{
             name: 'Jumlah Yudisium',
-            data: [5, 3, 8, 6, 5, 7, 6, 8, 6]
-            
+            data: fakultasData  // ← data dari controller
         }],
         xaxis: {
-            categories: ['FTE', 'FRI', 'FIF', 'FEB', 'FKB', 'FIK', 'FIT', 'Kampus Surabaya', 'Kampus Purwokerto']
+            categories: fakultasLabelsAlias  // ← label sudah disingkat
         },
         colors: ['#facc15'],
         plotOptions: {
@@ -19,6 +41,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 borderRadius: 4,
                 columnWidth: '40%'
             }
+        },
+        dataLabels: {
+            enabled: true
         }
     };
 

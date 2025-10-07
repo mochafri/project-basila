@@ -7,6 +7,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const totalTidakEligibleSpan = document.getElementById('totalTidakEligible');
     const btnTetapkan = document.getElementById('btnTetapkan');
 
+  // 🔹 Load Fakultas
+    try {
+        const res = await fetch(routes.showFaculties);
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error('Token exp : ' + res.statusText);
+        }
+
+        if (data.status === "success" && Array.isArray(data.data)) {
+            data.data.forEach(fakultas => {
+                const opt = document.createElement('option');
+                opt.value = fakultas.facultyid;
+                opt.textContent = fakultas.facultyname;
+                fakultasSelect.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.error('Gagal memuat fakultas:', err);
+        fakultasSelect.innerHTML = '<option value="">Gagal memuat data fakultas</option>';
+    }
+
     fakultasSelect.addEventListener('change', async () => {
         const facultyId = fakultasSelect.value;
         prodiSelect.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
@@ -179,8 +201,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                             confirmButtonText: 'OK',
                             buttonsStyling: false,
                             customClass: { confirmButton: 'btn-ok' }
-                        })
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // 🔁 Redirect ke halaman index2
+                                window.location.href = '/dashboard/index-2';
+                            }
+                        });
                     }
+
 
                 } catch (err) {
                     console.error("Error:", err);

@@ -18,6 +18,7 @@ use App\Http\Controllers\CryptocurrencyController;
 // login
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FacultyController;
+use App\Http\Controllers\IndexController;
 
 Route::get('/yudicium', [YudiciumController::class, 'index']);
 
@@ -122,13 +123,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/index', 'index')->name('index');
             Route::get('/index-2', 'index')->name('index2');
             Route::get('/index-6', 'index')->name('index6');
+            Route::get('/index-4', 'index')->name('index4');
+            
         });
 
         // Index3 routes
         Route::controller(Index3Controller::class)->group(function () {
             Route::get('/index-3', 'index')->name('index3');
             Route::post('/index-3/generate', 'generate')->name('index3.generate');
-            Route::get('/index-4', 'index')->name('index4');
+            
         });
 
         // Dashboard routes
@@ -140,6 +143,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/basilaDashboard', 'basilaDashboard')->name('basilaDashboard');
         });
     });
+
+    //box predikat dashboard
+
+    Route::get('/', [IndexController::class, 'index'])->name('dashboard.index');
+
 
     // generate nomor
     Route::post('/yudisium/generate-nomor', [App\Http\Controllers\NoYudiciumController::class, 'ajaxGenerateNomor'])

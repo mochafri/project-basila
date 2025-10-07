@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
+use App\Models\MhsYud;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Yudicium;
@@ -70,7 +71,7 @@ class Index3Controller extends Controller
                             'study_period' => $mhs['MASA_STUDI'] ?? '-',
                             'pass_sks' => $mhs['PASS_CREDIT'] ?? '-',
                             'ipk' => $mhs['GPA'] ?? '-',
-                            'predikat' => $this->getPredikat($mhs['GPA']),
+                            'predikat' => (new MhsYud)-> getPredikat($mhs['GPA']),
                             'status' => ucfirst(strtolower($mhs['STATUS'])),
                             'alasan_status' => $mhs['STATUS'] === 'ELIGIBLE' ? null : 'Tidak memenuhi syarat',
                         ];
@@ -128,14 +129,4 @@ class Index3Controller extends Controller
         ], 200);
     }
 
-    private function getPredikat($gpa)
-    {
-        if ($gpa >= 3.51)
-            return 'Cumlaude';
-        if ($gpa >= 3.00)
-            return 'Sangat Memuaskan';
-        if ($gpa >= 2.75)
-            return 'Memuaskan';
-        return 'Cukup';
-    }
 }

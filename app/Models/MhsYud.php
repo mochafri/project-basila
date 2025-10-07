@@ -26,12 +26,15 @@ class MhsYud extends Model
 
     public function getPredikat($gpa)
     {
-        if ($gpa >= 3.51)
-            return 'Cumlaude';
-        if ($gpa >= 3.00)
-            return 'Sangat Memuaskan';
-        if ($gpa >= 2.75)
-            return 'Memuaskan';
-        return 'Cukup';
+        if ($gpa == 4.00)
+            return 'Istimewa (Summa Cumlaude)';
+        elseif ($gpa >= 3.51 && $gpa < 4.00)
+            return 'Dengan Pujian (Cumlaude)';
+        elseif($gpa >= 3.00)
+            return 'Sangat Memuaskan (Very Good)';
+        elseif ($gpa >= 2.75)
+            return 'Memuaskan (Good)';
+        else
+        return 'Tanpa Predikat';
     }
 }
