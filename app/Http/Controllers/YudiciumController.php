@@ -77,6 +77,8 @@ class YudiciumController extends Controller
                 ->groupBy('fakultas_id')
                 ->get();
 
+            $countApproval = Yudicium::where('approval_status', 'Waiting')->count();
+
             $dataFakultas = [];
 
             foreach ($faculties as $faculty) {
@@ -103,6 +105,7 @@ class YudiciumController extends Controller
                 'totalMhsYud' => $totalMhsYud,
                 'dataPredikat' => $dataPredikat,
                 'dataFakultas' => $dataFakultas,
+                'countApproval' => $countApproval,
             ]);
         }
 

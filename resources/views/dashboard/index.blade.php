@@ -1,7 +1,8 @@
 @extends('layout.layout')
 
 @php
-    $script = '<script src="' . asset('assets/js/yudisiumChart.js') . '"></script>';
+$script = '
+<script src="' . asset('assets/js/yudisiumChart.js') . '"></script>';
 @endphp
 
 @section('content')
@@ -10,9 +11,10 @@
     <div class="flex items-center space-x-4">
         <!-- Dropdown Periode -->
         <div class="relative">
-            <select id="periodeSelect" class="text-gray-400 border border-gray-300 text-sm rounded-md py-2 pl-10 pr-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500">
+            <select id="periodeSelect"
+                class="text-gray-400 border border-gray-300 text-sm rounded-md py-2 pl-10 pr-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500">
                 <option selected>Ganjil 2024/2025</option>
-                <option >Genap 2024/2025</option>
+                <option>Genap 2024/2025</option>
                 <option>Ganjil 2025/2026</option>
                 <option>Genap 2025/2026</option>
             </select>
@@ -22,7 +24,8 @@
         </div>
 
         <!-- Tombol Tetapkan Periode -->
-        <button class="bg-[#e51411] hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full flex items-center space-x-2">
+        <button
+            class="bg-[#e51411] hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full flex items-center space-x-2">
             <iconify-icon icon="ph:graduation-cap-bold"></iconify-icon>
             <span>TETAPKAN PERIODE</span>
         </button>
@@ -36,7 +39,10 @@
             <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
         </div>
         <div class="flex flex-col text-center">
-            <h2 class="text-4xl text-white font-bold leading-tight">{{$postCount}}</h2>
+            <h2 class="text-4xl text-white font-bold leading-tight">{{ optional($datas->first())->approval_status ===
+                'approved'
+                ? $postCount : 0 }}
+            </h2>
             <p class="text-sm">Total Yudisium</p>
         </div>
     </div>
@@ -47,7 +53,9 @@
             <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
         </div>
         <div class="flex flex-col text-center">
-            <h2 class="text-4xl text-white font-bold leading-tight">{{$totalMhsYud }}</h2>
+            <h2 class="text-4xl text-white font-bold leading-tight">{{ optional($datas->first())->approval_status ===
+                'approved'
+                ? $totalMhsYud : 0 }}</h2>
             <p class="text-sm">Total Mahasiswa</p>
         </div>
     </div>
@@ -78,29 +86,31 @@
 
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-<div class="bg-white p-6 rounded-lg shadow mb-6">
-    <div class="flex justify-between items-center mb-4">
-        <!-- Judul dan Deskripsi -->
-        <div>
-            <h3 class="text-xl font-bold text-gray-900">Periode Yudisium</h3>
-            <p class="text-xs text-gray-500">Berikut detail yudisium mahasiswa periode ganjil 2024/2025</p>
+    <div class="bg-white p-6 rounded-lg shadow mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <!-- Judul dan Deskripsi -->
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">Periode Yudisium</h3>
+                <p class="text-xs text-gray-500">Berikut detail yudisium mahasiswa periode ganjil 2024/2025</p>
+            </div>
+
+            <!-- Total Yudisium dengan Gavel -->
+            <div class="flex items-center space-x-2">
+                <div class="bg-red-600 p-3 rounded-full">
+                    <iconify-icon icon="clarity:gavel-solid" class="text-white text-2xl"></iconify-icon>
+                </div>
+                <div class="flex flex-col justify-center items-center text-center">
+                    <h2 class="text-3xl font-bold text-red-600 leading-tight">{{
+                        optional($datas->first())->approval_status === 'approved'
+                        ? $postCount : 0 }}</h2>
+                    <p class="text-xs text-red-600">Total Yudisium</p>
+                </div>
+            </div>
         </div>
 
-        <!-- Total Yudisium dengan Gavel -->
-        <div class="flex items-center space-x-2">
-            <div class="bg-red-600 p-3 rounded-full">
-                <iconify-icon icon="clarity:gavel-solid" class="text-white text-2xl"></iconify-icon>
-            </div>
-            <div class="flex flex-col justify-center items-center text-center">
-                <h2 class="text-3xl font-bold text-red-600 leading-tight">{{$postCount}}</h2>
-                <p class="text-xs text-red-600">Total Yudisium</p>
-            </div>
-        </div>
+        <!-- Chart -->
+        <div id="yudisiumBarChart" class="apexcharts-tooltip-style-1"></div>
     </div>
-
-    <!-- Chart -->
-    <div id="yudisiumBarChart" class="apexcharts-tooltip-style-1"></div>
-</div>
 
 
     <div class="bg-white p-6 rounded-lg shadow mb-6">
@@ -115,7 +125,9 @@
                     <iconify-icon icon="ph:student-fill" class="text-white text-xl"></iconify-icon>
                 </div>
                 <div class="flex flex-col justify-center items-center text-center">
-                    <h2 class="text-3xl font-bold text-green-600 leading-tight">{{ $totalMhsYud }}</h2>
+                    <h2 class="text-3xl font-bold text-green-600 leading-tight">{{
+                        optional($datas->first())->approval_status === 'approved'
+                        ? $totalMhsYud : 0 }}</h2>
                     <p class="text-xs text-green-600">Total Mahasiswa</p>
                 </div>
             </div>
@@ -130,8 +142,7 @@
                     {{ $item['persen'] }}%
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-red-500 h-2 rounded-full"
-                        style="width: {{ $item['persen'] }}%">
+                    <div class="bg-red-500 h-2 rounded-full" style="width: {{ $item['persen'] }}%">
                     </div>
                 </div>
             </div>
@@ -142,7 +153,7 @@
                 <span>{{ $item['jumlah'] }} / {{ $totalMhsYud }}</span>
             </div>
         </div>
-    @endforeach
+        @endforeach
     </div>
 
 </div>
@@ -153,8 +164,9 @@
         <h4 class="text-xl font-semibold mb-2">Status Penerbitan SK</h4>
         <h5 class="text-sm font-normal mb-2 text-gray-500">Berikut detail penerbitan SK</h5>
         <ul class="text-sm space-y-1">
-            <li class="text-yellow-500">🟡 Total Waiting: 0</li>
-            <li class="text-green-600">🟢 Total Approved: 0</li>
+            <li class="text-yellow-500">🟡 Total Waiting: {{ $countApproval }}</li>
+            <li class="text-green-600">🟢 Total Approved: {{ optional($datas->first())->approval_status === 'approved'
+                ? $postCount : 0 }}</li>
             <li class="text-red-600">🔴 Total Rejected: 0</li>
             <li class="text-blue-600">🔵 Total Done: 43</li>
         </ul>
