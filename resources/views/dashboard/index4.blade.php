@@ -312,12 +312,15 @@
                                     </table>
                                     <div id="approve-yudisium"
                                         class="flex flex-col items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 gap-5">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Status Approve</label>
                                         <select id="approval" class="form-select w-full text-neutral-900">
                                             <option value="Eligible">Eligible</option>
                                             <option value="Tidak Eligible">Tidak Eligible</option>
                                         </select>
-                                        <input type="text" id="catatan"
-                                            class="form-input w-full text-neutral-900" placeholder="Alasan">
+
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
+                                        <textarea id="catatan"
+                                            rows="3" class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
                                         <button id="btn-simpan"
                                             class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
                                     </div>

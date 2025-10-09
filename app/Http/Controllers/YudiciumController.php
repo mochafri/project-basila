@@ -21,7 +21,7 @@ class YudiciumController extends Controller
         $this->token = env('KEY_TOKEN');
         $this->url = env('URL_ACADEMIC');
         $this-> urlFakultas = env('URL_FACULTY');
-        $this-> urlProdi = env('URL_ACADEMIC');
+        $this-> urlProdi = env('URL_PRODY');
     }
 
     public function index(Request $request)
@@ -107,20 +107,16 @@ class YudiciumController extends Controller
                 'dataFakultas' => $dataFakultas,
                 'countApproval' => $countApproval,
             ]);
-        }
-
-        // === ROUTE: index2 (data mahasiswa dengan fakultas/prodi) ===
-        elseif ($routeName === 'index2') {
+        } elseif ($routeName === 'index2') {
 
             $datas->transform(function ($item) use ($faculties, &$prodyCache) {
 
-                // Cocokkan fakultas dari API
                 $faculty = $faculties->firstWhere('facultyid', $item->fakultas_id);
                 $item->facultyname = $faculty['facultyname'] ?? 'Unknown';
                 $facultyId = $faculty['facultyid'] ?? null;
 
                 if ($facultyId) {
-                    // Cache agar tidak panggil API berulang
+
                     if (!isset($prodyCache[$facultyId])) {
                         $prodyRes = Http::withToken(env('KEY_TOKEN'))
                             ->get($this->urlProdi . $facultyId);
