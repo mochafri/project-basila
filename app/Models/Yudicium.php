@@ -14,5 +14,6 @@ class Yudicium extends Model
         'fakultas_id',
         'prodi_id',
         'periode',
+        'approval_status',
     ];
 }

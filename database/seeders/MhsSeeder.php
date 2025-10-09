@@ -16,7 +16,7 @@ class MhsSeeder extends Seeder
     {
         $data = [];
 
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $study_period = rand(6, 8);
             $pass_sks = rand(110, 144);
             $ipk = number_format(rand(200, 395) / 100, 2);

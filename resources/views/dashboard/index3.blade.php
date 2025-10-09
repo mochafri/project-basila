@@ -273,7 +273,7 @@ $script = '
         showFaculties: "{{ route('show.faculties') }}",
         filterMhs: "{{ route('filterMhs') }}",
         approveYudisium: "{{ route('yudicium.approve') }}",
-        ubahStatus: "{{ route('ubahStatus') }}",
+        ubahStatus: "{{ route('tempStatus') }}",
         getAllMhs : "{{ route('getAllMhs') }}"
     };
 </script>

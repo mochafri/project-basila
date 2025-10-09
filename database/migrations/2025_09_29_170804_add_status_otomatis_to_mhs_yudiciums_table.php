@@ -12,11 +12,6 @@ return new class extends Migration
             $table->string('status_otomatis')->nullable()->after('predikat');
             $table->text('alasan_status')->nullable()->after('status_otomatis');
         });
-
-        Schema::table('mahasiswa', function (Blueprint $table) {
-            $table->string('status_otomatis')->nullable()->after('predikat');
-            $table->text('alasan_status')->nullable()->after('status_otomatis');
-        });
     }
 
     public function down(): void
