@@ -5,6 +5,7 @@
     $script = '
         <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
         <script src="' . asset('assets/js/data-table.js') . '" defer></script>
+        <script src="' . asset('assets/js/approveYudcium.js') . '" defer></script>
     ';
 @endphp
 
@@ -308,13 +309,16 @@
 
                                         </tbody>
                                     </table>
-                                    <div class="flex flex-col items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 gap-5">
-                                        <select class="form-select w-full text-neutral-900 bg-gray-100">
-                                            <option>Approve</option>
-                                            <option>Not Approve</option>
+                                    <div id="approve-yudisium"
+                                        class="flex flex-col items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 gap-5">
+                                        <select id="approval" class="form-select w-full text-neutral-900">
+                                            <option value="Eligible">Eligible</option>
+                                            <option value="Tidak Eligible">Tidak Eligible</option>
                                         </select>
-                                        <input type="text" class="form-input w-full text-neutral-900 bg-gray-100" placeholder="Alasan">
-                                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
+                                        <input type="text" id="catatan"
+                                            class="form-input w-full text-neutral-900" placeholder="Alasan">
+                                        <button id="btn-simpan"
+                                            class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
                                     </div>
                                 </div>
                             </div>
@@ -327,8 +331,9 @@
     <script>
         const routes = {
             showFaculties: "{{ route('show.faculties') }}",
-            filterYudisium: "{{ route('yudicium.filter') }}"
+            filterYudisium: "{{ route('yudicium.filter') }}",
+            updateYudisium: "{{ route('yudicium.update') }}"
         };
     </script>
-    <script src="{{ asset('assets/js/approveYudcium.js') }}" defer></script>
+    <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
 @endsection

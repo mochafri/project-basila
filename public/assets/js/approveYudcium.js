@@ -3,10 +3,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const filterButton = document.getElementById('filterButton');
     const tbody = document.querySelector('#selection-table tbody');
 
-    const popup = document.getElementById("popup");
-    const popupBody = document.getElementById("popup-body");
-    const closeButton = document.getElementById("popup-close");
-
     console.log('popup-body?', document.getElementById('popup-body'));
 
     try {
@@ -33,6 +29,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     filterButton.addEventListener('click', async (e) => {
         e.preventDefault();
+
+        console.log("Clicked");
 
         try {
             const parseId = parseInt(fakultasSelect.value);
@@ -89,72 +87,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (err) {
             console.error(err);
         }
-    });
-
-    if (!popup || !popupBody || !closeButton) {
-        console.log("Popup : ", popup);
-        console.log("Popup Body : ", popupBody);
-        console.log("Close Button : ", closeButton);
-        console.error("Popup elements not found")
-        return;
-    }
-
-    document.addEventListener("click", async (e) => {
-        const button = e.target.closest(".btn-popup");
-        if (!button) return;
-
-        e.preventDefault();
-
-        const yudId = button.dataset.id;
-        console.log("ID : ", yudId);
-
-        try {
-            const res = await fetch(`/yudicium/${yudId}/mahasiswa`);
-            if (!res.ok) throw new Error('Failed to fetch');
-
-            const data = await res.json();
-            console.log("Data:", data);
-
-            if (Array.isArray(data.mahasiswa) && data.mahasiswa.length > 0) {
-                popupBody.innerHTML = `
-                    ${data.mahasiswa.map((mhs, index) => `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${mhs.nim}</td>
-                            <td>${mhs.name}</td>
-                            <td>${mhs.study_period}</td>
-                            <td>${mhs.pass_sks}</td>
-                            <td>${mhs.ipk}</td>
-                            <td>${mhs.predikat}</td>
-                            <td>${mhs.status && mhs.status.trim() !== ""
-                        ? mhs.status
-                        : mhs.status_otomatis
-                    }</td>
-                            <td>${mhs.alasan_status || '-'}</td>
-                        </tr>
-                    `).join('')}
-                `;
-            }
-
-            popup.classList.remove("hidden");
-        } catch (err) {
-            console.error(err);
-            popupBody.innerHTML = `
-                <tr>
-                    <td colspan="8" class="text-center">Gagal memuat data</td>
-                </tr>
-            `;
-            popup.classList.remove("hidden");
-        }
-    });
-
-    closeButton.addEventListener("click", () => {
-        popup.classList.add("hidden");
-    });
-
-    popup.addEventListener("click", (e) => {
-        if (e.target === popup)
-            popup.classList.add("hidden");
     });
 });
 

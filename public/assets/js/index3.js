@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const res = await fetch(`/faculties/${facultyId}`);
             const data = await res.json();
+
             if (data.success === "success" && Array.isArray(data.data)) {
                 data.data.forEach(prodi => {
                     const opt = document.createElement('option');
@@ -51,6 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     prodiSelect.appendChild(opt);
                 });
             }
+
         } catch (err) {
             console.error('Gagal memuat prodi:' + err);
             prodiSelect.innerHTML = '<option value="">Gagal memuat data prodi</option>';
@@ -284,7 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     customClass: {
                         confirmButton: 'btn-ok'
                     }
-                });
+                })
                 document.getElementById('statusModal').classList.add('hidden');
                 form.dispatchEvent(new Event("submit"));
             } else {

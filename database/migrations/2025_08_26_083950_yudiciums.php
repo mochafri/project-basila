@@ -17,7 +17,8 @@ return new class extends Migration {
             $table->integer('fakultas_id');
             $table->integer('prodi_id');
             $table->enum('approval_status', ['not_approved', 'approved'])->default('not_approved');
-            $table->unsignedBigInteger('approved_by')->nullable(); 
+            $table->string('catatan')->nullable();
+            $table->unsignedBigInteger('approved_by')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->timestamps();
         });

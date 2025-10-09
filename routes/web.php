@@ -204,22 +204,22 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    // Route::put('/yudicium/{id}/approve', [YudiciumController::class, 'approve'])->name('yudicium.approve');
+
+    // Route get mahasiswa and filter mahasiswa with api academic or database local
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/get-all-mhs', [Index3Controller::class, 'getAllMhs'])->name('getAllMhs');
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::post('/temp-status', [TempStatusController::class, 'postStatus'])->name('tempStatus');
-    });
-
-    Route::middleware(['auth'])->group(function () {
         Route::post('/filter-mhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
     });
 
-    Route::get('/yudicium/{id}/mahasiswa', [YudiciumController::class, 'getMahasiswa'])
-        ->name('yudicium.mahasiswa');
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/temp-status', [TempStatusController::class, 'postStatus'])->name('tempStatus');
+    });
+
+    // Route get data fakultas and prodi from api telkom university
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/faculties', [FacultyController::class, 'faculty'])->name('show.faculties');
@@ -229,12 +229,23 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/faculties/{id}', [FacultyController::class, 'prody'])->name('show.prody');
     });
 
+    // Yudicium Routes
+
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/yudicium/{id}/mahasiswa', [YudiciumController::class, 'getMahasiswa'])
+            ->name('yudicium.mahasiswa');
+    });
+
     Route::middleware(['auth'])->group(function () {
         Route::post('/yudicium-approve', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::post('/yudicium-filter', [AproveYudicium::class, 'filterYudisium'])->name('yudicium.filter');
+        Route::post('/yudicium-filter', [YudiciumController::class, 'filterYudisium'])->name('yudicium.filter');
+    });
+
+    Route::middleware(['auth'])->group(function() {
+        Route::post('/yudicium-update', [YudiciumController::class, 'updateStatus'])->name('yudicium.update');
     });
 });
 
