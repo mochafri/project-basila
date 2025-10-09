@@ -28,9 +28,9 @@
             <!-- Penambahan -->
 
             <li class="mb-4">
-                <a href="{{ route('index') }}">
+                <a href="https://basila.telkomuniversity.ac.id/basilav2/" target="_blank">
                     <iconify-icon icon="solar:home-smile-angle-outline" class="menu-icon"></iconify-icon>
-                    <span>Dashboard</span>
+                    <span>Beranda</span>
                 </a>
 
             </li>
@@ -108,7 +108,7 @@
                 <ul class="sidebar-submenu">
                     <li>
                         <a href="{{ route('index') }}"><i
-                                class="ri-circle-fill circle-icon text-dark w-auto"></i> Beranda</a>
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i> Dashboard</a>
                     </li>
                     <li>
                         <a href="{{ route('index2') }}"><i
