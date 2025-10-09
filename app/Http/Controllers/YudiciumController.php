@@ -21,7 +21,7 @@ class YudiciumController extends Controller
         $this->token = env('KEY_TOKEN');
         $this->url = env('URL_ACADEMIC');
         $this-> urlFakultas = env('URL_FACULTY');
-        $this-> urlProdi = env('URL_ACADEMIC');
+        $this-> urlProdi = env('URL_PRODY');
     }
 
     public function index(Request $request)
