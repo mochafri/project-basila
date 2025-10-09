@@ -180,8 +180,7 @@
                                             </label>
                                         </div>
                                     </td>
-                                    <td><a href="javascript:void(0)" class="text-primary-600">KR.418/AKD15/AKD
-                                            BAA/2024</a></td>
+                                    <td><a href="javascript:void(0)" class="text-primary-600"></a></td>
                                     <td>
                                         <div class="flex items-center">
                                             <h6 class="text-base mb-0 ">
@@ -217,8 +216,7 @@
                                         @else
                                             <div class="flex items-center">
                                                 <span
-                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Not
-                                                    Approved</span>
+                                                    class="bg-warning-100  text-warning-600  px-6 py-1.5 rounded-full font-medium text-sm">{{ $data->approval_status}}</span>
                                             </div>
                                         @endif
                                     </td>

@@ -50,7 +50,9 @@ $script = '
                                     <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                 </div>
                                 <div class="flex flex-col text-center">
-                                    <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
+                                    <h2 class="text-4xl text-white font-bold leading-tight">{{
+                                        optional($datas->first())->approval_status === 'approved'
+                                        ? $totalMhsYud : 0 }}</h2>
                                     <p class="text-sm">Total Yudisium</p>
                                 </div>
                             </div>
@@ -62,7 +64,9 @@ $script = '
                                     <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                                 </div>
                                 <div class="flex flex-col text-center">
-                                    <h2 class="text-4xl text-white font-bold leading-tight">214</h2>
+                                    <h2 class="text-4xl text-white font-bold leading-tight">{{
+                                        optional($datas->first())->approval_status === 'approved'
+                                        ? $postCount : 0 }}</h2>
                                     <p class="text-sm">Total Mahasiswa</p>
                                 </div>
                             </div>
@@ -109,7 +113,9 @@ $script = '
                                         <span class="ri-circle-fill circle-icon text-green-500 w-auto"></span>
                                         <p class="text-neutral-800">Total Eligible</p>
                                     </div>
-                                    <p class="text-neutral-800">214</p>
+                                    <p class="text-neutral-800">{{ optional($datas->first())->approval_status ===
+                                        'approved'
+                                        ? $postCount : 0 }}</p>
                                 </div>
                                 <div class="flex items-center justify-between font-medium">
                                     <div class="flex items-center gap-2">
@@ -126,7 +132,8 @@ $script = '
                                 <div class="w-[60%] flex flex-col gap-2 font-medium">
                                     <div class="flex justify-between items-center">
                                         <label for="fakultas" class="text-neutral-500">Jenis Laporan</label>
-                                        <select name="fakultas" id="fakultas" class="text-neutral-500  w-[50%] form-select text-sm">
+                                        <select name="fakultas" id="fakultas"
+                                            class="text-neutral-500  w-[50%] form-select text-sm">
                                             <option value="informatika">Yudisium</option>
                                             <option value="Ilmu Terapan">Tidak Yudisium</option>
 
@@ -134,7 +141,8 @@ $script = '
                                     </div>
                                     <div class="flex justify-between items-center">
                                         <label for="Semester" class="text-neutral-500">Format</label>
-                                        <select name="Semester" id="Semester" class="text-neutral-500 w-[50%] form-select text-sm">
+                                        <select name="Semester" id="Semester"
+                                            class="text-neutral-500 w-[50%] form-select text-sm">
                                             <option value="genap24">Excel</option>
                                             <option value="ganjil24">PDF</option>
                                         </select>

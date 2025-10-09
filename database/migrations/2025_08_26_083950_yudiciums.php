@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('periode');
             $table->integer('fakultas_id');
             $table->integer('prodi_id');
-            $table->enum('approval_status', ['not_approved', 'approved'])->default('not_approved');
+            $table->enum('approval_status', ['Waiting', 'approved'])->default('Waiting');
             $table->unsignedBigInteger('approved_by')->nullable(); 
             $table->timestamp('approved_at')->nullable();
             $table->timestamps();
