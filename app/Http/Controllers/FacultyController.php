@@ -7,18 +7,18 @@ use Illuminate\Support\Facades\Http;
 
 class FacultyController extends Controller
 {
-    private $token;
-
     public function __construct()
     {
         $this->token = env('KEY_TOKEN');
+        $this->urlFakulty = env('URL_FACULTY');
+        $this->urlPrody = env('URL_PRODY');
     }
 
     public function faculty()
     {
         try {
             $response = Http::withToken($this->token)
-                ->get('https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69');
+                ->get($this->urlFakulty);
 
             if ($response->successful()) {
                 $faculties = $response->json();
@@ -58,7 +58,7 @@ class FacultyController extends Controller
     {
         try {
             $response = Http::withToken($this->token)
-                ->get("https://gateway.telkomuniversity.ac.id/b2ac79622cd60bce8dc5a1a7171bfc9c/{$id}");
+                ->get($this->urlPrody . $id);
 
             if ($response->successful() === 403) {
                 \Log::info('Token tidak valid');

@@ -10,11 +10,9 @@ use App\Models\Post;
 
 class Index3Controller extends Controller
 {
-    public $url;
-
     public function __construct()
     {
-        $this->url = 'https://webservice-feeder.telkomuniversity.ac.id/apidikti/getRegpd.php?stt=7';
+        $this->url = env('URL_ACADEMIC');
     }
 
     public function index(Request $request)

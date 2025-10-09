@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (err) {
         console.error(err);
+        fakultasSelect.innerHTML = '<option value="">Gagal memuat data fakultas</option>';
     }
 
     filterButton.addEventListener('click', async (e) => {

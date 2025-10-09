@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (Array.isArray(data.yudisium) && data.yudisium.length > 0) {
                     const status = data.yudisium[0].approval_status;
 
-                    const option = ['not_approved', 'approved'];
+                    const option = ['Waiting', 'approved'];
 
                     approvalSelect.innerHTML = option.map(opt =>
                         `<option value="${opt}" ${opt} === ${status} ? 'selected' : ''}>

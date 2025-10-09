@@ -211,8 +211,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                             confirmButtonText: 'OK',
                             buttonsStyling: false,
                             customClass: { confirmButton: 'btn-ok' }
-                        })
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // 🔁 Redirect ke halaman index2
+                                window.location.href = '/dashboard/index-2';
+                            }
+                        });
                     }
+
 
                 } catch (err) {
                     console.error("Error:", err);
