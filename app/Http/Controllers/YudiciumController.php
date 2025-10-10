@@ -21,7 +21,7 @@ class YudiciumController extends Controller
         $this->token = env('KEY_TOKEN');
         $this->url = env('URL_ACADEMIC');
         $this-> urlFakultas = env('URL_FACULTY');
-        $this-> urlProdi = env('URL_ACADEMIC');
+        $this-> urlProdi = env('URL_PRODY');
     }
 
     public function index(Request $request)
@@ -127,11 +127,13 @@ class YudiciumController extends Controller
 
                         $prodyCache[$facultyId] = $prodyRes->successful() ? collect($prodyRes->json()) : collect();
                     }
-
+                    
                     $prody = $prodyCache[$facultyId];
                     if ($prody->isNotEmpty()) {
                         $program = $prody->firstWhere('studyprogramid', (string) $item->prodi_id);
                         $item->prodyname = $program['studyprogramname'] ?? 'Unknown';
+                    } else {
+                        $item->prodyname = 'Unknown';
                     }
                 } else {
                     $item->prodyname = 'Unknown';
@@ -344,6 +346,8 @@ class YudiciumController extends Controller
                 if ($prody->isNotEmpty()) {
                     $prodi = $prody->firstWhere('studyprogramid', $item->prodi);
                     $item->prodiname = $prodi['studyprogramname'] ?? 'Unknown';
+                } else {
+                    $item->prodiname = 'Unknown';
                 }
             } else {
                 $item->prodiname = 'Unknown';
