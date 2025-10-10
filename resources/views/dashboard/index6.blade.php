@@ -52,7 +52,7 @@ $script = '
                                 <div class="flex flex-col text-center">
                                     <h2 class="text-4xl text-white font-bold leading-tight">{{
                                         optional($datas->first())->approval_status === 'approved'
-                                        ? $totalMhsYud : 0 }}</h2>
+                                        ? $postCount : 0 }}</h2>
                                     <p class="text-sm">Total Yudisium</p>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@ $script = '
                                 <div class="flex flex-col text-center">
                                     <h2 class="text-4xl text-white font-bold leading-tight">{{
                                         optional($datas->first())->approval_status === 'approved'
-                                        ? $postCount : 0 }}</h2>
+                                        ? $totalMhsYud : 0 }}</h2>
                                     <p class="text-sm">Total Mahasiswa</p>
                                 </div>
                             </div>

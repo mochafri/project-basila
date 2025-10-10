@@ -12,7 +12,7 @@ $script = '
 
 
 @section('content')
-<h1 class="text-2xl font-bold text-neutral-400 mb-5">Penetapan Yudisium / Tambah</h1>
+<h1 class="text-2xl font-semibold text-gray-600 mb-5">Penetapan Yudisium / Tambah</h1>
 <div class="bg-white p-6 rounded-xl shadow-md mb-6">
     <h2 class="text-lg font-semibold mb-1">Mahasiswa Yudisium</h2>
     <p class="text-sm text-gray-500 mb-4">Pastikan data yang dipilih telah sesuai untuk menampilkan data mahasiswa
