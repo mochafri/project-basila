@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 // 🔁 Redirect ke halaman index2
-                                window.location.href = '/dashboard/index-2';
+                                window.location.href = '/dashboard/penetapan-yudisium';
                             }
                         });
                     }

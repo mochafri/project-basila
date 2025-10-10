@@ -28,7 +28,7 @@
             <!-- Penambahan -->
 
             <li class="mb-4">
-                <a href="https://basila.telkomuniversity.ac.id/basilav2/" target="_blank">
+                <a href="https://basila.telkomuniversity.ac.id/basilav2/" onclick="confirm('Anda akan diarahkan ke halaman lain, lanjutkan?')">
                     <iconify-icon icon="solar:home-smile-angle-outline" class="menu-icon"></iconify-icon>
                     <span>Beranda</span>
                 </a>

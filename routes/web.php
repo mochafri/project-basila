@@ -267,13 +267,9 @@ Route::middleware(['auth'])->group(function () {
 
 // routes/web.php
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');
-<<<<<<< HEAD
-Route::post('/authentication/sign-in', [AuthController::class, 'processSignIn'])->name('signin.process');
-=======
 Route::post('/authentication/sign-in', [AuthController::class, 'processSignIn'])->name('signin.process');
 
 
 Route::get('/', function () {
     return redirect()->route('signin.show');
 });
->>>>>>> b2183255f2571b53dfdf9de6ce767e153b623760
