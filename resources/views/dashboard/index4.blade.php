@@ -11,7 +11,7 @@
 
 @section('content')
     <!-- Crypto Home Widgets Start -->
-    <h1 class="text-2xl font-bold text-neutral-400 mb-5">Approval Yudisium</h1>
+    <h1 class="text-2xl font-semibold text-gray-600 mb-5">Approval Yudisium</h1>
 
     <!-- Crypto Home Widgets End -->
 
@@ -66,7 +66,9 @@
                                         <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{
+                                            optional($datas->first())->approval_status === 'approved'
+                                            ? $postCount : 0 }}</h2>
                                         <p class="text-sm">Total Yudisium</p>
                                     </div>
                                 </div>

@@ -20,8 +20,8 @@ class YudiciumController extends Controller
     {
         $this->token = env('KEY_TOKEN');
         $this->url = 'https://webservice-feeder.telkomuniversity.ac.id/apidikti/getRegpd.php?stt=7';
-        $this-> urlFakultas = 'https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69';
-        $this-> urlProdi = 'https://gateway.telkomuniversity.ac.id/b2ac79622cd60bce8dc5a1a7171bfc9c/';
+        $this->urlFakultas = 'https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69';
+        $this->urlProdi = 'https://gateway.telkomuniversity.ac.id/b2ac79622cd60bce8dc5a1a7171bfc9c/';
     }
 
     public function index(Request $request)
@@ -45,9 +45,15 @@ class YudiciumController extends Controller
             // ===============================
             // 1️⃣ Hitung jumlah per predikat
             // ===============================
-            $predikatCounts = MhsYud::select('predikat', DB::raw('COUNT(*) as total'))
-                ->groupBy('predikat')
+            $predikatCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+                ->where('yudiciums.approval_status', 'approved')
+                ->select('mhs_yudiciums.predikat', DB::raw('COUNT(*) as total'))
+                ->groupBy('mhs_yudiciums.predikat')
                 ->get();
+
+            $totalMhsYud = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+                ->where('yudiciums.approval_status', 'approved')
+                ->count();
 
             $predikatList = [
                 'Istimewa (Summa Cumlaude)',
@@ -73,11 +79,20 @@ class YudiciumController extends Controller
             // ===============================
             // 2️⃣ Hitung jumlah yudisium per fakultas
             // ===============================
-            $fakultasCounts = MhsYud::select('fakultas_id', DB::raw('COUNT(*) as total'))
-                ->groupBy('fakultas_id')
+            $fakultasCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+                ->where('yudiciums.approval_status', 'approved')
+                ->select('mhs_yudiciums.fakultas_id', DB::raw('COUNT(*) as total'))
+                ->groupBy('mhs_yudiciums.fakultas_id')
                 ->get();
 
-            $countApproval = Yudicium::where('approval_status', 'Waiting')->count();
+            // Hitung total mahasiswa yudisium yang sudah disetujui
+            $totalMhsYud = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+                ->where('yudiciums.approval_status', 'approved')
+                ->count();
+            
+            $approvalWaiting = Yudicium::where('approval_status', 'not_approved')->count();
+
+            $countApproval = Yudicium::where('approval_status', 'approved')->count();
 
             $dataFakultas = [];
 
@@ -106,6 +121,7 @@ class YudiciumController extends Controller
                 'dataPredikat' => $dataPredikat,
                 'dataFakultas' => $dataFakultas,
                 'countApproval' => $countApproval,
+                'waitingApproval' => $approvalWaiting
             ]);
         }
 
@@ -355,12 +371,12 @@ class YudiciumController extends Controller
         return response()->json([
             'success' => true,
             'data' => $yudiciums
-        ],200);
+        ], 200);
     }
 
     public function updateStatus(Request $request)
     {
-        try{
+        try {
 
             $validate = $request->validate([
                 'approval_status' => 'string|required',
@@ -376,27 +392,27 @@ class YudiciumController extends Controller
                     'catatan' => $validate['catatan']
                 ]);
 
-            if(!$yudisium){
+            if (!$yudisium) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Yudisium not found'
-                ],403);
+                ], 403);
             }
 
             $yudisium = Yudicium::find($request->yudisium_id);
-            \Log::info('Update status : '. $yudisium);
+            \Log::info('Update status : ' . $yudisium);
 
             return response()->json([
                 'success' => true,
                 'data' => $yudisium->fresh()
-            ],200);
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
                 'line' => $e->getLine()
-            ],500);
+            ], 500);
         }
     }
 }

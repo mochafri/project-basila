@@ -213,7 +213,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             customClass: { confirmButton: 'btn-ok' }
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // 🔁 Redirect ke halaman index2
                                 window.location.href = '/dashboard/index-2';
                             }
                         });

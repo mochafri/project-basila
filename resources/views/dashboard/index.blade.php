@@ -164,11 +164,12 @@ $script = '
         <h4 class="text-xl font-semibold mb-2">Status Penerbitan SK</h4>
         <h5 class="text-sm font-normal mb-2 text-gray-500">Berikut detail penerbitan SK</h5>
         <ul class="text-sm space-y-1">
-            <li class="text-yellow-500">🟡 Total Waiting: {{ $countApproval }}</li>
+            <li class="text-yellow-500">🟡 Total Waiting: {{ $waitingApproval }}</li>
             <li class="text-green-600">🟢 Total Approved: {{ optional($datas->first())->approval_status === 'approved'
                 ? $postCount : 0 }}</li>
             <li class="text-red-600">🔴 Total Rejected: 0</li>
-            <li class="text-blue-600">🔵 Total Done: 43</li>
+            <li class="text-blue-600">🔵 Total Done: {{ optional($datas->first())->approval_status === 'approved'
+                ? $postCount : 0 }}</li>
         </ul>
     </div>
 
