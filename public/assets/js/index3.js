@@ -1,3 +1,6 @@
+let faculty_Id;
+let prodi_Id;
+
 document.addEventListener('DOMContentLoaded', async () => {
     const fakultasSelect = document.getElementById('fakultas');
     const prodiSelect = document.getElementById('prodi');
@@ -6,6 +9,75 @@ document.addEventListener('DOMContentLoaded', async () => {
     const totalEligibleSpan = document.getElementById('totalEligible');
     const totalTidakEligibleSpan = document.getElementById('totalTidakEligible');
     const btnTetapkan = document.getElementById('btnTetapkan');
+
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        const res = await fetch(`/index3/${id}`);
+
+        if (!res.ok)
+            throw new Error('Failed to fetch');
+
+        const data = await res.json();
+
+        console.log("Data : ", data);
+
+        if (Array.isArray(data.data) && Array.isArray(data.data)) {
+            data.data.forEach((mhs, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                        <td>${idx + 1}</td>
+                        <td>${mhs.nim}</td>
+                        <td>${mhs.name}</td>
+                        <td>${mhs.study_period} Semester</td>
+                        <td>${mhs.pass_sks}</td>
+                        <td>${mhs.ipk}</td>
+                        <td>${mhs.predikat}</td>
+                        <td>
+                            <span
+                                class="statusSpan ${mhs.status === "Eligible"
+                        ? "bg-success-100 text-success-600"
+                        : "bg-danger-100 text-danger-600"
+                    } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
+                                data-nim="${mhs.nim}"
+                                data-status="${mhs.status}"
+                                data-alasan="${mhs.alasan_status}">
+                                ${mhs.status}
+                            </span>
+                        </td>
+                        <td>
+                            ${mhs.alasan_status
+                        ? `<span class="text-xs text-gray-500">${mhs.alasan_status}</span>`
+                        : '-'
+                    }
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
+                                <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
+                            </a>
+                        </td>
+                    `;
+
+                tbody.appendChild(tr);
+
+                faculty_Id = mhs.fakultas;
+                prodi_Id = mhs.prodi;
+
+                console.log("ProdiId : ", prodi_Id);
+
+                console.log("Fakultas : ", mhs.fakultas);
+                console.log("Prodi : ", mhs.prodi);
+
+                console.log("FakultasId : ", faculty_Id);
+
+                if (mhs.status === "Eligible") totalEligible++;
+                else totalTidakEligible++;
+            });
+        }
+    } catch (err) {
+        console.error(err);
+    }
 
     // Ambil data fakultas dari API
     try {
@@ -24,7 +96,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fakultasSelect.appendChild(opt);
             });
         }
-
     } catch (err) {
         console.error('Gagal memuat fakultas:', err);
         fakultasSelect.innerHTML = '<option value="">Gagal memuat data fakultas</option>';
@@ -109,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 class="statusSpan ${mhs.status === "Eligible"
                             ? "bg-success-100 text-success-600"
                             : "bg-danger-100 text-danger-600"
-                            } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
+                        } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
                                 data-nim="${mhs.nim}"
                                 data-status="${mhs.status}"
                                 data-alasan="${mhs.alasan_status}">
@@ -166,8 +237,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const facultyId = parseInt(fakultasSelect.value);
-                    const prodiId = parseInt(prodiSelect.value);
+                    facultyId = parseInt(fakultasSelect.value) || null;
+                    prodiId = parseInt(prodiSelect.value) || null;
+
+                    console.log("Fakultas : ", facultyId);
+                    console.log("Prodi : ", prodiId);
 
                     const res = await fetch(routes.approveYudisium, {
                         method: "POST",
@@ -176,8 +250,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
                         },
                         body: JSON.stringify({
-                            fakultas_id: facultyId,
-                            prodi_id: prodiId,
+                            fakultas_id: facultyId || faculty_Id,
+                            prodi_id: prodiId ||  prodi_Id,
                             status: status,
                             alasan_status: alasan
                         })
@@ -214,7 +288,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             customClass: { confirmButton: 'btn-ok' }
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // 🔁 Redirect ke halaman index2
                                 window.location.href = '/dashboard/penetapan-yudisium';
                             }
                         });

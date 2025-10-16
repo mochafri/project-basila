@@ -252,6 +252,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
+        Route::get('/index3/{id}', [YudiciumController::class, 'edit'])->name('edit');
+    });
+
+    Route::middleware(['auth'])->group(function () {
         Route::post('/yudicium-approve', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
     });
 
@@ -259,7 +263,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/yudicium-filter', [YudiciumController::class, 'filterYudisium'])->name('yudicium.filter');
     });
 
-    Route::middleware(['auth'])->group(function() {
+    Route::middleware(['auth'])->group(function () {
         Route::post('/yudicium-update', [YudiciumController::class, 'updateStatus'])->name('yudicium.update');
     });
 });

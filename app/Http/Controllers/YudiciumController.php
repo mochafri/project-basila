@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Yudicium;
 use App\Models\MhsYud;
+use App\Models\Yudicium;
 use App\Models\TempStatus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
@@ -39,10 +39,10 @@ class YudiciumController extends Controller
         $prodyCache = [];
 
         $predikatCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
-                ->where('yudiciums.approval_status', 'approved')
-                ->select('mhs_yudiciums.predikat', DB::raw('COUNT(*) as total'))
-                ->groupBy('mhs_yudiciums.predikat')
-                ->get();
+            ->where('yudiciums.approval_status', 'approved')
+            ->select('mhs_yudiciums.predikat', DB::raw('COUNT(*) as total'))
+            ->groupBy('mhs_yudiciums.predikat')
+            ->get();
 
         $fakultasCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
             ->where('yudiciums.approval_status', 'approved')
@@ -408,5 +408,56 @@ class YudiciumController extends Controller
                 'line' => $e->getLine()
             ], 500);
         }
+    }
+
+    public function edit($id)
+    {
+        if (!$id) {
+            \Log::info('ID not found');
+            return response()->json([
+                'success' => false,
+                'message' => 'ID not found'
+            ]);
+        }
+
+        $mahasiswa = MhsYud::select('nim', 'name', 'fakultas_id', 'prody_id', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status', 'status_otomatis', 'alasan_status')
+            ->where('yudicium_id', $id)
+            ->get();
+        $nim = $mahasiswa->pluck('nim');
+
+        $result = [];
+
+        $result = collect($mahasiswa ?? [])
+            ->map(function ($mhs) {
+                $tempStatus = TempStatus::select('status', 'alasan')
+                    ->where('nim', $mhs['nim'])
+                    ->get();
+                $statusFromTemp = $tempStatus->value('status');
+                $alasanFromTemp = $tempStatus->value('alasan');
+
+                $finalStatus = !empty($statusFromTemp) ? $statusFromTemp : $mhs['status_otomatis'];
+
+                return [
+                    'nim' => $mhs['nim'],
+                    'name' => $mhs['name'],
+                    'fakultas' => $mhs['fakultas_id'],
+                    'prodi' => $mhs['prody_id'],
+                    'study_period' => $mhs['study_period'],
+                    'pass_sks' => $mhs['pass_sks'],
+                    'ipk' => $mhs['ipk'] ?? '-',
+                    'predikat' => $mhs['predikat'],
+                    'status' => $finalStatus,
+                    'alasan_status' => $alasanFromTemp ?? '-'
+                ];
+            });
+
+        \Log::info('NIM : ', $nim->toArray());
+        \Log::info('Mhs Yud : ', $mahasiswa->toArray());
+        \Log::info('Result : ', $result->toArray());
+
+        return response()->json([
+            'success' => true,
+            'data' => $result
+        ]);
     }
 }

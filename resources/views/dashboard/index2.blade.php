@@ -217,6 +217,11 @@
                                                 <span
                                                     class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Approved</span>
                                             </div>
+                                        @elseif($data->approval_status === 'Rejected')
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Rejected</span>
+                                            </div>
                                         @else
                                             <div class="flex items-center">
                                                 <span
@@ -236,9 +241,9 @@
                                             data-id={{ $data->id }}>
                                             <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
                                         </button>
-                                        <a href="javascript:void(0)"
-                                            class="w-8 h-8 bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 rounded-full inline-flex items-center justify-center">
-                                            <iconify-icon icon="lucide:edit"></iconify-icon>
+                                        <a href="{{ route('index3', ['id' => $data->id]) }}"
+                                            class="w-8 h-8 bg-warning-100 dark:bg-warning-600/25 text-warning-600 dark:text-warning-400 rounded-full inline-flex items-center justify-center">
+                                            <iconify-icon icon="mingcute:edit-2-line"></iconify-icon>
                                         </a>
                                         <a href="javascript:void(0)"
                                             class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
