@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
-use Symfony\Component\Yaml\Yaml;
 
 class YudiciumController extends Controller
 {
@@ -20,8 +19,8 @@ class YudiciumController extends Controller
     {
         $this->token = env('KEY_TOKEN');
         $this->url = env('URL_ACADEMIC');
-        $this-> urlFakultas = env('URL_FACULTY');
-        $this-> urlProdi = env('URL_PRODY');
+        $this->urlFakultas = env('URL_FACULTY');
+        $this->urlProdi = env('URL_PRODY');
     }
 
     public function index(Request $request)
@@ -39,16 +38,33 @@ class YudiciumController extends Controller
 
         $prodyCache = [];
 
+        $predikatCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+                ->where('yudiciums.approval_status', 'approved')
+                ->select('mhs_yudiciums.predikat', DB::raw('COUNT(*) as total'))
+                ->groupBy('mhs_yudiciums.predikat')
+                ->get();
+
+        $fakultasCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+            ->where('yudiciums.approval_status', 'approved')
+            ->select('mhs_yudiciums.fakultas_id', DB::raw('COUNT(*) as total'))
+            ->groupBy('mhs_yudiciums.fakultas_id')
+            ->get();
+
+        // Hitung total mahasiswa yudisium yang sudah disetujui
+        $totalMhsYud = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+            ->where('yudiciums.approval_status', 'approved')
+            ->count();
+
+        $approvalWaiting = Yudicium::where('approval_status', 'Waiting')->count();
+
+        $countApproval = Yudicium::where('approval_status', 'approved')->count();
+
         // === ROUTE: index (Dashboard utama) ===
         if ($routeName === 'index' || $routeName === 'index4' || $routeName === 'index6') {
 
             // ===============================
             // 1️⃣ Hitung jumlah per predikat
             // ===============================
-            $predikatCounts = MhsYud::select('predikat', DB::raw('COUNT(*) as total'))
-                ->groupBy('predikat')
-                ->get();
-
             $predikatList = [
                 'Istimewa (Summa Cumlaude)',
                 'Dengan Pujian (Cumlaude)',
@@ -73,11 +89,6 @@ class YudiciumController extends Controller
             // ===============================
             // 2️⃣ Hitung jumlah yudisium per fakultas
             // ===============================
-            $fakultasCounts = MhsYud::select('fakultas_id', DB::raw('COUNT(*) as total'))
-                ->groupBy('fakultas_id')
-                ->get();
-
-            $countApproval = Yudicium::where('approval_status', 'Waiting')->count();
 
             $dataFakultas = [];
 
@@ -106,28 +117,25 @@ class YudiciumController extends Controller
                 'dataPredikat' => $dataPredikat,
                 'dataFakultas' => $dataFakultas,
                 'countApproval' => $countApproval,
+                'waitingApproval' => $approvalWaiting
             ]);
-        }
-
-        // === ROUTE: index2 (data mahasiswa dengan fakultas/prodi) ===
-        elseif ($routeName === 'index2') {
+        } elseif ($routeName === 'index2') {
 
             $datas->transform(function ($item) use ($faculties, &$prodyCache) {
 
-                // Cocokkan fakultas dari API
                 $faculty = $faculties->firstWhere('facultyid', $item->fakultas_id);
                 $item->facultyname = $faculty['facultyname'] ?? 'Unknown';
                 $facultyId = $faculty['facultyid'] ?? null;
 
                 if ($facultyId) {
-                    // Cache agar tidak panggil API berulang
+
                     if (!isset($prodyCache[$facultyId])) {
                         $prodyRes = Http::withToken(env('KEY_TOKEN'))
                             ->get($this->urlProdi . $facultyId);
 
                         $prodyCache[$facultyId] = $prodyRes->successful() ? collect($prodyRes->json()) : collect();
                     }
-                    
+
                     $prody = $prodyCache[$facultyId];
                     if ($prody->isNotEmpty()) {
                         $program = $prody->firstWhere('studyprogramid', (string) $item->prodi_id);
@@ -146,6 +154,7 @@ class YudiciumController extends Controller
                 'datas' => $datas,
                 'postCount' => $postCount,
                 'totalMhsYud' => $totalMhsYud,
+                'countApproval' => $countApproval
             ]);
         }
     }
@@ -321,6 +330,7 @@ class YudiciumController extends Controller
                 DB::raw('COUNT(mhs_yudiciums.id) as total_mhs')
             )
             ->where('yudiciums.fakultas_id', $validate['fakultas_id'])
+            ->where('yudiciums.approval_status', 'Waiting')
             ->groupBy('yudiciums.id', 'yudiciums.no_yudicium')
             ->get();
 
@@ -359,12 +369,12 @@ class YudiciumController extends Controller
         return response()->json([
             'success' => true,
             'data' => $yudiciums
-        ],200);
+        ], 200);
     }
 
     public function updateStatus(Request $request)
     {
-        try{
+        try {
 
             $validate = $request->validate([
                 'approval_status' => 'string|required',
@@ -380,27 +390,27 @@ class YudiciumController extends Controller
                     'catatan' => $validate['catatan']
                 ]);
 
-            if(!$yudisium){
+            if (!$yudisium) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Yudisium not found'
-                ],403);
+                ], 403);
             }
 
             $yudisium = Yudicium::find($request->yudisium_id);
-            \Log::info('Update status : '. $yudisium);
+            \Log::info('Update status : ' . $yudisium);
 
             return response()->json([
                 'success' => true,
                 'data' => $yudisium->fresh()
-            ],200);
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
                 'line' => $e->getLine()
-            ],500);
+            ], 500);
         }
     }
 }

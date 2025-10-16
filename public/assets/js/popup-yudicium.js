@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (Array.isArray(data.yudisium) && data.yudisium.length > 0) {
                     const status = data.yudisium[0].approval_status;
 
-                    const option = ['Waiting', 'approved'];
+                    const option = ['Waiting', 'Approved'];
 
                     approvalSelect.innerHTML = option.map(opt =>
                         `<option value="${opt}" ${opt} === ${status} ? 'selected' : ''}>
@@ -130,7 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     customClass: {
                         confirmButton: 'btn-ok'
                     }
-                })
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
                 document.getElementById('popup').classList.add('hidden');
             } else {
                 Swal.fire({

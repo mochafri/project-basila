@@ -109,9 +109,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 class="statusSpan ${mhs.status === "Eligible"
                             ? "bg-success-100 text-success-600"
                             : "bg-danger-100 text-danger-600"
-                        } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
+                            } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
                                 data-nim="${mhs.nim}"
-                                data-status="${mhs.status}">
+                                data-status="${mhs.status}"
+                                data-alasan="${mhs.alasan_status}">
                                 ${mhs.status}
                             </span>
                         </td>
@@ -178,7 +179,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             fakultas_id: facultyId,
                             prodi_id: prodiId,
                             status: status,
-                            alasan: alasan
+                            alasan_status: alasan
                         })
                     });
 
@@ -214,7 +215,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 // 🔁 Redirect ke halaman index2
-                                window.location.href = '/dashboard/index-2';
+                                window.location.href = '/dashboard/penetapan-yudisium';
                             }
                         });
                     }
@@ -249,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target.classList.contains('statusSpan')) {
             document.getElementById('modalNim').value = e.target.dataset.nim;
             document.getElementById('modalStatus').value = e.target.dataset.status;
-            document.getElementById('modalAlasan').value = '';
+            document.getElementById('modalAlasan').value = e.target.dataset.alasan || '';
             document.getElementById('statusModal').classList.remove('hidden');
         }
     });
@@ -265,6 +266,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const status = document.getElementById('modalStatus').value;
         const alasan = document.getElementById('modalAlasan').value;
         const nim = document.getElementById('modalNim').value;
+
+        console.log("Nim : ", nim);
 
         try {
             const res = await fetch(routes.ubahStatus, {
@@ -304,90 +307,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             Swal.fire("Error!", "Tidak bisa mengubah status", "error");
         }
     });
-
-    // // Submit by variable lewat request waktu tetapkan No Yudisium
-    // document.getElementById('statusForm').addEventListener('submit', (e) => {
-    //     e.preventDefault();
-
-    //     const status = document.getElementById('modalStatus').value;
-    //     const alasan = document.getElementById('modalAlasan').value;
-
-    //     const statusSpans = tbody.querySelectorAll('.statusSpan');
-    //     statusSpans.forEach(span => {
-    //         span.textContent = status;
-    //         span.className = `statusSpan ${status === "Eligible" ? "bg-success-100 text-success-600" : "bg-danger-100 text-danger-600"
-    //             } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer`;
-
-    //         const alasanCell = span.closest('tr').children[8];
-    //         alasanCell.innerHTML = alasan ? `<span class="text-xs text-gray-500">${alasan}</span>` : '-';
-    //     });
-
-    //     document.getElementById('statusModal').classList.add('hidden');
-    // });
-
-    // Buat fetch semua mahasiswa dari API academic
-    // try {
-    //     const res = await fetch(routes.getAllMhs);
-    //     const data = await res.json();
-
-    //     if (res.ok && data.success && Array.isArray(data.mahasiswa)) {
-    //         await renderMahasiswa(data.mahasiswa);
-    //     } else {
-    //         tbody.innerHTML = '<tr><td colspan="10" class="text-center text-red-500">Gagal memuat data mahasiswa</td></tr>';
-    //     }
-    // } catch (err) {
-    //     console.error('Gagal memuat data default mahasiswa:', err);
-    //     tbody.innerHTML = '<tr><td colspan="10" class="text-center text-red-500">Error memuat data</td></tr>';
-    // }
-
-    // async function renderMahasiswa(mahasiswa) {
-    //     tbody.innerHTML = '';
-    //     let totalEligible = 0;
-    //     let totalTidakEligible = 0;
-
-    //     if (Array.isArray(mahasiswa) && mahasiswa.length > 0) {
-    //         mahasiswa.forEach((mhs, idx) => {
-    //             const tr = document.createElement('tr');
-    //             tr.innerHTML = `
-    //             <td>${idx + 1}</td>
-    //             <td>${mhs.nim}</td>
-    //             <td>${mhs.name}</td>
-    //             <td>${mhs.study_period} Semester</td>
-    //             <td>${mhs.pass_sks}</td>
-    //             <td>${mhs.ipk}</td>
-    //             <td>${mhs.predikat}</td>
-    //             <td>
-    //                 <span
-    //                     class="statusSpan ${mhs.status === "Eligible"
-    //                     ? "bg-success-100 text-success-600"
-    //                     : "bg-danger-100 text-danger-600"}
-    //                         px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
-    //                     data-nim="${mhs.nim}"
-    //                     data-status="${mhs.status}">
-    //                     ${mhs.status}
-    //                 </span>
-    //             </td>
-    //             <td>
-    //                 ${mhs.alasan_status
-    //                     ? `<span class="text-xs text-gray-500">${mhs.alasan_status}</span>`
-    //                     : '-'}
-    //             </td>
-    //             <td>
-    //                 <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
-    //                     <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-    //                 </a>
-    //             </td>
-    //         `;
-    //             tbody.appendChild(tr);
-
-    //             if (mhs.status === "Eligible") totalEligible++;
-    //             else totalTidakEligible++;
-    //         });
-    //     } else {
-    //         tbody.innerHTML = '<tr><td colspan="10" class="text-center">Tidak ada data</td></tr>';
-    //     }
-
-    //     totalEligibleSpan.textContent = totalEligible;
-    //     totalTidakEligibleSpan.textContent = totalTidakEligible;
-    // }
 });

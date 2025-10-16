@@ -4,13 +4,13 @@
     $title = 'Penetapan Yudisium';
     $subTitle = 'Daftar Yudisium';
     $script = '
-        <script src="' . asset('assets/js/data-table.js') . '" defer></script>
-    ';
+                <script src="' . asset('assets/js/data-table.js') . '" defer></script>
+            ';
 @endphp
 
 @section('content')
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <h1 class="text-2xl font-bold text-neutral-400 mb-5 lg:col-span-12">Penetapan Yudisium</h1>
+        <h1 class="text-2xl font-semibold text-gray-600 mb-5 lg:col-span-12">Penetapan Yudisium</h1>
         <!-- Filter dan Statistik -->
         <div class="col-span-12 bg-white p-6 rounded-xl shadow-lg">
             <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
@@ -39,15 +39,17 @@
 
                     <!-- Card Total Yudisium -->
                     <div
-                                    class="bg-[#e51411] text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
-                                    <div class="w-16 h-16 bg-[#c7110f] rounded-full flex items-center justify-center">
-                                        <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
-                                    </div>
-                                    <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
-                                        <p class="text-sm">Total Yudisium</p>
-                                    </div>
-                                </div>
+                        class="bg-[#e51411] text-white rounded-xl p-5 shadow-lg flex items-center justify-center space-x-4">
+                        <div class="w-16 h-16 bg-[#c7110f] rounded-full flex items-center justify-center">
+                            <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
+                        </div>
+                        <div class="flex flex-col text-center">
+                            <h2 class="text-4xl text-white font-bold leading-tight">{{
+                                optional($datas->first())->approval_status === 'Approved'
+                                ? $countApproval : 0 }}</h2>
+                            <p class="text-sm">Total Yudisium</p>
+                        </div>
+                    </div>
 
                     <!-- Card Total Mahasiswa -->
                     <div
@@ -56,7 +58,9 @@
                             <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                         </div>
                         <div class="flex flex-col text-center sm:text-left">
-                            <h2 class="text-4xl text-white font-bold">{{ $totalMhsYud }}</h2>
+                            <h2 class="text-4xl text-white font-bold">{{ optional($datas->first())->approval_status ===
+                            'Approved'
+                            ? $totalMhsYud : 0 }}</h2>
                             <p class="text-sm">Total Mahasiswa</p>
                         </div>
                     </div>
@@ -208,7 +212,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @if ($data->approval_status === 'approved')
+                                        @if ($data->approval_status === 'Approved')
                                             <div class="flex items-center">
                                                 <span
                                                     class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Approved</span>
@@ -271,8 +275,8 @@
                                             <div class="flex items-center gap-2">
                                                 NIM
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -283,8 +287,8 @@
                                             <div class="flex items-center gap-2">
                                                 Nama
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -295,8 +299,8 @@
                                             <div class="flex items-center gap-2">
                                                 Masa Studi
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -307,8 +311,8 @@
                                             <div class="flex items-center gap-2">
                                                 SKS Lulus
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -319,8 +323,8 @@
                                             <div class="flex items-center gap-2">
                                                 IPK
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -331,8 +335,8 @@
                                             <div class="flex items-center gap-2">
                                                 Predikat
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -343,8 +347,8 @@
                                             <div class="flex items-center gap-2">
                                                 Status
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -355,8 +359,8 @@
                                             <div class="flex items-center gap-2">
                                                 Alasan
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m8 15 4 4 4-4m0-6-4-4-4 4" />
@@ -380,7 +384,7 @@
             @method('PUT')
             <button type="submit" class="btn bg-red-500 text-white btn-sm mt-5">Approve</button>
         </form>
-    @endforeach --}}
+        @endforeach --}}
     </div>
     <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
 @endsection

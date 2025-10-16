@@ -24,9 +24,6 @@ use App\Http\Controllers\IndexController;
 
 Route::get('/yudicium', [YudiciumController::class, 'index']);
 
-Route::get('/', function () {
-    return redirect()->route('signin.show');
-});
 
 
 // Route::controller(DashboardController::class)->group(function () {
@@ -122,18 +119,28 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         // Yudicium routes
         Route::controller(YudiciumController::class)->group(function () {
-            Route::get('/index', 'index')->name('index');
-            Route::get('/index-2', 'index')->name('index2');
-            Route::get('/index-6', 'index')->name('index6');
-            Route::get('/index-4', 'index')->name('index4');
-            
+            Route::get('/kelola-dashboard', 'index')->name('index');
+            Route::redirect('/dashboard/index', '/dashboard/kelola-dashboard');
+
+            Route::get('/penetapan-yudisium', 'index')->name('index2');
+            Route::redirect('/dashboard/index-2', '/dashboard/penetapan-yudisium');
+
+
+            Route::get('/laporan', 'index')->name('index6');
+            Route::redirect('/dashboard/index-6', '/dashboard/laporan');
+
+
+            Route::get('/approval-yudisium', 'index')->name('index4');
+            Route::redirect('/dashboard/index-4', '/dashboard/approval-yudisium');
         });
 
         // Index3 routes
         Route::controller(Index3Controller::class)->group(function () {
-            Route::get('/index-3', 'index')->name('index3');
+
+            Route::get('/tambah-yudisium', 'index')->name('index3');
+            Route::redirect('/dashboard/index-3', '/dashboard/tambah-yudisium');
+
             Route::post('/index-3/generate', 'generate')->name('index3.generate');
-            
         });
 
         // Dashboard routes
@@ -261,3 +268,8 @@ Route::middleware(['auth'])->group(function () {
 // routes/web.php
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');
 Route::post('/authentication/sign-in', [AuthController::class, 'processSignIn'])->name('signin.process');
+
+
+Route::get('/', function () {
+    return redirect()->route('signin.show');
+});

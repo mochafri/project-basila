@@ -41,7 +41,7 @@ $script = '
         <div class="flex flex-col text-center">
             <h2 class="text-4xl text-white font-bold leading-tight">{{ optional($datas->first())->approval_status ===
                 'approved'
-                ? $postCount : 0 }}
+                ? $countApproval : 0 }}
             </h2>
             <p class="text-sm">Total Yudisium</p>
         </div>
@@ -102,7 +102,7 @@ $script = '
                 <div class="flex flex-col justify-center items-center text-center">
                     <h2 class="text-3xl font-bold text-red-600 leading-tight">{{
                         optional($datas->first())->approval_status === 'approved'
-                        ? $postCount : 0 }}</h2>
+                        ? $countApproval : 0 }}</h2>
                     <p class="text-xs text-red-600">Total Yudisium</p>
                 </div>
             </div>
@@ -164,11 +164,12 @@ $script = '
         <h4 class="text-xl font-semibold mb-2">Status Penerbitan SK</h4>
         <h5 class="text-sm font-normal mb-2 text-gray-500">Berikut detail penerbitan SK</h5>
         <ul class="text-sm space-y-1">
-            <li class="text-yellow-500">🟡 Total Waiting: {{ $countApproval }}</li>
+            <li class="text-yellow-500">🟡 Total Waiting: {{ $waitingApproval }}</li>
             <li class="text-green-600">🟢 Total Approved: {{ optional($datas->first())->approval_status === 'approved'
                 ? $postCount : 0 }}</li>
             <li class="text-red-600">🔴 Total Rejected: 0</li>
-            <li class="text-blue-600">🔵 Total Done: 43</li>
+            <li class="text-blue-600">🔵 Total Done: {{ optional($datas->first())->approval_status === 'approved'
+                ? $postCount : 0 }}</li>
         </ul>
     </div>
 

@@ -11,7 +11,7 @@
 
 @section('content')
     <!-- Crypto Home Widgets Start -->
-    <h1 class="text-2xl font-bold text-neutral-400 mb-5">Approval Yudisium</h1>
+    <h1 class="text-2xl font-semibold text-gray-600 mb-5">Approval Yudisium</h1>
 
     <!-- Crypto Home Widgets End -->
 
@@ -67,7 +67,9 @@
                                         <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $postCount }}</h2>
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{
+                                            optional($datas->first())->approval_status === 'Approved'
+                                            ? $countApproval : 0 }}</h2>
                                         <p class="text-sm">Total Yudisium</p>
                                     </div>
                                 </div>
@@ -79,7 +81,8 @@
                                         <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{optional($datas->first())->approval_status === 'Approved'
+                                            ? $totalMhsYud : 0 }}</h2>
                                         <p class="text-sm">Total Mahasiswa</p>
                                     </div>
                                 </div>
@@ -312,12 +315,15 @@
                                     </table>
                                     <div id="approve-yudisium"
                                         class="flex flex-col items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 gap-5">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Status Approve</label>
                                         <select id="approval" class="form-select w-full text-neutral-900">
                                             <option value="Eligible">Eligible</option>
                                             <option value="Tidak Eligible">Tidak Eligible</option>
                                         </select>
-                                        <input type="text" id="catatan"
-                                            class="form-input w-full text-neutral-900" placeholder="Alasan">
+
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
+                                        <textarea id="catatan"
+                                            rows="3" class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
                                         <button id="btn-simpan"
                                             class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
                                     </div>
