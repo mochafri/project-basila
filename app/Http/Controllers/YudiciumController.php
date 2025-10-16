@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
-use Symfony\Component\Yaml\Yaml;
 
 class YudiciumController extends Controller
 {
@@ -22,9 +21,6 @@ class YudiciumController extends Controller
         $this->url = env('URL_ACADEMIC');
         $this->urlFakultas = env('URL_FACULTY');
         $this->urlProdi = env('URL_PRODY');
-        $this->url = 'https://webservice-feeder.telkomuniversity.ac.id/apidikti/getRegpd.php?stt=7';
-        $this->urlFakultas = 'https://gateway.telkomuniversity.ac.id/2def2c126fd225c3eaa77e20194b9b69';
-        $this->urlProdi = 'https://gateway.telkomuniversity.ac.id/b2ac79622cd60bce8dc5a1a7171bfc9c/';
     }
 
     public function index(Request $request)
@@ -332,6 +328,7 @@ class YudiciumController extends Controller
                 DB::raw('COUNT(mhs_yudiciums.id) as total_mhs')
             )
             ->where('yudiciums.fakultas_id', $validate['fakultas_id'])
+            ->where('yudiciums.approval_status', 'Waiting')
             ->groupBy('yudiciums.id', 'yudiciums.no_yudicium')
             ->get();
 

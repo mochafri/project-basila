@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="flex flex-col text-center">
                                         <h2 class="text-4xl text-white font-bold leading-tight">{{
-                                            optional($datas->first())->approval_status === 'approved'
+                                            optional($datas->first())->approval_status === 'Approved'
                                             ? $countApproval : 0 }}</h2>
                                         <p class="text-sm">Total Yudisium</p>
                                     </div>
@@ -81,7 +81,7 @@
                                         <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{optional($datas->first())->approval_status === 'approved'
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{optional($datas->first())->approval_status === 'Approved'
                                             ? $totalMhsYud : 0 }}</h2>
                                         <p class="text-sm">Total Mahasiswa</p>
                                     </div>

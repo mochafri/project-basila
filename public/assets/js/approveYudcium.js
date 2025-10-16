@@ -60,10 +60,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
 
             tbody.innerHTML = '';
+
+            if(Array.isArray(data.data) && data.data.length === 0) {
+                Swal.fire({
+                    title: 'Info!',
+                    text: 'Tidak ada data yudisium untuk fakultas ini',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn-ok'
+                    }
+                })
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center">Tidak ada data</td></tr>';
+            }
+
             if (Array.isArray(data.data) && data.data.length > 0) {
                 data.data.forEach((yud, idx) => {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `
+                        tr.innerHTML = `
                         <td>${idx + 1}</td>
                         <td>${yud.no_yudicium}</td>
                         <td>${yud.periode}</td>
@@ -79,11 +94,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </td>
                     `;
                     tbody.appendChild(tr);
-                });
-            } else if (Array.isArray(data.data) && data.data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center">Tidak ada data</td></tr>';
-            }
 
+                });
+            } 
             console.log("Data yudisium : ", data);
         } catch (err) {
             console.error(err);
