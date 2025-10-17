@@ -66,7 +66,7 @@ class YudiciumController extends Controller
             // 1️⃣ Hitung jumlah per predikat
             // ===============================
             $predikatList = [
-                'Istimewa (Summa Cumlaude)',
+                'Sempurna (Summa Cumlaude)',
                 'Dengan Pujian (Cumlaude)',
                 'Sangat Memuaskan (Very Good)',
                 'Memuaskan (Good)',

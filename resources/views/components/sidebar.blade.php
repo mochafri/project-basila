@@ -103,7 +103,7 @@
             <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="icons8:student" class="menu-icon"></iconify-icon>
-                    <span>Student Yudicium</span>
+                    <span>Mahasiswa Yudisium</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
