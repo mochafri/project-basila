@@ -11,24 +11,34 @@ $script = '
     <div class="flex items-center space-x-4">
         <!-- Dropdown Periode -->
         <div class="relative">
-            <select id="periodeSelect"
-                class="text-gray-400 border border-gray-300 text-sm rounded-md py-2 pl-10 pr-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500">
-                <option selected>Ganjil 2024/2025</option>
-                <option>Genap 2024/2025</option>
-                <option>Ganjil 2025/2026</option>
-                <option>Genap 2025/2026</option>
-            </select>
-            <div class="absolute left-3 top-2.5 text-gray-400">
+            <form action="{{ route('index') }}" method="GET">
+                <select name="periode" onchange="this.form.submit()"
+                    class="border border-gray-300 rounded-md p-2 text-gray-600">
+                    <option value="Pilih">--Pilih periode--</option>
+                    @foreach ($periodes as $p)
+                    <option value="{{ $p['value'] }}" {{ $periode==$p['value'] ? 'selected' : '' }}>
+                        {{ $p['label'] }}
+                    </option>
+                    @endforeach
+                </select>
+            </form>
+            <!-- <div class="absolute left-3 top-2.5 text-gray-400">
                 <iconify-icon icon="ph:graduation-cap-light"></iconify-icon>
-            </div>
+            </div> -->
         </div>
 
-        <!-- Tombol Tetapkan Periode -->
-        <button
+        <!-- Tombol -->
+        <button id="setPeriodeBtn"
             class="bg-[#e51411] hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full flex items-center space-x-2">
             <iconify-icon icon="ph:graduation-cap-bold"></iconify-icon>
             <span>TETAPKAN PERIODE</span>
         </button>
+
+
+
+
+
+
     </div>
 </div>
 
@@ -39,9 +49,7 @@ $script = '
             <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
         </div>
         <div class="flex flex-col text-center">
-            <h2 class="text-4xl text-white font-bold leading-tight">{{ optional($datas->first())->approval_status ===
-                'approved'
-                ? $countApproval : 0 }}
+            <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}
             </h2>
             <p class="text-sm">Total Yudisium</p>
         </div>
@@ -53,9 +61,7 @@ $script = '
             <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
         </div>
         <div class="flex flex-col text-center">
-            <h2 class="text-4xl text-white font-bold leading-tight">{{ optional($datas->first())->approval_status ===
-                'approved'
-                ? $totalMhsYud : 0 }}</h2>
+            <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
             <p class="text-sm">Total Mahasiswa</p>
         </div>
     </div>
@@ -193,6 +199,13 @@ $script = '
         </ul>
     </div>
 </div>
+
+<script>
+    document.getElementById('setPeriodeBtn').addEventListener('click', function () {
+        const periode = document.getElementById('periodeSelect').value;
+        window.location.href = `?periode=${encodeURIComponent(periode)}`;
+    });
+</script>
 
 <script>
     // Kirim data dari PHP ke JS

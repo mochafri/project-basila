@@ -25,42 +25,94 @@ class YudiciumController extends Controller
 
     public function index(Request $request)
     {
-        $datas = DB::table('yudiciums')->get();
+        // 1️⃣ Ambil periode dari query string (misalnya ?periode=2025-02-01)
+        $periode = $request->query('periode');
 
+        // 2️⃣ Generate daftar dropdown periode otomatis (2 tahun terakhir)
+        $periodes = $this->generatePeriodeDropdown();
+
+        // Siapkan variabel default
+        $selectedPeriode = null;
+
+        if ($periode) {
+            $selectedPeriode = collect($periodes)->firstWhere('value', $periode);
+        }
+
+        // 3️⃣ Ambil data yudicium sesuai periode (jika dipilih)
+        $datasQuery = DB::table('yudiciums');
+        if ($selectedPeriode) {
+            $datasQuery->whereBetween('periode', [
+                $selectedPeriode['start'],
+                $selectedPeriode['end']
+            ]);
+        }
+        $datas = $datasQuery->get();
+
+        // 4️⃣ Hitung jumlah yudisium yang disetujui (Approved)
+        $countApprovalQuery = DB::table('yudiciums')
+            ->where('approval_status', 'Approved');
+        if ($selectedPeriode) {
+            $countApprovalQuery->whereBetween('periode', [
+                $selectedPeriode['start'],
+                $selectedPeriode['end']
+            ]);
+        }
+        $countApproval = $countApprovalQuery->count();
+
+        // 5️⃣ Hitung total mahasiswa yudisium (yang sudah disetujui)
+        $totalMhsYudQuery = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+            ->where('yudiciums.approval_status', 'approved');
+        if ($selectedPeriode) {
+            $totalMhsYudQuery->whereBetween('yudiciums.periode', [
+                $selectedPeriode['start'],
+                $selectedPeriode['end']
+            ]);
+        }
+        $totalMhsYud = $totalMhsYudQuery->count();
+
+        // 6️⃣ Hitung jumlah per predikat (mengikuti periode)
+        $predikatCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+            ->where('yudiciums.approval_status', 'approved')
+            ->select('mhs_yudiciums.predikat', DB::raw('COUNT(*) as total'))
+            ->groupBy('mhs_yudiciums.predikat');
+
+        if ($selectedPeriode) {
+            $predikatCounts->whereBetween('yudiciums.periode', [
+                $selectedPeriode['start'],
+                $selectedPeriode['end']
+            ]);
+        }
+
+        $predikatCounts = $predikatCounts->get();
+
+        // 7️⃣ Hitung jumlah per fakultas (mengikuti periode)
+        $fakultasCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+            ->where('yudiciums.approval_status', 'approved')
+            ->select('mhs_yudiciums.fakultas_id', DB::raw('COUNT(*) as total'))
+            ->groupBy('mhs_yudiciums.fakultas_id');
+
+        if ($selectedPeriode) {
+            $fakultasCounts->whereBetween('yudiciums.periode', [
+                $selectedPeriode['start'],
+                $selectedPeriode['end']
+            ]);
+        }
+
+        $fakultasCounts = $fakultasCounts->get();
+
+        // 🔹 Data tambahan
         $routeName = $request->route()->getName();
         $postCount = Post::count();
-        $totalMhsYud = MhsYud::count();
+        $approvalWaiting = Yudicium::where('approval_status', 'Waiting')->count();
 
-        // Ambil data fakultas dari API
-        $facultyRes = Http::withToken($this->token)
-            ->get($this->urlFakultas);
+        // 🔹 Ambil data fakultas dari API
+        $facultyRes = Http::withToken($this->token)->get($this->urlFakultas);
         $faculties = $facultyRes->successful() ? collect($facultyRes->json()) : collect();
 
         $prodyCache = [];
 
-        $predikatCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
-            ->where('yudiciums.approval_status', 'approved')
-            ->select('mhs_yudiciums.predikat', DB::raw('COUNT(*) as total'))
-            ->groupBy('mhs_yudiciums.predikat')
-            ->get();
-
-        $fakultasCounts = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
-            ->where('yudiciums.approval_status', 'approved')
-            ->select('mhs_yudiciums.fakultas_id', DB::raw('COUNT(*) as total'))
-            ->groupBy('mhs_yudiciums.fakultas_id')
-            ->get();
-
-        // Hitung total mahasiswa yudisium yang sudah disetujui
-        $totalMhsYud = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
-            ->where('yudiciums.approval_status', 'approved')
-            ->count();
-
-        $approvalWaiting = Yudicium::where('approval_status', 'Waiting')->count();
-
-        $countApproval = Yudicium::where('approval_status', 'approved')->count();
-
         // === ROUTE: index (Dashboard utama) ===
-        if ($routeName === 'index' || $routeName === 'index4' || $routeName === 'index6') {
+        if (in_array($routeName, ['index', 'index4', 'index6'])) {
 
             // ===============================
             // 1️⃣ Hitung jumlah per predikat
@@ -87,9 +139,8 @@ class YudiciumController extends Controller
             }
 
             // ===============================
-            // 2️⃣ Hitung jumlah yudisium per fakultas
+            // 2️⃣ Hitung jumlah per fakultas
             // ===============================
-
             $dataFakultas = [];
 
             foreach ($faculties as $faculty) {
@@ -104,12 +155,6 @@ class YudiciumController extends Controller
                 ];
             }
 
-            // // Urutkan fakultas berdasarkan jumlah terbanyak
-            // usort($dataFakultas, fn($a, $b) => $b['jumlah'] <=> $a['jumlah']);
-
-            // ===============================
-            // Return ke view dashboard
-            // ===============================
             return view("dashboard.$routeName", [
                 'datas' => $datas,
                 'postCount' => $postCount,
@@ -117,32 +162,29 @@ class YudiciumController extends Controller
                 'dataPredikat' => $dataPredikat,
                 'dataFakultas' => $dataFakultas,
                 'countApproval' => $countApproval,
-                'waitingApproval' => $approvalWaiting
+                'waitingApproval' => $approvalWaiting,
+                'periode' => $periode,
+                'periodes' => $periodes
             ]);
-        } elseif ($routeName === 'index2') {
+        }
+
+        // === ROUTE: index2 ===
+        elseif ($routeName === 'index2') {
 
             $datas->transform(function ($item) use ($faculties, &$prodyCache) {
-
                 $faculty = $faculties->firstWhere('facultyid', $item->fakultas_id);
                 $item->facultyname = $faculty['facultyname'] ?? 'Unknown';
                 $facultyId = $faculty['facultyid'] ?? null;
 
                 if ($facultyId) {
-
                     if (!isset($prodyCache[$facultyId])) {
                         $prodyRes = Http::withToken(env('KEY_TOKEN'))
                             ->get($this->urlProdi . $facultyId);
-
                         $prodyCache[$facultyId] = $prodyRes->successful() ? collect($prodyRes->json()) : collect();
                     }
 
                     $prody = $prodyCache[$facultyId];
-                    if ($prody->isNotEmpty()) {
-                        $program = $prody->firstWhere('studyprogramid', (string) $item->prodi_id);
-                        $item->prodyname = $program['studyprogramname'] ?? 'Unknown';
-                    } else {
-                        $item->prodyname = 'Unknown';
-                    }
+                    $item->prodyname = $prody->firstWhere('studyprogramid', (string) $item->prodi_id)['studyprogramname'] ?? 'Unknown';
                 } else {
                     $item->prodyname = 'Unknown';
                 }
@@ -232,7 +274,7 @@ class YudiciumController extends Controller
             $nextId = $lastId ? $lastId + 1 : 1;
             $mappingFaculties = [3 => 'IT', 4 => 'IK', 5 => 'TE', 6 => 'RI', 7 => 'IF', 8 => 'EB', 9 => 'KB', 10 => 'SBY', 11 => 'PWT'];
             $fakultasInitial = $mappingFaculties[$validate['fakultas_id']] ?? 'XX';
-            $tahun = date('Y');
+            $tahun = date('Y-m-d');
             $nomorYudisium = $nextId . '/AKD100/' . $fakultasInitial . '/' . $tahun;
 
             \Log::info('Nomor Yudisium : ' . $nomorYudisium);
@@ -404,7 +446,6 @@ class YudiciumController extends Controller
                 'success' => true,
                 'data' => $yudisium->fresh()
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
