@@ -91,7 +91,7 @@ $script = '
             <!-- Judul dan Deskripsi -->
             <div>
                 <h3 class="text-xl font-bold text-gray-900">Periode Yudisium</h3>
-                <p class="text-xs text-gray-500">Berikut detail yudisium mahasiswa periode ganjil 2024/2025</p>
+                <p class="text-xs text-gray-500">Berikut detail yudisium kelulusan periode ganjil 2024/2025</p>
             </div>
 
             <!-- Total Yudisium dengan Gavel -->
@@ -117,8 +117,8 @@ $script = '
         <!-- Header Section -->
         <div class="flex justify-between items-start mb-6">
             <div>
-                <h3 class="text-xl font-bold text-gray-900">Predikat Mahasiswa</h3>
-                <p class="text-xs text-gray-500">Berikut detail predikat mahasiswa periode ganjil 2024/2025</p>
+                <h3 class="text-xl font-bold text-gray-900">Predikat Kelulusan</h3>
+                <p class="text-xs text-gray-500">Berikut detail predikat kelulusan periode ganjil 2024/2025</p>
             </div>
             <div class="flex items-center space-x-2">
                 <div class="bg-green-600 p-3 rounded-full">

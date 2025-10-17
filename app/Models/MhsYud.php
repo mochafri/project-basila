@@ -27,7 +27,7 @@ class MhsYud extends Model
     public function getPredikat($gpa)
     {
         if ($gpa == 4.00)
-            return 'Istimewa (Summa Cumlaude)';
+            return 'Sempurna (Summa Cumlaude)';
         elseif ($gpa >= 3.51 && $gpa < 4.00)
             return 'Dengan Pujian (Cumlaude)';
         elseif($gpa >= 3.00)

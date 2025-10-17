@@ -66,7 +66,7 @@ class YudiciumController extends Controller
             // 1️⃣ Hitung jumlah per predikat
             // ===============================
             $predikatList = [
-                'Istimewa (Summa Cumlaude)',
+                'Sempurna (Summa Cumlaude)',
                 'Dengan Pujian (Cumlaude)',
                 'Sangat Memuaskan (Very Good)',
                 'Memuaskan (Good)',
@@ -140,6 +140,8 @@ class YudiciumController extends Controller
                     if ($prody->isNotEmpty()) {
                         $program = $prody->firstWhere('studyprogramid', (string) $item->prodi_id);
                         $item->prodyname = $program['studyprogramname'] ?? 'Unknown';
+                    } else {
+                        $item->prodyname = 'Unknown';
                     }
                 } else {
                     $item->prodyname = 'Unknown';
@@ -354,6 +356,8 @@ class YudiciumController extends Controller
                 if ($prody->isNotEmpty()) {
                     $prodi = $prody->firstWhere('studyprogramid', $item->prodi);
                     $item->prodiname = $prodi['studyprogramname'] ?? 'Unknown';
+                } else {
+                    $item->prodiname = 'Unknown';
                 }
             } else {
                 $item->prodiname = 'Unknown';
