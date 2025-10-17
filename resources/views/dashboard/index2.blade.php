@@ -44,9 +44,7 @@
                             <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                         </div>
                         <div class="flex flex-col text-center">
-                            <h2 class="text-4xl text-white font-bold leading-tight">{{
-                                optional($datas->first())->approval_status === 'Approved'
-                                ? $countApproval : 0 }}</h2>
+                            <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
                             <p class="text-sm">Total Yudisium</p>
                         </div>
                     </div>
@@ -58,10 +56,8 @@
                             <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                         </div>
                         <div class="flex flex-col text-center sm:text-left">
-                            <h2 class="text-4xl text-white font-bold">{{ optional($datas->first())->approval_status ===
-                            'Approved'
-                            ? $totalMhsYud : 0 }}</h2>
-                            <p class="text-sm">Total Mahasiswa</p>
+                            <h2 class="text-4xl text-white font-bold">{{ $totalMhsYud }}</h2>
+                            <p class="text-sm">Total Lulusan</p>
                         </div>
                     </div>
 
@@ -236,11 +232,6 @@
                                             <div class="flex items-center">
                                                 <span
                                                     class="bg-warning-100  text-warning-600  px-6 py-1.5 rounded-full font-medium text-sm">{{ $data->approval_status}}</span>
-                                            </div>
-                                        @else   ($data->approval_status === 'Reject')
-                                            <div class="flex items-center">
-                                                <span
-                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">{{ $data->approval_status}}</span>
                                             </div>
                                         @endif
                                     </td>

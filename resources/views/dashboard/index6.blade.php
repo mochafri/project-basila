@@ -50,9 +50,7 @@ $script = '
                                     <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                 </div>
                                 <div class="flex flex-col text-center">
-                                    <h2 class="text-4xl text-white font-bold leading-tight">{{
-                                        optional($datas->first())->approval_status === 'approved'
-                                        ? $postCount : 0 }}</h2>
+                                    <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
                                     <p class="text-sm">Total Yudisium</p>
                                 </div>
                             </div>
@@ -64,10 +62,8 @@ $script = '
                                     <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                                 </div>
                                 <div class="flex flex-col text-center">
-                                    <h2 class="text-4xl text-white font-bold leading-tight">{{
-                                        optional($datas->first())->approval_status === 'approved'
-                                        ? $totalMhsYud : 0 }}</h2>
-                                    <p class="text-sm">Total Mahasiswa</p>
+                                    <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
+                                    <p class="text-sm">Total Kelulusan</p>
                                 </div>
                             </div>
 
@@ -113,9 +109,7 @@ $script = '
                                         <span class="ri-circle-fill circle-icon text-green-500 w-auto"></span>
                                         <p class="text-neutral-800">Total Eligible</p>
                                     </div>
-                                    <p class="text-neutral-800">{{ optional($datas->first())->approval_status ===
-                                        'approved'
-                                        ? $postCount : 0 }}</p>
+                                    <p class="text-neutral-800">{{ $totalMhsYud }}</p>
                                 </div>
                                 <div class="flex items-center justify-between font-medium">
                                     <div class="flex items-center gap-2">

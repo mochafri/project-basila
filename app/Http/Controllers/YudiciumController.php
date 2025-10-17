@@ -454,6 +454,33 @@ class YudiciumController extends Controller
             ], 500);
         }
     }
+    
+    private function generatePeriodeDropdown()
+    {
+        $currentYear = date('Y');
+        $periodes = [];
+
+        for ($year = $currentYear; $year >= $currentYear - 2; $year--) {
+            // Semester Genap: Februari–Juli
+            $periodes[] = [
+                'value' => "{$year}-02-01",
+                'label' => "Genap {$year}/" . ($year + 1),
+                'start' => "{$year}-02-01",
+                'end' => "{$year}-07-31"
+            ];
+
+            // Semester Ganjil: Agustus–Januari
+            $periodes[] = [
+                'value' => "{$year}-08-01",
+                'label' => "Ganjil {$year}/" . ($year + 1),
+                'start' => "{$year}-08-01",
+                'end' => ($year + 1) . "-01-31"
+            ];
+        }
+
+        usort($periodes, fn($a, $b) => strcmp($b['value'], $a['value']));
+        return $periodes;
+    }
 
     public function edit($id)
     {

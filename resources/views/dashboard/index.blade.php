@@ -62,7 +62,7 @@ $script = '
         </div>
         <div class="flex flex-col text-center">
             <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
-            <p class="text-sm">Total Mahasiswa</p>
+            <p class="text-sm">Total Lulusan</p>
         </div>
     </div>
 
@@ -97,7 +97,7 @@ $script = '
             <!-- Judul dan Deskripsi -->
             <div>
                 <h3 class="text-xl font-bold text-gray-900">Periode Yudisium</h3>
-                <p class="text-xs text-gray-500">Berikut detail yudisium kelulusan periode ganjil 2024/2025</p>
+                <p class="text-xs text-gray-500">Berikut detail yudisium Lulusan periode ganjil 2024/2025</p>
             </div>
 
             <!-- Total Yudisium dengan Gavel -->
@@ -106,9 +106,8 @@ $script = '
                     <iconify-icon icon="clarity:gavel-solid" class="text-white text-2xl"></iconify-icon>
                 </div>
                 <div class="flex flex-col justify-center items-center text-center">
-                    <h2 class="text-3xl font-bold text-red-600 leading-tight">{{
-                        optional($datas->first())->approval_status === 'approved'
-                        ? $countApproval : 0 }}</h2>
+                    <h2 class="text-3xl font-bold text-red-600 leading-tight">
+                        {{ $countApproval }}</h2>
                     <p class="text-xs text-red-600">Total Yudisium</p>
                 </div>
             </div>
@@ -123,18 +122,16 @@ $script = '
         <!-- Header Section -->
         <div class="flex justify-between items-start mb-6">
             <div>
-                <h3 class="text-xl font-bold text-gray-900">Predikat Kelulusan</h3>
-                <p class="text-xs text-gray-500">Berikut detail predikat kelulusan periode ganjil 2024/2025</p>
+                <h3 class="text-xl font-bold text-gray-900">Predikat Lulusan</h3>
+                <p class="text-xs text-gray-500">Berikut detail predikat lulusan periode ganjil 2024/2025</p>
             </div>
             <div class="flex items-center space-x-2">
                 <div class="bg-green-600 p-3 rounded-full">
                     <iconify-icon icon="ph:student-fill" class="text-white text-xl"></iconify-icon>
                 </div>
                 <div class="flex flex-col justify-center items-center text-center">
-                    <h2 class="text-3xl font-bold text-green-600 leading-tight">{{
-                        optional($datas->first())->approval_status === 'approved'
-                        ? $totalMhsYud : 0 }}</h2>
-                    <p class="text-xs text-green-600">Total Mahasiswa</p>
+                    <h2 class="text-3xl font-bold text-green-600 leading-tight">{{ $totalMhsYud }}</h2>
+                    <p class="text-xs text-green-600">Total Lulusan</p>
                 </div>
             </div>
         </div>
@@ -171,11 +168,9 @@ $script = '
         <h5 class="text-sm font-normal mb-2 text-gray-500">Berikut detail penerbitan SK</h5>
         <ul class="text-sm space-y-1">
             <li class="text-yellow-500">🟡 Total Waiting: {{ $waitingApproval }}</li>
-            <li class="text-green-600">🟢 Total Approved: {{ optional($datas->first())->approval_status === 'approved'
-                ? $postCount : 0 }}</li>
+            <li class="text-green-600">🟢 Total Approved: {{ $countApproval }}</li>
             <li class="text-red-600">🔴 Total Rejected: 0</li>
-            <li class="text-blue-600">🔵 Total Done: {{ optional($datas->first())->approval_status === 'approved'
-                ? $postCount : 0 }}</li>
+            <li class="text-blue-600">🔵 Total Done: {{ $countApproval }}</li>
         </ul>
     </div>
 

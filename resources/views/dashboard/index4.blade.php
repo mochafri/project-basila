@@ -67,9 +67,7 @@
                                         <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{
-                                            optional($datas->first())->approval_status === 'Approved'
-                                            ? $countApproval : 0 }}</h2>
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
                                         <p class="text-sm">Total Yudisium</p>
                                     </div>
                                 </div>
@@ -81,9 +79,8 @@
                                         <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{optional($datas->first())->approval_status === 'Approved'
-                                            ? $totalMhsYud : 0 }}</h2>
-                                        <p class="text-sm">Total Mahasiswa</p>
+                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
+                                        <p class="text-sm">Total Lulusan</p>
                                     </div>
                                 </div>
                             </div>

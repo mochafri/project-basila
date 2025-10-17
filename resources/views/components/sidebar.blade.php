@@ -116,7 +116,7 @@
                     </li>
                     <li>
                         <a href="{{ route('index4') }}"><i
-                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Approval Yudisium</a>
+                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Persetujuan Yudisium</a>
                     </li>
                     {{-- <li>
                         <a href="{{ route('index5') }}"><i
