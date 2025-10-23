@@ -127,7 +127,8 @@ Route::middleware(['auth'])->group(function () {
 
 
             Route::get('/laporan', 'index')->name('index6');
-            Route::redirect('/dashboard/index-6', '/dashboard/laporan');
+            Route::redirect('/d
+            shboard/index-6', '/dashboard/laporan');
 
 
             Route::get('/approval-yudisium', 'index')->name('index4');

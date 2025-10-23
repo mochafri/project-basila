@@ -24,7 +24,7 @@ $script = '
                     <form action="{{ route('index') }}" method="GET">
                         <select name="periode" id="periodeSelect"
                             class="border border-gray-300 rounded-md p-2 text-gray-600">
-                            <option value="Pilih">--Pilih periode--</option>
+                            <option value="Pilih">-- Pilih periode --</option>
                             @foreach ($periodes as $p)
                             <option value="{{ $p['value'] }}" {{ $periode==$p['value'] ? 'selected' : '' }}>
                                 {{ $p['label'] }}
