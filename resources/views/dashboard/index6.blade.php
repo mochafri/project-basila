@@ -8,7 +8,7 @@ $script = '
 
 @section('content')
 <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-semibold text-gray-600">Laporan</h1>
+    <h1 class="text-2xl font-semibold text-gray-600">{{ __('index6.title') }}</h1>
     <div class="flex items-center space-x-4">
         <!-- Dropdown Periode -->
         <div class="relative">
@@ -28,7 +28,7 @@ $script = '
         <button
             class="bg-[#e51411] hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full flex items-center space-x-2">
             <iconify-icon icon="ph:graduation-cap-bold"></iconify-icon>
-            <span>TETAPKAN PERIODE</span>
+            <span>{{ __('index6.set_period') }}</span>
         </button>
     </div>
 </div>
@@ -51,7 +51,7 @@ $script = '
                                 </div>
                                 <div class="flex flex-col text-center">
                                     <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
-                                    <p class="text-sm">Total Yudisium</p>
+                                    <p class="text-sm">{{ __('index6.total_yudisium') }}</p>
                                 </div>
                             </div>
 
@@ -63,7 +63,7 @@ $script = '
                                 </div>
                                 <div class="flex flex-col text-center">
                                     <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
-                                    <p class="text-sm">Total Kelulusan</p>
+                                    <p class="text-sm">{{ __('index6.total_graduate') }}</p>
                                 </div>
                             </div>
 
@@ -75,7 +75,7 @@ $script = '
                                 </div>
                                 <div class="flex flex-col text-center">
                                     <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
-                                    <p class="text-sm">Total SK Terbit</p>
+                                    <p class="text-sm">{{ __('index6.total_sk') }}</p>
                                 </div>
                             </div>
                             {{-- Card Total DKD --}}
@@ -87,7 +87,7 @@ $script = '
                                 </div>
                                 <div class="flex flex-col text-center">
                                     <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
-                                    <p class="text-sm">Total DKD</p>
+                                    <p class="text-sm">{{ __('index6.total_dkd') }}</p>
                                 </div>
                             </div>
 
@@ -100,41 +100,41 @@ $script = '
                                 </div>
                                 <div class="flex flex-col text-center">
                                     <h2 class="text-4xl text-white font-bold leading-tight">214</h2>
-                                    <p class="text-sm">Total Reservasi PISN</p>
+                                    <p class="text-sm">{{ __('index6.total_pisn') }}</p>
                                 </div>
                             </div>
                             <div class="flex flex-col gap-2  justify-center">
                                 <div class="flex items-center justify-between font-medium">
                                     <div class="flex items-center gap-2">
                                         <span class="ri-circle-fill circle-icon text-green-500 w-auto"></span>
-                                        <p class="text-neutral-800">Total Eligible</p>
+                                        <p class="text-neutral-800">{{ __('index6.eligible') }}</p>
                                     </div>
                                     <p class="text-neutral-800">{{ $totalMhsYud }}</p>
                                 </div>
                                 <div class="flex items-center justify-between font-medium">
                                     <div class="flex items-center gap-2">
                                         <span class="ri-circle-fill circle-icon text-red-500 w-auto"></span>
-                                        <p class="text-neutral-800">Total Tidak Eligible</p>
+                                        <p class="text-neutral-800">{{ __('index6.not_eligible') }}</p>
                                     </div>
                                     <p class="text-neutral-800">0</p>
                                 </div>
                             </div>
                         </div>
                         <div class="GenerateLaporan my-5">
-                            <h1 class="text-xl font-bold mb-5">Generate Laporan</h1>
+                            <h1 class="text-xl font-bold mb-5">{{ __('index6.generate') }}</h1>
                             <form action="">
                                 <div class="w-[60%] flex flex-col gap-2 font-medium">
                                     <div class="flex justify-between items-center">
-                                        <label for="fakultas" class="text-neutral-500">Jenis Laporan</label>
+                                        <label for="fakultas" class="text-neutral-500">{{ __('index6.type_report') }}</label>
                                         <select name="fakultas" id="fakultas"
                                             class="text-neutral-500  w-[50%] form-select text-sm">
-                                            <option value="informatika">Yudisium</option>
-                                            <option value="Ilmu Terapan">Tidak Yudisium</option>
+                                            <option value="informatika">{{ __('index6.yudisium') }}</option>
+                                            <option value="Ilmu Terapan">{{ __('index6.not_yudisium') }}</option>
 
                                         </select>
                                     </div>
                                     <div class="flex justify-between items-center">
-                                        <label for="Semester" class="text-neutral-500">Format</label>
+                                        <label for="Semester" class="text-neutral-500">{{ __('index6.format') }}</label>
                                         <select name="Semester" id="Semester"
                                             class="text-neutral-500 w-[50%] form-select text-sm">
                                             <option value="genap24">Excel</option>
@@ -142,7 +142,7 @@ $script = '
                                         </select>
                                     </div>
                                     <button
-                                        class="text-neutral-100 border bg-blue-800 rounded-md shadow-xl w-1/3 px-2 py-1">Generate</button>
+                                        class="text-neutral-100 border bg-blue-800 rounded-md shadow-xl w-1/3 px-2 py-1">{{ __('index6.btn_report') }}</button>
                                 </div>
                             </form>
                         </div>

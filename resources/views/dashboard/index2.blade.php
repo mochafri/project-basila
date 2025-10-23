@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <h1 class="text-2xl font-semibold text-gray-600 mb-5 lg:col-span-12">Penetapan Yudisium</h1>
+        <h1 class="text-2xl font-semibold text-gray-600 mb-5 lg:col-span-12">{{ __('penetapan.title') }}</h1>
         <!-- Filter dan Statistik -->
         <div class="col-span-12 bg-white p-6 rounded-xl shadow-lg">
             <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
@@ -19,7 +19,7 @@
                 <div class="flex flex-col gap-3 w-full sm:w-auto">
                     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                         <label for="semester" class="text-sm font-medium text-neutral-700 whitespace-nowrap">
-                            Semester
+                            {{ __('penetapan.semester') }}
                         </label>
                         <select id="semester" name="semester" class="form-select text-neutral-950 w-full sm:w-48">
                             <option>Ganjil 2024/2025</option>
@@ -30,7 +30,7 @@
                     </div>
                     <button
                         class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-full sm:w-fit">
-                        Tampilkan
+                        {{ __('penetapan.show') }}
                     </button>
                 </div>
 
@@ -45,7 +45,7 @@
                         </div>
                         <div class="flex flex-col text-center">
                             <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
-                            <p class="text-sm">Total Yudisium</p>
+                            <p class="text-sm">{{ __('penetapan.total_yudisium') }}</p>
                         </div>
                     </div>
 
@@ -57,7 +57,7 @@
                         </div>
                         <div class="flex flex-col text-center sm:text-left">
                             <h2 class="text-4xl text-white font-bold">{{ $totalMhsYud }}</h2>
-                            <p class="text-sm">Total Lulusan</p>
+                            <p class="text-sm">{{ __('penetapan.total_graduate') }}</p>
                         </div>
                     </div>
 
@@ -71,14 +71,14 @@
             <div class="card border-0 overflow-hidden">
                 <div class="card-header flex justify-between items-center">
                     <div>
-                        <h6 class="card-title mb-0 text-lg font-bold">Daftar Yudisium</h6>
-                        <h6 class="card-title mb-0 text-xs text-gray-600">Berikut Daftar Yudisium Periode Ganjil 2024/2025
+                        <h6 class="card-title mb-0 text-lg font-bold">{{ __('penetapan.list_title') }}</h6>
+                        <h6 class="card-title mb-0 text-xs text-gray-600">{{ __('penetapan.list_subtitle') }}
                         </h6>
                     </div>
                     <!-- Tombol Tambah -->
                     <button
                         class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition">
-                        <a href="{{ route('index3') }}">+ Tambah</a>
+                        <a href="{{ route('index3') }}">{{ __('penetapan.add') }}</a>
                     </button>
                 </div>
                 <div class="card-body">
@@ -88,13 +88,13 @@
                                 <th scope="col" class="text-neutral-800 dark:text-white">
                                     <div class="form-check style-check flex items-center">
                                         <label class="ms-2 text-neutral-950 form-check-label" for="serial">
-                                            No
+                                            {{ __('penetapan.no') }}
                                         </label>
                                     </div>
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Nomor SK
+                                        {{ __('penetapan.sk_number') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -104,7 +104,7 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Nomor Yudisium
+                                        {{ __('penetapan.yudisium_number') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -114,7 +114,7 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Periode
+                                        {{ __('penetapan.period') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -124,7 +124,7 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Fakultas
+                                        {{ __('penetapan.faculty') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -134,7 +134,7 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Program Studi
+                                        {{ __('penetapan.study_program') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -144,7 +144,7 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Approval Dekan/Dir
+                                        {{ __('penetapan.approval') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -154,7 +154,7 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Alasan
+                                        {{ __('penetapan.reason') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -164,7 +164,7 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Status DKD
+                                        {{ __('penetapan.status_dkd') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -174,7 +174,7 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
-                                        Action
+                                        {{ __('penetapan.action') }}
                                     </div>
                                 </th>
                             </tr>
@@ -278,7 +278,7 @@
                         class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div
                             class="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-6xl max-h-[90%] overflow-y-auto relative text-center">
-                            <h2 class="text-2xl font-bold mb-4">Detail Mahasiswa</h2>
+                            <h2 class="text-2xl font-bold mb-4">{{ __('penetapan.detail_student') }}</h2>
                             <button id="popup-close" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
                                 <iconify-icon icon="mdi:close" class="text-2xl"></iconify-icon>
                             </button>
@@ -289,13 +289,13 @@
                                         <th scope="col" class="text-neutral-800 dark:text-white">
                                             <div class="form-check style-check flex items-center">
                                                 <label class="ms-2 text-neutral-950 form-check-label" for="serial">
-                                                    No
+                                                    {{ __('penetapan.no') }}
                                                 </label>
                                             </div>
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                NIM
+                                                {{ __('penetapan.nim') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -307,7 +307,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                Nama
+                                                {{ __('penetapan.name') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -319,7 +319,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                Masa Studi
+                                                {{ __('penetapan.study_duration') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -331,7 +331,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                SKS Lulus
+                                                {{ __('penetapan.credits') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -343,7 +343,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                IPK
+                                                {{ __('penetapan.gpa') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -355,7 +355,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                Predikat
+                                                {{ __('penetapan.predicate') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -367,7 +367,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                Status
+                                                {{ __('penetapan.status') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -379,7 +379,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                Alasan
+                                                {{ __('penetapan.reason') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">

@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Dashboard',
+    'set_period' => 'SET PERIOD',
+    'select_period' => '--Select period--',
+    'total_yudisium' => 'Total Yudisium',
+    'total_graduate' => 'Total Graduates',
+    'total_sk' => 'Total SK Issued',
+    'total_pisn' => 'Total PISN Reservations',
+    'yudisium_period' => 'Yudisium Period',
+    'yudisium_detail' => 'Here are the details of the Yudisium for the odd semester 2024/2025 graduates',
+    'graduate_predicate' => 'Graduate Predicate',
+    'graduate_detail' => 'Here are the details of graduate predicates for the odd semester 2024/2025',
+    'sk_status' => 'SK Publication Status',
+    'sk_detail' => 'Details of SK publication below',
+    'pisn_status' => 'PISN Status',
+    'pisn_detail' => 'Details of PISN reservations below',
+    'graduation_docs' => 'Graduation Document Issuance',
+    'graduation_docs_detail' => 'Details of digital graduation document issuance',
+    'waiting' => 'Total Waiting :',
+    'approved' => 'Total Approved :',
+    'rejected' => 'Total Rejected :',
+    'done' => 'Total Done :',
+    'eligible' => 'Total Eligible :',
+    'not_eligible' => 'Total Not Eligible :',
+];

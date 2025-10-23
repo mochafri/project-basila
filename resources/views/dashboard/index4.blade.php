@@ -11,7 +11,7 @@
 
 @section('content')
     <!-- Crypto Home Widgets Start -->
-    <h1 class="text-2xl font-semibold text-gray-600 mb-5">Approval Yudisium</h1>
+    <h1 class="text-2xl font-semibold text-gray-600 mb-5">{{ __('index4.title') }}</h1>
 
     <!-- Crypto Home Widgets End -->
 
@@ -23,14 +23,14 @@
                     <div
                         class="card-body yudisium w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-center">
                         <div class="left">
-                            <h1 class="text-xl font-bold mb-5">Yudisium</h1>
+                            <h1 class="text-xl font-bold mb-5">{{ __('index4.yudisium') }}</h1>
                             <form action="">
                                 <div class="w-[60%] flex flex-col gap-2">
                                     <div class="flex justify-between items-center">
-                                        <label for="fakultas" class="text-neutral-800">Fakultas</label>
+                                        <label for="fakultas" class="text-neutral-800">{{ __('index4.faculty') }}</label>
                                         <select name="fakultas" id="fakultas"
                                             class="text-neutral-800 uppercase w-[55%] form-select text-sm">
-                                            <option value="">-- Pilih Fakultas --</option>
+                                            <option value="">{{ __('index4.select_faculty') }}</option>
                                             {{-- <option value="">-- Pilih Fakultas --</option>
                                             @foreach ($faculties as $faculty)
                                                 <option value="{{ $faculty['facultyid'] }}">
@@ -42,7 +42,7 @@
                                     </div>
 
                                     <div class="flex justify-between items-center">
-                                        <label for="Semester" class="text-neutral-800">Semester</label>
+                                        <label for="Semester" class="text-neutral-800">{{ __('index4.semester') }}</label>
                                         <select name="Semester" id="Semester"
                                             class="text-neutral-800 w-[55%] form-select text-sm">
                                             <option value="genap24">Genap 2024/2025</option>
@@ -53,7 +53,7 @@
                                     </div>
                                     <button id="filterButton"
                                         class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">
-                                        Tampilkan
+                                        {{ __('index4.show') }}
                                     </button>
                                 </div>
                             </form>
@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="flex flex-col text-center">
                                         <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
-                                        <p class="text-sm">Total Yudisium</p>
+                                        <p class="text-sm">{{ __('index4.total_yudisium') }}</p>
                                     </div>
                                 </div>
 
@@ -80,7 +80,7 @@
                                     </div>
                                     <div class="flex flex-col text-center">
                                         <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
-                                        <p class="text-sm">Total Lulusan</p>
+                                        <p class="text-sm">{{ __('index4.total_graduates') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -91,8 +91,8 @@
                     <div class="col-span-12">
                         <div class="card border-0 overflow-hidden">
                             <div class="card-header">
-                                <h6 class="card-title text-lg font-bold mb-2">Daftar Yudisium</h6>
-                                <p class="text-sm text-neutral-400 mb-5">Berikut daftar yudisium periode Ganjil 2024/2025
+                                <h6 class="card-title text-lg font-bold mb-2">{{ __('index4.list_title') }}</h6>
+                                <p class="text-sm text-neutral-400 mb-5">{{ __('index4.list_subtitle') }}
                                 </p>
                             </div>
                             <div class="card-body">
@@ -103,14 +103,14 @@
                                                 style="color: black;">
                                                 <div class="form-check style-check flex items-center">
                                                     <label class="ms-2 form-check-label" for="serial">
-                                                        No
+                                                        {{ __('index4.no') }}
                                                     </label>
                                                 </div>
                                             </th>
                                             <th scope="col" class="text-neutral-800 dark:text-white"
                                                 style="color: black;">
                                                 <div class="flex items-center gap-2">
-                                                    Nomor Yudisium
+                                                    {{ __('index4.yudisium_number') }}
                                                     <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         fill="none" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@
                                             <th scope="col" class="text-neutral-800 dark:text-white"
                                                 style="color: black;">
                                                 <div class="flex items-center gap-2">
-                                                    Periode
+                                                    {{ __('index4.period') }}
                                                     <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         fill="none" viewBox="0 0 24 24">
@@ -136,7 +136,7 @@
                                             <th scope="col" class="text-neutral-800 dark:text-white"
                                                 style="color: black;">
                                                 <div class="flex items-center gap-2">
-                                                    Fakultas
+                                                    {{ __('index4.faculty') }}
                                                     <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         fill="none" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@
                                             <th scope="col" class="text-neutral-800 dark:text-white"
                                                 style="color: black;">
                                                 <div class="flex items-center gap-2">
-                                                    Program Studi
+                                                    {{ __('index4.study_program') }}
                                                     <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         fill="none" viewBox="0 0 24 24">
@@ -162,7 +162,7 @@
                                             <th scope="col" class="text-neutral-800 dark:text-white"
                                                 style="color: black;">
                                                 <div class="flex items-center gap-2">
-                                                    Total Mahasiswa
+                                                    {{ __('index4.total_students') }}
                                                     <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         fill="none" viewBox="0 0 24 24">
@@ -175,7 +175,7 @@
                                             <th scope="col" class="text-neutral-800 dark:text-white"
                                                 style="color: black;">
                                                 <div class="flex items-center gap-2">
-                                                    Action
+                                                    {{ __('index4.action') }}
                                                 </div>
                                             </th>
                                         </tr>
@@ -191,7 +191,7 @@
                                 class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                 <div
                                     class="bg-white p-6 rounded-lg shadow-lg w-[40%] max-w-6xl max-h-[100%] overflow-y-auto relative text-center">
-                                    <h2 class="text-2xl font-bold mb-4">Detail Mahasiswa</h2>
+                                    <h2 class="text-2xl font-bold mb-4">{{ __('index4.student_detail') }}</h2>
                                     <button id="popup-close"
                                         class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
                                         <iconify-icon icon="mdi:close" class="text-2xl"></iconify-icon>
@@ -204,13 +204,13 @@
                                                     <div class="form-check style-check flex items-center">
                                                         <label class="ms-2 text-neutral-950 form-check-label"
                                                             for="serial">
-                                                            No
+                                                            {{ __('index4.no') }}
                                                         </label>
                                                     </div>
                                                 </th>
                                                 <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
-                                                        NIM
+                                                        {{ __('index4.nim') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" fill="none" viewBox="0 0 24 24">
@@ -222,7 +222,7 @@
                                                 </th>
                                                 <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
-                                                        Nama
+                                                        {{ __('index4.name') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" fill="none" viewBox="0 0 24 24">
@@ -234,7 +234,7 @@
                                                 </th>
                                                 <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
-                                                        Masa Studi
+                                                        {{ __('index4.study_duration') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" fill="none" viewBox="0 0 24 24">
@@ -246,7 +246,7 @@
                                                 </th>
                                                 <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
-                                                        SKS Lulus
+                                                        {{ __('index4.credits') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" fill="none" viewBox="0 0 24 24">
@@ -258,7 +258,7 @@
                                                 </th>
                                                 <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
-                                                        IPK
+                                                        {{ __('index4.gpa') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" fill="none" viewBox="0 0 24 24">
@@ -270,7 +270,7 @@
                                                 </th>
                                                 <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
-                                                        Predikat
+                                                        {{ __('index4.predicate') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" fill="none" viewBox="0 0 24 24">
@@ -282,7 +282,7 @@
                                                 </th>
                                                 <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
-                                                        Status
+                                                        {{ __('index4.status') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" fill="none" viewBox="0 0 24 24">
@@ -294,7 +294,7 @@
                                                 </th>
                                                 <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
-                                                        Alasan
+                                                        {{ __('index4.reason') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" fill="none" viewBox="0 0 24 24">
@@ -312,17 +312,17 @@
                                     </table>
                                     <div id="approve-yudisium"
                                         class="flex flex-col items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 gap-5">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Status Approve</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('index4.approval_status') }}</label>
                                         <select id="approval" class="form-select w-full text-neutral-900">
-                                            <option value="Eligible">Eligible</option>
-                                            <option value="Tidak Eligible">Tidak Eligible</option>
+                                            <option value="Eligible">{{ __('index4.eligible') }}</option>
+                                            <option value="Tidak Eligible">{{ __('index4.not_eligible') }}</option>
                                         </select>
 
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('index4.note') }}</label>
                                         <textarea id="catatan"
                                             rows="3" class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
                                         <button id="btn-simpan"
-                                            class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
+                                            class="bg-red-600 text-white px-4 py-2 rounded">{{ __('index4.save') }}</button>
                                     </div>
                                 </div>
                             </div>
