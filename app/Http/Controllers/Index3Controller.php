@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\MhsYud;
+use App\Models\Mahasiswa;
 use App\Models\TempStatus;
 use App\Models\Post;
 
@@ -48,43 +49,45 @@ class Index3Controller extends Controller
     {
         try {
             $prodiId = $request->prodi;
-
-            $url = $this->url . '&id=' . $prodiId;
-            $response = Http::get($url);
+            // $url = $this->url . '&id=' . $prodiId;
+            // $response = Http::get($url);
+            $mahasiswaDb = Mahasiswa::select()->get()->toArray();
 
             $mahasiswa = [];
 
-            if ($response->successful()) {
-                $data = $response->json();
+            // if ($response->successful()) {
+            //     $data = $response->json();
 
-                \Log::info('Data mahasiswa', $data);
+            //     if(empty($data)){
+            //         $data = $mahasiswaDb ;
+            //     }
 
-                $mahasiswa = collect($data ?? [])
-                    ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
-                    ->map(function ($mhs) {
-                        $tempStatus = TempStatus::select('status', 'alasan')
-                            ->where('nim', $mhs['STUDENTID']);
+            $mahasiswa = collect($mahasiswaDb ?? [])
+                ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
+                ->map(function ($mhs) {
+                    $tempStatus = TempStatus::select('status', 'alasan')
+                        ->where('nim', $mhs['STUDENTID']);
 
-                        $statusFromTemp = $tempStatus->value('status');
-                        $alasanFromTemp = $tempStatus->value('alasan');
+                    $statusFromTemp = $tempStatus->value('status');
+                    $alasanFromTemp = $tempStatus->value('alasan');
 
-                        $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
+                    $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
 
-                        return [
-                            'nim' => $mhs['STUDENTID'] ?? '-',
-                            'name' => $mhs['FULLNAME'] ?? '-',
-                            'study_period' => $mhs['MASA_STUDI'] ?? '-',
-                            'pass_sks' => $mhs['PASS_CREDIT'] ?? '-',
-                            'ipk' => $mhs['GPA'] ?? '-',
-                            'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
-                            'status' => !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi,
-                            'alasan_status' => !empty($alasanFromTemp) ? $alasanFromTemp : '-',
-                        ];
-                    })
-                    ->toArray();
+                    return [
+                        'nim' => $mhs['STUDENTID'] ?? '-',
+                        'name' => $mhs['FULLNAME'] ?? '-',
+                        'study_period' => $mhs['MASA_STUDI'] ?? '-',
+                        'pass_sks' => $mhs['PASS_CREDIT'] ?? '-',
+                        'ipk' => $mhs['GPA'] ?? '-',
+                        'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
+                        'status' => !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi,
+                        'alasan_status' => !empty($alasanFromTemp) ? $alasanFromTemp : '-',
+                    ];
+                })
+                ->toArray();
 
-                \Log::info('Data mahasiswa', $mahasiswa);
-            }
+            \Log::info('Data mahasiswa', $mahasiswa);
+            // }
 
             return response()->json([
                 'success' => true,
