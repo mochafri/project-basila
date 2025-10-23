@@ -13,10 +13,10 @@ return new class extends Migration {
         Schema::create('yudiciums', function (Blueprint $table) {
             $table->id();
             $table->string('no_yudicium')->unique()->nullable();
-            $table->date('periode');
+            $table->date('periode')->nullable();
             $table->integer('fakultas_id');
             $table->integer('prodi_id');
-            $table->enum('approval_status', ['Waiting', 'Approved'])->default('Waiting');
+            $table->enum('approval_status', ['Waiting', 'Approved', 'Rejected', 'Draft'])->default('Draft');
             $table->string('catatan')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->timestamp('approved_at')->nullable();
