@@ -31,7 +31,8 @@
             <!-- Form -->
 
 
-            <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
+            <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4" action="{{ route('index3') }}"
+                method="GET">
                 @csrf
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
@@ -44,9 +45,14 @@
                 <!-- Semester -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Semester</label>
-                    <select class="form-select w-full text-neutral-900 bg-gray-100" name="semester">
-                        <option>Ganjil 2024/2025</option>
-                        <option>Genap 2025/2026</option>
+                    <select name="periode" id="periodeSelect"
+                        class="form-select border border-gray-300 rounded-md p-2 text-gray-600">
+                        <option value="Pilih">-- Pilih Periode --</option>
+                        @foreach ($periodes as $p)
+                            <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
+                                {{ $p['label'] }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -132,8 +138,9 @@
                                             Masa Studi
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                             </svg>
                                         </div>
                                     </th>
@@ -245,7 +252,7 @@
 
         <div class="flex flex-col md:flex-row items-center gap-4">
             <!-- <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
-                            placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
+                                        placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
 
             <button type="buttton" id="btnSimpan"
                 class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
@@ -260,5 +267,11 @@
             ubahStatus: "{{ route('tempStatus') }}",
             saveDraft: "{{ route('yudicium.save') }}",
         };
+    </script>
+    <script>
+        document.getElementById('setPeriodeBtn').addEventListener('click', function() {
+            const periode = document.getElementById('periodeSelect').value;
+            window.location.href = `?periode=${encodeURIComponent(periode)}`;
+        });
     </script>
 @endsection

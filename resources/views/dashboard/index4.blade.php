@@ -41,7 +41,7 @@
 
                                 <div class="flex justify-between items-center">
                                     <label for="Semester" class="text-neutral-800">Semester</label>
-                                    <form action="{{ route('index') }}" method="GET">
+                                    <form action="{{ route('index4') }}" method="GET">
                                         <select name="periode" id="periodeSelect"
                                             class="border border-gray-300 rounded-md p-2 text-gray-600">
                                             <option value="Pilih">-- Pilih Periode --</option>

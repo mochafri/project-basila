@@ -21,7 +21,7 @@
                         <label for="semester" class="text-sm font-medium text-neutral-700 whitespace-nowrap">
                             Semester
                         </label>
-                        <form action="{{ route('index') }}" method="GET">
+                        <form action="{{ route('index2') }}" method="GET">
                             <select name="periode" id="periodeSelect"
                                 class="border border-gray-300 rounded-md p-2 text-gray-600">
                                 <option value="Pilih">-- Pilih periode --</option>

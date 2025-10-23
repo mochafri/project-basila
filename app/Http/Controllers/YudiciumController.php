@@ -168,7 +168,7 @@ class YudiciumController extends Controller
                 'periodes' => $periodes
             ]);
         }
-
+        
         // === ROUTE: index2 ===
         elseif ($routeName === 'index2') {
 
@@ -200,7 +200,6 @@ class YudiciumController extends Controller
                 'countApproval' => $countApproval,
                 'periode' => $periode,
                 'periodes' => $periodes
-
             ]);
         }
     }
