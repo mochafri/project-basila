@@ -55,7 +55,7 @@
                         <div class="w-16 h-16 bg-[#2f812f] rounded-full flex items-center justify-center">
                             <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                         </div>
-                        <div class="flex flex-col text-center sm:text-left">
+                        <div class="flex flex-col text-center sm:text-left ">
                             <h2 class="text-4xl text-white font-bold">{{ $totalMhsYud }}</h2>
                             <p class="text-sm">Total Lulusan</p>
                         </div>
@@ -225,8 +225,13 @@
                                             </div>
                                         @elseif($data->approval_status === 'Rejected')
                                             <div class="flex items-center">
+                                                <a href="{{ route('index7', ['id' => $data->id]) }}"
+                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Rejected</a>
+                                            </div>
+                                        @elseif($data->approval_status === 'Draft')
+                                            <div class="flex items-center">
                                                 <span
-                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Rejected</span>
+                                                    class="bg-blue-100  text-blue-600  px-6 py-1.5 rounded-full font-medium text-sm">Draft</span>
                                             </div>
                                         @else
                                             <div class="flex items-center">
@@ -258,7 +263,7 @@
                                             data-id={{ $data->id }}>
                                             <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
                                         </button>
-                                        <a href="{{ route('index3', ['id' => $data->id]) }}"
+                                        <a href="{{ route('index5', ['id' => $data->id]) }}"
                                             class="w-8 h-8 bg-warning-100 dark:bg-warning-600/25 text-warning-600 dark:text-warning-400 rounded-full inline-flex items-center justify-center">
                                             <iconify-icon icon="mingcute:edit-2-line"></iconify-icon>
                                         </a>

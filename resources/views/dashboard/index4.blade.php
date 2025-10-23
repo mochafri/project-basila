@@ -5,7 +5,6 @@
     $script = '
         <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
         <script src="' . asset('assets/js/data-table.js') . '" defer></script>
-        <script src="' . asset('assets/js/approveYudcium.js') . '" defer></script>
     ';
 @endphp
 
@@ -181,7 +180,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -336,8 +335,10 @@
         const routes = {
             showFaculties: "{{ route('show.faculties') }}",
             filterYudisium: "{{ route('yudicium.filter') }}",
-            updateYudisium: "{{ route('yudicium.update') }}"
+            updateYudisium: "{{ route('yudicium.update') }}",
+            getAllYud: "{{ route('yudicium.getAll') }}" 
         };
     </script>
     <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
+    <script src="{{ asset('assets/js/approveYudcium.js') }}" defer></script>
 @endsection
