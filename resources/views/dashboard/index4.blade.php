@@ -3,10 +3,10 @@
     $title = 'Approval Yudisium';
     $subTitle = 'Cryptocracy';
     $script = '
-<script src="' . asset('assets/js/homeFourChart.js') . '"></script>
-<script src="' . asset('assets/js/data-table.js') . '" defer></script>
-<script src="' . asset('assets/js/approveYudcium.js') . '" defer></script>
-';
+        <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
+        <script src="' . asset('assets/js/data-table.js') . '" defer></script>
+        <script src="' . asset('assets/js/approveYudcium.js') . '" defer></script>
+    ';
 @endphp
 
 @section('content')
@@ -345,7 +345,6 @@
             };
         </script>
         <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
-        <script src="{{ asset('assets/js/approveYudcium.js') }}" defer></script>
         <script>
             document.getElementById('setPeriodeBtn').addEventListener('click', function() {
                 const periode = document.getElementById('periodeSelect').value;
