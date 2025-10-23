@@ -197,7 +197,10 @@ class YudiciumController extends Controller
                 'datas' => $datas,
                 'postCount' => $postCount,
                 'totalMhsYud' => $totalMhsYud,
-                'countApproval' => $countApproval
+                'countApproval' => $countApproval,
+                'periode' => $periode,
+                'periodes' => $periodes
+
             ]);
         }
     }

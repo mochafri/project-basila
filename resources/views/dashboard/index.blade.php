@@ -12,9 +12,8 @@ $script = '
         <!-- Dropdown Periode -->
         <div class="relative">
             <form action="{{ route('index') }}" method="GET">
-                <select name="periode" onchange="this.form.submit()"
-                    class="border border-gray-300 rounded-md p-2 text-gray-600">
-                    <option value="Pilih">--Pilih periode--</option>
+                <select name="periode" id="periodeSelect" class="border border-gray-300 rounded-md p-2 text-gray-600">
+                    <option value="Pilih">-- Pilih Periode --</option>
                     @foreach ($periodes as $p)
                     <option value="{{ $p['value'] }}" {{ $periode==$p['value'] ? 'selected' : '' }}>
                         {{ $p['label'] }}

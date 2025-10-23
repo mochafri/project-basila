@@ -3,9 +3,10 @@
     $title = 'Approval Yudisium';
     $subTitle = 'Cryptocracy';
     $script = '
-        <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
-        <script src="' . asset('assets/js/data-table.js') . '" defer></script>
-    ';
+<script src="' . asset('assets/js/homeFourChart.js') . '"></script>
+<script src="' . asset('assets/js/data-table.js') . '" defer></script>
+<script src="' . asset('assets/js/approveYudcium.js') . '" defer></script>
+';
 @endphp
 
 @section('content')
@@ -31,24 +32,29 @@
                                             class="text-neutral-800 uppercase w-[55%] form-select text-sm">
                                             <option value="">-- Pilih Fakultas --</option>
                                             {{-- <option value="">-- Pilih Fakultas --</option>
-                                            @foreach ($faculties as $faculty)
-                                                <option value="{{ $faculty['facultyid'] }}">
-                                                    {{ $faculty['facultyname'] }}
-                                                </option>
-                                            @endforeach --}}
+                                        @foreach ($faculties as $faculty)
+                                        <option value="{{ $faculty['facultyid'] }}">
+                                            {{ $faculty['facultyname'] }}
+                                        </option>
+                                        @endforeach --}}
 
                                         </select>
                                     </div>
 
                                     <div class="flex justify-between items-center">
                                         <label for="Semester" class="text-neutral-800">Semester</label>
-                                        <select name="Semester" id="Semester"
-                                            class="text-neutral-800 w-[55%] form-select text-sm">
-                                            <option value="genap24">Genap 2024/2025</option>
-                                            <option value="ganjil24">Ganjil 2024/2025</option>
-                                            <option value="genap25">Genap 2025/2026 </option>
-                                            <option value="ganjil25">Ganjil 2025/2026 </option>
-                                        </select>
+                                        <form action="{{ route('index') }}" method="GET">
+                                            <select name="periode" id="periodeSelect"
+                                                class="border border-gray-300 rounded-md p-2 text-gray-600">
+                                                <option value="Pilih">-- Pilih Periode --</option>
+                                                @foreach ($periodes as $p)
+                                                    <option value="{{ $p['value'] }}"
+                                                        {{ $periode == $p['value'] ? 'selected' : '' }}>
+                                                        {{ $p['label'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </form>
                                     </div>
                                     <button id="filterButton"
                                         class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">
@@ -66,7 +72,9 @@
                                         <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
+                                        <h2 class="text-4xl text-white font-bold leading-tight">
+                                            {{ optional($datas->first())->approval_status === 'Approved' ? $countApproval : 0 }}
+                                        </h2>
                                         <p class="text-sm">Total Yudisium</p>
                                     </div>
                                 </div>
@@ -78,8 +86,10 @@
                                         <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                                     </div>
                                     <div class="flex flex-col text-center">
-                                        <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
-                                        <p class="text-sm">Total Lulusan</p>
+                                        <h2 class="text-4xl text-white font-bold leading-tight">
+                                            {{ optional($datas->first())->approval_status === 'Approved' ? $totalMhsYud : 0 }}
+                                        </h2>
+                                        <p class="text-sm">Total Mahasiswa</p>
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +190,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -318,8 +328,7 @@
                                         </select>
 
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
-                                        <textarea id="catatan"
-                                            rows="3" class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
+                                        <textarea id="catatan" rows="3" class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
                                         <button id="btn-simpan"
                                             class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
                                     </div>
@@ -330,15 +339,21 @@
                 </div>
             </div>
         </div>
+        <script>
+            const routes = {
+                showFaculties: "{{ route('show.faculties') }}",
+                filterYudisium: "{{ route('yudicium.filter') }}",
+                updateYudisium: "{{ route('yudicium.update') }}",
+                getAllYud: "{{ route('yudicium.getAll') }}"
+            };
+        </script>
+        <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
+        <script src="{{ asset('assets/js/approveYudcium.js') }}" defer></script>
+        <script>
+            document.getElementById('setPeriodeBtn').addEventListener('click', function() {
+                const periode = document.getElementById('periodeSelect').value;
+                window.location.href = `?periode=${encodeURIComponent(periode)}`;
+            });
+        </script>
     </div>
-    <script>
-        const routes = {
-            showFaculties: "{{ route('show.faculties') }}",
-            filterYudisium: "{{ route('yudicium.filter') }}",
-            updateYudisium: "{{ route('yudicium.update') }}",
-            getAllYud: "{{ route('yudicium.getAll') }}" 
-        };
-    </script>
-    <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
-    <script src="{{ asset('assets/js/approveYudcium.js') }}" defer></script>
 @endsection
