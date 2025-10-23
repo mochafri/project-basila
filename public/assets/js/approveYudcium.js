@@ -28,6 +28,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         fakultasSelect.innerHTML = '<option value="">Gagal memuat data fakultas</option>';
     }
 
+    try {
+        const res = await fetch(routes.getAllYud);
+
+        if (!res.ok) {
+            throw new Error('Token exp : ' + res.statusText);
+        }
+
+        const data = await res.json();
+
+        if (Array.isArray.length > 0 && Array.isArray(data.data)) {
+            data.data.forEach((yud, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                        <td>${idx + 1}</td>
+                        <td>${yud.no_yudicium}</td>
+                        <td>${yud.periode}</td>
+                        <td>${yud.fakultasname}</td>
+                        <td>${yud.prodiname}</td>
+                        <td>${yud.total_mhs}</td>
+                        <td>
+                            <button
+                                class="btn-popup w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center"
+                                data-id="${yud.id}">
+                                <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
+                            </button>
+                        </td>
+                    `;
+                tbody.appendChild(tr);
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center">Server error</td></tr>';
+    }
+
     filterButton.addEventListener('click', async (e) => {
         e.preventDefault();
 
@@ -61,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             tbody.innerHTML = '';
 
-            if(Array.isArray(data.data) && data.data.length === 0) {
+            if (Array.isArray(data.data) && data.data.length === 0) {
                 Swal.fire({
                     title: 'Info!',
                     text: 'Tidak ada data yudisium untuk fakultas ini',
@@ -78,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (Array.isArray(data.data) && data.data.length > 0) {
                 data.data.forEach((yud, idx) => {
                     const tr = document.createElement('tr');
-                        tr.innerHTML = `
+                    tr.innerHTML = `
                         <td>${idx + 1}</td>
                         <td>${yud.no_yudicium}</td>
                         <td>${yud.periode}</td>
@@ -96,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     tbody.appendChild(tr);
 
                 });
-            } 
+            }
             console.log("Data yudisium : ", data);
         } catch (err) {
             console.error(err);
