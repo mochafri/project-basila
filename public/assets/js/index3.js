@@ -16,12 +16,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
         const prodiId = prodiSelect.value;
 
         console.log("Clicked");
-
-        if (!facultyId || !prodiId) {
-            alert('Pilih Fakultas dan Program Studi terlebih dahulu');
-            return;
-        }
-
+        
         try {
             const res = await fetch(routes.filterMhs, {
                 method: "POST",

@@ -24,44 +24,41 @@
                         class="card-body yudisium w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-center">
                         <div class="left">
                             <h1 class="text-xl font-bold mb-5">Yudisium</h1>
-                            <form action="">
-                                <div class="w-[60%] flex flex-col gap-2">
-                                    <div class="flex justify-between items-center">
-                                        <label for="fakultas" class="text-neutral-800">Fakultas</label>
-                                        <select name="fakultas" id="fakultas"
-                                            class="text-neutral-800 uppercase w-[55%] form-select text-sm">
-                                            <option value="">-- Pilih Fakultas --</option>
-                                            {{-- <option value="">-- Pilih Fakultas --</option>
-                                        @foreach ($faculties as $faculty)
-                                        <option value="{{ $faculty['facultyid'] }}">
-                                            {{ $faculty['facultyname'] }}
-                                        </option>
-                                        @endforeach --}}
-
-                                        </select>
-                                    </div>
-
-                                    <div class="flex justify-between items-center">
-                                        <label for="Semester" class="text-neutral-800">Semester</label>
-                                        <form action="{{ route('index') }}" method="GET">
-                                            <select name="periode" id="periodeSelect"
-                                                class="border border-gray-300 rounded-md p-2 text-gray-600">
-                                                <option value="Pilih">-- Pilih Periode --</option>
-                                                @foreach ($periodes as $p)
-                                                    <option value="{{ $p['value'] }}"
-                                                        {{ $periode == $p['value'] ? 'selected' : '' }}>
-                                                        {{ $p['label'] }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </form>
-                                    </div>
-                                    <button id="filterButton"
-                                        class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">
-                                        Tampilkan
-                                    </button>
+                            <div class="w-[60%] flex flex-col gap-2">
+                                <div class="flex justify-between items-center">
+                                    <label for="fakultas" class="text-neutral-800">Fakultas</label>
+                                    <select name="fakultas" id="fakultas"
+                                        class="text-neutral-800 uppercase w-[55%] form-select text-sm">
+                                        <option value="">-- Pilih Fakultas --</option>
+                                        {{-- <option value="">-- Pilih Fakultas --</option>
+                                                @foreach ($faculties as $faculty)
+                                                <option value="{{ $faculty['facultyid'] }}">
+                                                    {{ $faculty['facultyname'] }}
+                                                </option>
+                                                @endforeach --}}
+                                    </select>
                                 </div>
-                            </form>
+
+                                <div class="flex justify-between items-center">
+                                    <label for="Semester" class="text-neutral-800">Semester</label>
+                                    <form action="{{ route('index') }}" method="GET">
+                                        <select name="periode" id="periodeSelect"
+                                            class="border border-gray-300 rounded-md p-2 text-gray-600">
+                                            <option value="Pilih">-- Pilih Periode --</option>
+                                            @foreach ($periodes as $p)
+                                                <option value="{{ $p['value'] }}"
+                                                    {{ $periode == $p['value'] ? 'selected' : '' }}>
+                                                    {{ $p['label'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </form>
+                                </div>
+                                <button id="filterButton"
+                                    class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">
+                                    Tampilkan
+                                </button>
+                            </div>
                         </div>
                         <div class="right">
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 ">

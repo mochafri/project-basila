@@ -311,10 +311,8 @@ class YudiciumController extends Controller
             $id = $validate['id'];
             $mappingFaculties = [3 => 'IT', 4 => 'IK', 5 => 'TE', 6 => 'RI', 7 => 'IF', 8 => 'EB', 9 => 'KB', 10 => 'SBY', 11 => 'PWT'];
             $fakultasInitial = $mappingFaculties[$validate['facultyId']] ?? 'XX';
-            $tahun = date('Y-m-d');
+            $tahun = date('d-m-Y');
             $nomorYudisium = $id . '/AKD100/' . $fakultasInitial . '/' . $tahun;
-
-            $tahun = date('Y-m-d');
 
             $yudicium = Yudicium::where('id', $validate['id'])
                 ->update([
