@@ -2,6 +2,9 @@ window.faculty_Id = null;
 window.prodi_Id = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const totalEligibleSpan = document.getElementById('totalEligible');
+    const totalTidakEligibleSpan = document.getElementById('totalTidakEligible');
+
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
@@ -15,6 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         console.log("Data : ", data);
 
+        let totalEligible = 0;
+        let totalTidakEligible = 0;
+
         if (Array.isArray(data.data) && Array.isArray(data.data)) {
             data.data.forEach((mhs, idx) => {
                 getMahasiswa(mhs, idx);
@@ -26,6 +32,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 prodi_Id = mhs.prodi;
             });
         }
+
+        totalEligibleSpan.textContent = totalEligible;
+        totalTidakEligibleSpan.textContent = totalTidakEligible;
     } catch (err) {
         console.error(err);
     }
