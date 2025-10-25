@@ -14,7 +14,7 @@
 @endphp
 
 @section('content')
-    <h1 class="text-2xl font-semibold text-gray-600 mb-5">Perbaruan Status Penolakan</h1>
+    <h1 id="title" class="text-2xl font-semibold text-gray-600 mb-5">Penetapan Yudisium</h1>
     
     <!-- Daftar Mahasiswa -->
     <div class="bg-white p-6 rounded-xl shadow-md">
@@ -146,7 +146,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                
                             </tbody>
                         </table>
                     </div>

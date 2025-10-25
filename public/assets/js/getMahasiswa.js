@@ -35,5 +35,4 @@ window.getMahasiswa = function (mhs, idx) {
                         </td>
                     `;
     tbody.appendChild(tr);
-
 }

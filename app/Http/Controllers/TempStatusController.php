@@ -38,6 +38,8 @@ class TempStatusController extends Controller
                 ]);
         }
 
+        session()->flash('success', 'Status berhasil disimpan');
+
         \Log::info('Status berhasil disimpan', $status->toArray());
 
         return response()->json([

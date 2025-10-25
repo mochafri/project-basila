@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Dashboard',
+    'set_period' => 'TETAPKAN PERIODE',
+    'select_period' => '--Pilih periode--',
+    'total_yudisium' => 'Total Yudisium',
+    'total_graduate' => 'Total Lulusan',
+    'total_sk' => 'Total SK Terbit',
+    'total_pisn' => 'Total Reservasi PISN',
+    'yudisium_period' => 'Periode Yudisium',
+    'yudisium_detail' => 'Berikut detail yudisium Lulusan periode ganjil 2024/2025',
+    'graduate_predicate' => 'Predikat Lulusan',
+    'graduate_detail' => 'Berikut detail predikat lulusan periode ganjil 2024/2025',
+    'sk_status' => 'Status Penerbitan SK',
+    'sk_detail' => 'Berikut detail penerbitan SK',
+    'pisn_status' => 'Status PISN',
+    'pisn_detail' => 'Berikut detail reservasi PISN',
+    'graduation_docs' => 'Penerbitan Dokumen Kelulusan',
+    'graduation_docs_detail' => 'Berikut detail penerbitan dokumen kelulusan digital',
+    'waiting' => 'Total Waiting :',
+    'approved' => 'Total Approved :',
+    'rejected' => 'Total Rejected :',
+    'done' => 'Total Done :',
+    'eligible' => 'Total Eligible :',
+    'not_eligible' => 'Total Tidak Eligible :',
+];

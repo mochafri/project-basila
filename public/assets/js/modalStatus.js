@@ -41,6 +41,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const data = await res.json();
             if (data.success) {
+                const row = tbody.querySelector(`tr[data-nim="${nim}"]`);
+                if (row) {
+                    row.querySelector('.statusSpan').textContent = status;
+                    row.querySelector('.statusSpan').dataset.status = status;
+                    row.querySelector('.alasanSpan').textContent = alasan; 
+                    row.querySelector('.statusSpan').dataset.alasan = alasan;
+                }
+
                 Swal.fire({
                     title: 'Berhasil!',
                     text: 'Status berhasil diubah',

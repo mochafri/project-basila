@@ -4,6 +4,7 @@ use App\Http\Controllers\Index3Controller;
 use App\Http\Controllers\TempStatusController;
 use App\Http\Controllers\TetapKanController;
 use App\Http\Controllers\UpdateYudicium;
+use App\Http\Controllers\UpdateYudiciumController;
 use App\Http\Controllers\YudiciumController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -136,9 +137,12 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Update Yudisium route 
-        Route::controller(UpdateYudicium::class)->group(function () {
+        Route::controller(UpdateYudiciumController::class)->group(function () {
             Route::get('/update-yudisium', 'index')->name('index7');
-            Route::redirect('/dashboard/index-7', '/dashboard/update-yudisium');
+            Route::redirect('/dashboard/index-7/', '/dashboard/update-yudisium');
+
+            Route::get('/Tetapkan-yudisium', 'index')->name('index5');
+            Route::redirect('/dashboard/index-5/', '/dashboard/index-5');
         });
 
         // Index3 routes
@@ -147,11 +151,6 @@ Route::middleware(['auth'])->group(function () {
             Route::redirect('/dashboard/index-3', '/dashboard/tambah-yudisium');
 
             Route::post('/index-3/generate', 'generate')->name('index3.generate');
-        });
-
-        Route::controller(TetapKanController::class)->group(function () {
-            Route::get('/Tetapkan-yudisium', 'index')->name('index5');
-            Route::redirect('/dashboard/index-5', '/dashboard/index-5'); 
         });
 
         // Dashboard routes 
@@ -277,7 +276,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::post('/update-status', [UpdateYudicium::class, 'updateYudicium'])->name('update.status'); 
+        Route::post('/update-status', [UpdateYudicium::class, 'updateYudicium'])->name('update.status');
     });
 
     Route::middleware(['auth'])->group(function () {
@@ -293,6 +292,21 @@ Route::middleware(['auth'])->group(function () {
         Route::get('all-yud', [YudiciumController::class,'getAllYudicium'])->name('yudicium.getAll');
     });
 });
+
+//route ganti bahasa
+Route::get('/change-language/{lang}', function ($lang) {
+    // Pastikan hanya bahasa yang tersedia
+    $availableLangs = ['id', 'en'];
+
+    if (in_array($lang, $availableLangs)) {
+        Session::put('locale', $lang);
+        App::setLocale($lang);
+    }
+
+    // Kembali ke halaman sebelumnya
+    return redirect()->back();
+})->name('change.language');
+
 
 // routes/web.php
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');

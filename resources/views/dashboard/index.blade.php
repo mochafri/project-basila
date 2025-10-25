@@ -7,13 +7,14 @@ $script = '
 
 @section('content')
 <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-semibold text-gray-600">Dashboard</h1>
+    <h1 class="text-2xl font-semibold text-gray-600">{{ __('dashboard.title') }}</h1>
     <div class="flex items-center space-x-4">
         <!-- Dropdown Periode -->
         <div class="relative">
             <form action="{{ route('index') }}" method="GET">
-                <select name="periode" id="periodeSelect" class="border border-gray-300 rounded-md p-2 text-gray-600">
-                    <option value="Pilih">-- Pilih Periode --</option>
+                <select name="periode" onchange="this.form.submit()"
+                    class="border border-gray-300 rounded-md p-2 text-gray-600">
+                    <option value="Pilih">{{ __('dashboard.select_period') }}</option>
                     @foreach ($periodes as $p)
                     <option value="{{ $p['value'] }}" {{ $periode==$p['value'] ? 'selected' : '' }}>
                         {{ $p['label'] }}
@@ -30,7 +31,7 @@ $script = '
         <button id="setPeriodeBtn"
             class="bg-[#e51411] hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full flex items-center space-x-2">
             <iconify-icon icon="ph:graduation-cap-bold"></iconify-icon>
-            <span>TETAPKAN PERIODE</span>
+            <span>{{ __('dashboard.set_period') }}</span>
         </button>
 
 
@@ -50,7 +51,7 @@ $script = '
         <div class="flex flex-col text-center">
             <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}
             </h2>
-            <p class="text-sm">Total Yudisium</p>
+            <p class="text-sm">{{ __('dashboard.total_yudisium') }}</p>
         </div>
     </div>
 
@@ -61,7 +62,7 @@ $script = '
         </div>
         <div class="flex flex-col text-center">
             <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
-            <p class="text-sm">Total Lulusan</p>
+            <p class="text-sm">{{ __('dashboard.total_graduate') }}</p>
         </div>
     </div>
 
@@ -72,7 +73,7 @@ $script = '
         </div>
         <div class="flex flex-col text-center">
             <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
-            <p class="text-sm">Total SK Terbit</p>
+            <p class="text-sm">{{ __('dashboard.total_sk') }}</p>
         </div>
     </div>
 
@@ -83,7 +84,7 @@ $script = '
         </div>
         <div class="flex flex-col text-center">
             <h2 class="text-4xl text-white font-bold leading-tight">214</h2>
-            <p class="text-sm">Total Reservasi PISN</p>
+            <p class="text-sm">{{ __('dashboard.total_pisn') }}</p>
         </div>
     </div>
 </div>
@@ -95,8 +96,8 @@ $script = '
         <div class="flex justify-between items-center mb-4">
             <!-- Judul dan Deskripsi -->
             <div>
-                <h3 class="text-xl font-bold text-gray-900">Periode Yudisium</h3>
-                <p class="text-xs text-gray-500">Berikut detail yudisium Lulusan periode ganjil 2024/2025</p>
+                <h3 class="text-xl font-bold text-gray-900">{{ __('dashboard.yudisium_period') }}</h3>
+                <p class="text-xs text-gray-500">{{ __('dashboard.yudisium_detail') }}</p>
             </div>
 
             <!-- Total Yudisium dengan Gavel -->
@@ -107,7 +108,7 @@ $script = '
                 <div class="flex flex-col justify-center items-center text-center">
                     <h2 class="text-3xl font-bold text-red-600 leading-tight">
                         {{ $countApproval }}</h2>
-                    <p class="text-xs text-red-600">Total Yudisium</p>
+                    <p class="text-xs text-red-600">{{ __('dashboard.total_yudisium') }}</p>
                 </div>
             </div>
         </div>
@@ -121,8 +122,8 @@ $script = '
         <!-- Header Section -->
         <div class="flex justify-between items-start mb-6">
             <div>
-                <h3 class="text-xl font-bold text-gray-900">Predikat Lulusan</h3>
-                <p class="text-xs text-gray-500">Berikut detail predikat lulusan periode ganjil 2024/2025</p>
+                <h3 class="text-xl font-bold text-gray-900">{{ __('dashboard.graduate_predicate') }}</h3>
+                <p class="text-xs text-gray-500">{{ __('dashboard.graduate_detail') }}</p>
             </div>
             <div class="flex items-center space-x-2">
                 <div class="bg-green-600 p-3 rounded-full">
@@ -130,7 +131,7 @@ $script = '
                 </div>
                 <div class="flex flex-col justify-center items-center text-center">
                     <h2 class="text-3xl font-bold text-green-600 leading-tight">{{ $totalMhsYud }}</h2>
-                    <p class="text-xs text-green-600">Total Lulusan</p>
+                    <p class="text-xs text-green-600">{{ __('dashboard.total_graduate') }}</p>
                 </div>
             </div>
         </div>
@@ -163,33 +164,33 @@ $script = '
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="bg-white p-5 rounded-lg shadow">
-        <h4 class="text-xl font-semibold mb-2">Status Penerbitan SK</h4>
-        <h5 class="text-sm font-normal mb-2 text-gray-500">Berikut detail penerbitan SK</h5>
+        <h4 class="text-xl font-semibold mb-2">{{ __('dashboard.sk_status') }}</h4>
+        <h5 class="text-sm font-normal mb-2 text-gray-500">{{ __('dashboard.sk_detail') }}</h5>
         <ul class="text-sm space-y-1">
-            <li class="text-yellow-500">🟡 Total Waiting: {{ $waitingApproval }}</li>
-            <li class="text-green-600">🟢 Total Approved: {{ $countApproval }}</li>
-            <li class="text-red-600">🔴 Total Rejected: 0</li>
-            <li class="text-blue-600">🔵 Total Done: {{ $countApproval }}</li>
+            <li class="text-yellow-500">🟡 {{ __('dashboard.waiting') }} {{ $waitingApproval }}</li>
+            <li class="text-green-600">🟢 {{ __('dashboard.approved') }} {{ $countApproval }}</li>
+            <li class="text-red-600">🔴 {{ __('dashboard.rejected') }} 0</li>
+            <li class="text-blue-600">🔵 {{ __('dashboard.done') }} {{ $countApproval }}</li>
         </ul>
     </div>
 
     <div class="bg-white p-5 rounded-lg shadow">
-        <h4 class="text-xl font-semibold mb-2">Status PISN</h4>
-        <h5 class="text-sm font-normal mb-2 text-gray-500">Berikut detail reservasi PISN</h5>
+        <h4 class="text-xl font-semibold mb-2">{{ __('dashboard.pisn_status') }}</h4>
+        <h5 class="text-sm font-normal mb-2 text-gray-500">{{ __('dashboard.pisn_detail') }}</h5>
         <ul class="text-sm space-y-1">
-            <li class="text-green-600">🟢 Total Eligible: 214</li>
-            <li class="text-red-600">🔴 Total Tidak Eligible: 0</li>
+            <li class="text-green-600">🟢 {{ __('dashboard.eligible') }} 214</li>
+            <li class="text-red-600">🔴 {{ __('dashboard.not_eligible') }} 0</li>
         </ul>
     </div>
 
     <div class="bg-white p-5 rounded-lg shadow">
-        <h4 class="text-xl font-semibold mb-2">Penerbitan Dokumen Kelulusan</h4>
-        <h5 class="text-sm font-normal mb-2 text-gray-500">Berikut detail penerbitan dokumen kelulusan digital</h5>
+        <h4 class="text-xl font-semibold mb-2">{{ __('dashboard.graduation_docs') }}</h4>
+        <h5 class="text-sm font-normal mb-2 text-gray-500">{{ __('dashboard.graduation_docs_detail') }}</h5>
         <ul class="text-sm space-y-1">
-            <li class="text-yellow-500">🟡 Total Waiting: 0</li>
-            <li class="text-green-600">🟢 Total Approved: 0</li>
-            <li class="text-red-600">🔴 Total Rejected: 0</li>
-            <li class="text-blue-600">🔵 Total Done: 214</li>
+            <li class="text-yellow-500">🟡 {{ __('dashboard.waiting') }} 0</li>
+            <li class="text-green-600">🟢 {{ __('dashboard.approved') }} 0</li>
+            <li class="text-red-600">🔴 {{ __('dashboard.rejected') }} 0</li>
+            <li class="text-blue-600">🔵 {{ __('dashboard.done') }} 214</li>
         </ul>
     </div>
 </div>

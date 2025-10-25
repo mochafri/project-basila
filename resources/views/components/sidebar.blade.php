@@ -7,8 +7,7 @@
             <img src="{{ asset('assets/basila_images/basila_white.png') }}" alt="site logo" class="light-logo"
                 width="120">
             <img src="{{ asset('assets/images/logo-light.png') }}" alt="site logo" class="dark-logo">
-            <img src="{{ asset('assets/basila_images/logo_basila.png') }}" alt="site logo" class="logo-icon"
-                width="30">
+            <img src="{{ asset('assets/basila_images/logo_basila.png') }}" alt="site logo" class="logo-icon" width="30">
         </a>
     </div>
     <div class="sidebar-menu-area">
@@ -28,11 +27,13 @@
             <!-- Penambahan -->
 
             <li class="mb-4">
-                <a href="https://basila.telkomuniversity.ac.id/basilav2/" onclick="confirm('Anda akan diarahkan ke halaman lain, lanjutkan?')">
+            <li class="mb-4">
+                <a href="https://basila.telkomuniversity.ac.id/basilav2/"
+                    onclick="confirm('Anda akan diarahkan ke halaman lain, lanjutkan?')">
                     <iconify-icon icon="solar:home-smile-angle-outline" class="menu-icon"></iconify-icon>
-                    <span>Beranda</span>
+                    <span>{{ __('sidebar.home') }}</span>
                 </a>
-
+            </li>
             </li>
             {{-- <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
@@ -103,28 +104,36 @@
             <li class="dropdown mb-4">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="icons8:student" class="menu-icon"></iconify-icon>
-                    <span>Mahasiswa Yudisium</span>
+                    <span>{{ __('sidebar.student_yudisium') }}</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('index') }}"><i
-                                class="ri-circle-fill circle-icon text-dark w-auto"></i> Dashboard</a>
+                        <a href="{{ route('index') }}">
+                            <i class="ri-circle-fill circle-icon text-dark w-auto"></i>
+                            {{ __('sidebar.dashboard') }}
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('index2') }}"><i
-                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Penetapan Yudisium</a>
+                        <a href="{{ route('index2') }}">
+                            <i class="ri-circle-fill circle-icon text-dark w-auto"></i>
+                            {{ __('sidebar.determination') }}
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('index4') }}"><i
-                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Persetujuan Yudisium</a>
+                        <a href="{{ route('index4') }}">
+                            <i class="ri-circle-fill circle-icon text-dark w-auto"></i>
+                            {{ __('sidebar.approval') }}
+                        </a>
                     </li>
                     {{-- <li>
                         <a href="{{ route('index5') }}"><i
                                 class="ri-circle-fill circle-icon text-dark w-auto"></i>Eligibilitas Yudisium</a>
                     </li> --}}
                     <li>
-                        <a href="{{ route('index6') }}"><i
-                                class="ri-circle-fill circle-icon text-dark w-auto"></i>Laporan</a>
+                        <a href="{{ route('index6') }}">
+                            <i class="ri-circle-fill circle-icon text-dark w-auto"></i>
+                            {{ __('sidebar.report') }}
+                        </a>
                     </li>
                 </ul>
             </li>

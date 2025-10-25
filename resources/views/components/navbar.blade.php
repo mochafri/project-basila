@@ -7,10 +7,11 @@
                     <iconify-icon icon="iconoir:arrow-right" class="icon active"></iconify-icon>
                 </button>
                 <button type="button" class="sidebar-mobile-toggle d-flex !leading-[0]">
-                    <iconify-icon icon="heroicons:bars-3-solid" class="icon !text-[30px] text-neutral-200"></iconify-icon>
+                    <iconify-icon icon="heroicons:bars-3-solid"
+                        class="icon !text-[30px] text-neutral-200"></iconify-icon>
                 </button>
                 <form class="navbar-search">
-                    <input type="text" name="search" placeholder="Search">
+                    <input type="text" name="search" placeholder="{{ __('messages.search') }}">
                     <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
                 </form>
             </div>
@@ -27,9 +28,13 @@
                     class="z-10 hidden bg-white  rounded-2xl overflow-hidden shadow-lg max-w-[394px] w-full">
                     <div
                         class="py-3 px-4 rounded-lg bg-primary-50 dark:bg-primary-600/25 m-4 flex items-center justify-between gap-2">
-                        <h6 class="text-lg text-neutral-900 font-semibold mb-0">Messaage</h6>
-                        <span
-                            class="w-10 h-10 bg-white dark:bg-neutral-600 text-primary-600 dark:text-white font-bold flex justify-center items-center rounded-full">05</span>
+                        <<h6 class="text-lg text-neutral-900 font-semibold mb-0">{{ __('messages.message') }}</h6>
+                            <a href="javascript:void(0)"
+                                class="text-primary-600 dark:text-primary-600 font-semibold hover:underline text-center">
+                                {{ __('messages.see_all_message') }}
+                            </a>
+                            <span
+                                class="w-10 h-10 bg-white dark:bg-neutral-600 text-primary-600 dark:text-white font-bold flex justify-center items-center rounded-full">05</span>
                     </div>
                     <div class="scroll-sm !border-t-0">
                         <div class="max-h-[400px] overflow-y-auto">
@@ -157,7 +162,11 @@
                     class="z-10 hidden bg-white  rounded-2xl overflow-hidden shadow-lg max-w-[394px] w-full">
                     <div
                         class="py-3 px-4 rounded-lg bg-primary-50 dark:bg-primary-600/25 m-4 flex items-center justify-between gap-2">
-                        <h6 class="text-lg text-neutral-900 font-semibold mb-0">Notification</h6>
+                        <h6 class="text-lg text-neutral-900 font-semibold mb-0">{{ __('messages.notification') }}</h6>
+                        <a href="javascript:void(0)"
+                            class="text-primary-600 dark:text-primary-600 font-semibold hover:underline text-center">
+                            {{ __('messages.see_all_notification') }}
+                        </a>
                         <span
                             class="w-10 h-10 bg-white dark:bg-neutral-600 text-primary-600 dark:text-white font-bold flex justify-center items-center rounded-full">05</span>
                     </div>
@@ -258,6 +267,54 @@
                 </div>
                 <!-- Notification End  -->
 
+                <!-- Language Switch Dropdown Start -->
+                <div class="hidden sm:inline-block">
+                    <button data-dropdown-toggle="dropdownLang"
+                        class="has-indicator w-10 h-10 bg-red-600 dark:text-white rounded-full flex justify-center items-center"
+                        type="button">
+                        @if (App::getLocale() === 'id')
+                            <iconify-icon icon="circle-flags:id" class="text-2xl"></iconify-icon>
+                        @else
+                            <iconify-icon icon="circle-flags:gb" class="text-2xl"></iconify-icon>
+                        @endif
+                    </button>
+
+                    <div id="dropdownLang"
+                        class="z-10 hidden bg-white rounded-lg shadow-lg dropdown-menu-sm p-3 w-56">
+                        <div class="py-2 px-3 rounded-lg bg-primary-50 dark:bg-primary-600/25 mb-3">
+                            <h6 class="text-sm text-neutral-900 font-semibold mb-0">{{ __('messages.choose_language') }}
+                            </h6>
+                        </div>
+
+                        <div class="flex flex-col gap-3">
+                            <a href="{{ route('change.language', 'id') }}"
+                                class="flex items-center justify-between p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 @if(App::getLocale() === 'id') bg-gray-100 dark:bg-gray-600 @endif">
+                                <div class="flex items-center gap-3">
+                                    <iconify-icon icon="circle-flags:id" class="text-2xl"></iconify-icon>
+                                    <span
+                                        class="text-sm font-medium text-neutral-800 dark:text-neutral-800">Indonesia</span>
+                                </div>
+                                @if (App::getLocale() === 'id')
+                                    <iconify-icon icon="mdi:check" class="text-primary-500"></iconify-icon>
+                                @endif
+                            </a>
+
+                            <a href="{{ route('change.language', 'en') }}"
+                                class="flex items-center justify-between p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 @if(App::getLocale() === 'en') bg-gray-100 dark:bg-gray-600 @endif">
+                                <div class="flex items-center gap-3">
+                                    <iconify-icon icon="circle-flags:gb" class="text-2xl"></iconify-icon>
+                                    <span
+                                        class="text-sm font-medium text-neutral-800 dark:text-neutral-800">English</span>
+                                </div>
+                                @if (App::getLocale() === 'en')
+                                    <iconify-icon icon="mdi:check" class="text-primary-500"></iconify-icon>
+                                @endif
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Language Switch Dropdown End -->
+
 
                 <button data-dropdown-toggle="dropdownProfile" class="flex justify-center items-center rounded-full"
                     type="button">
@@ -268,11 +325,12 @@
                     <div
                         class="py-3 px-4 rounded-lg bg-primary-50 dark:bg-primary-600/25 mb-4 flex items-center justify-between gap-2">
                         <div class="flex items-center gap-3">
-                            {{-- <img src="{{ session('profilephoto') }}" alt="image"
-                                class="w-10 h-10 rounded-full"> --}}
+                            {{-- <img src="{{ session('profilephoto') }}" alt="image" class="w-10 h-10 rounded-full">
+                            --}}
                             <div class="flex flex-col">
                                 <h6 class="text-lg text-neutral-900 font-semibold mb-0 normal-case">
-                                    {{ session('username') }}</h6>
+                                    {{ session('username') }}
+                                </h6>
                                 <span class="text-neutral-500">Admin</span>
                             </div>
                         </div>
@@ -284,26 +342,27 @@
                     <div class="max-h-[400px] overflow-y-auto scroll-sm pe-2">
                         <ul class="flex flex-col">
                             <li>
-                                <a class="text-black px-0 py-2 hover:text-primary-600 flex items-center gap-4"
-                                    href="{{ route('viewProfile') }}">
-                                    <iconify-icon icon="solar:user-linear" class="icon text-xl"></iconify-icon> My
-                                    Profile
+                                <a href="{{ route('viewProfile') }}"
+                                    class="text-black px-0 py-2 hover:text-primary-600 flex items-center gap-4">
+                                    <iconify-icon icon="solar:user-linear" class="icon text-xl"></iconify-icon>
+                                    {{ __('messages.my_profile') }}
                                 </a>
                             </li>
                             <li>
-                                <a class="text-black px-0 py-2 hover:text-primary-600 flex items-center gap-4"
-                                    href="{{ route('company') }}">
+                                <a href="{{ route('company') }}"
+                                    class="text-black px-0 py-2 hover:text-primary-600 flex items-center gap-4">
                                     <iconify-icon icon="icon-park-outline:setting-two"
-                                        class="icon text-xl"></iconify-icon> Setting
+                                        class="icon text-xl"></iconify-icon>
+                                    {{ __('messages.settings') }}
                                 </a>
                             </li>
                             <li>
-                                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                                <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button type="submit"
                                         class="text-black px-0 py-2 hover:text-danger-600 flex items-center gap-4 w-full text-left">
                                         <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon>
-                                        Log Out
+                                        {{ __('messages.logout') }}
                                     </button>
                                 </form>
                             </li>

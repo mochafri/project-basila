@@ -6,6 +6,7 @@
         <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
         <script src="' . asset('assets/js/data-table.js') . '" defer></script>
         <script src="' . asset('assets/js/approveYudcium.js') . '" defer></script>
+        <script src="' . asset('assets/js/fakultasSelect.js') . '"></script>
     ';
 @endphp
 
@@ -187,7 +188,57 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($yudicium as $idx => $data)
+                                            <tr> <!-- class="{{ $loop->odd ? 'bg-blue-100' : 'bg-white' }}"  untuk membedakan background row-->
+                                                <td>
+                                                    <div class="form-check style-check flex items-center">
+                                                        {{-- <input class="form-check-input" type="checkbox"> --}}
+                                                        <label class="ms-2 form-check-label">
+                                                            {{ $idx + 1 }}
+                                                        </label>
+                                                    </div>
+                                                </td>
 
+                                                <td>
+                                                    <div class="flex items-center">
+                                                        <h6 class="text-base mb-0 ">
+                                                            {{ $data->no_yudicium }}
+                                                        </h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex items-center">
+                                                        <h6>
+                                                            {{ $data->periode }}
+                                                        </h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <h6>
+                                                            {{ $data->fakultasname }}
+                                                        </h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex items-center">
+                                                        <h6>{{ $data->prodiname }}</h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex items-center">
+                                                        <h6>{{ $data->total_mhs }}</h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        class="btn-popup w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center"
+                                                        data-id="{{ $data->id }}">
+                                                        <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

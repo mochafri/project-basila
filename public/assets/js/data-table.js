@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
             columns: [
                 { select: [0, 6], sortable: false }
             ],
+            labels: {
+                placeholder: "Search for a user...",
+                noRows: "",
+                info: ""
+            },
+
             rowRender: (row, tr) => {
                 if (!tr.attributes) tr.attributes = {};
                 if (!tr.attributes.class) tr.attributes.class = "";

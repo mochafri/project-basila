@@ -6,11 +6,15 @@ use App\Models\Yudicium;
 use App\Models\MhsYud;
 use Illuminate\Http\Request;
 
-class UpdateYudicium extends Controller
+class UpdateYudiciumController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('dashboard.index7');
+        $routeName = $request->route()->getName();
+
+        if (in_array($routeName, ['index5', 'index7'])) {
+            return view("dashboard.$routeName");
+        }
     }
 
     public function updateYudicium(Request $request)

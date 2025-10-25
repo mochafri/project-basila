@@ -123,20 +123,20 @@ class Index3Controller extends Controller
     {
         try {
             $prodiId = $request->prodi;
-            // $url = $this->url . '&id=' . $prodiId;
-            // $response = Http::get($url);
-            $mahasiswaDb = Mahasiswa::select()->get()->toArray();
+            $url = $this->url . '&id=' . $prodiId;
+            $response = Http::get($url);
+            // $mahasiswaDb = Mahasiswa::select()->get()->toArray();
 
             $mahasiswa = [];
 
-            // if ($response->successful()) {
-            //     $data = $response->json();
+            if ($response->successful()) {
+                $data = $response->json();
 
-            //     if(empty($data)){
-            //         $data = $mahasiswaDb ;
-            //     }
+                // if(empty($data)){
+                //     $data = $mahasiswaDb ;
+                // }
 
-            $mahasiswa = collect($mahasiswaDb ?? [])
+            $mahasiswa = collect($data ?? [])
                 ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
                 ->map(function ($mhs) {
                     $tempStatus = TempStatus::select('status', 'alasan')
@@ -161,7 +161,7 @@ class Index3Controller extends Controller
                 ->toArray();
 
             \Log::info('Data mahasiswa', $mahasiswa);
-            // }
+            }
 
             return response()->json([
                 'success' => true,
