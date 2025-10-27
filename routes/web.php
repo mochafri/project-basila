@@ -128,9 +128,7 @@ Route::middleware(['auth'])->group(function () {
             Route::redirect('/dashboard/index-2', '/dashboard/penetapan-yudisium');
 
             Route::get('/laporan', 'index')->name('index6');
-            Route::redirect('/d
-            shboard/index-6', '/dashboard/laporan');
-
+            Route::redirect('/dashboard/index-6', '/dashboard/laporan');
 
             Route::get('/approval-yudisium', 'index')->name('index4');
             Route::redirect('/dashboard/index-4', '/dashboard/approval-yudisium');
@@ -151,6 +149,10 @@ Route::middleware(['auth'])->group(function () {
             Route::redirect('/dashboard/index-3', '/dashboard/tambah-yudisium');
 
             Route::post('/index-3/generate', 'generate')->name('index3.generate');
+
+            Route::middleware(['auth'])->group(function () {
+                Route::post('/filter-mhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
+            });
         });
 
         // Dashboard routes 
@@ -235,10 +237,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::post('/filter-mhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
-    });
-
-    Route::middleware(['auth'])->group(function () {
         Route::post('/temp-status', [TempStatusController::class, 'postStatus'])->name('tempStatus');
     });
 
@@ -289,7 +287,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::get('all-yud', [YudiciumController::class,'getAllYudicium'])->name('yudicium.getAll');
+        Route::get('all-yud', [YudiciumController::class, 'getAllYudicium'])->name('yudicium.getAll');
     });
 });
 

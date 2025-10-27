@@ -380,7 +380,7 @@ class YudiciumController extends Controller
 
     public function getMahasiswa($id)
     {
-        $mahasiswa = MhsYud::select('nim', 'name', 'study_period', 'pass_sks', 'ipk', 'predikat', 'status', 'status_otomatis', 'alasan_status')
+        $mahasiswa = MhsYud::select('nim', 'name', 'study_period', 'pass_sks', 'fakultas_id', 'ipk', 'predikat', 'status', 'status_otomatis', 'alasan_status')
             ->where('yudicium_id', $id)
             ->get();
 

@@ -1,14 +1,17 @@
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async (e) => {
     const btnTetapkan = document.getElementById('btnTetapkan');
 
+    const span = document.querySelector('.statusSpan');
+    if (!span) return Swal.fire('Error', 'Data mahasiswa tidak ditemukan.', 'error');
+
+    const fakultasId = span.dataset.fakultas;
+    console.log("Fakultas ID:", fakultasId);
+
     // Listener Event buat button tetapkan
-    btnTetapkan.addEventListener('click', async (e) => {
+    btnTetapkan.addEventListener('click', async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         const parseId = parseInt(id);
-        console.log("ID : ", id);
-
-        console.log("Clicked");
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -26,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    parseFaculty = parseInt(window.faculty_Id);
+                    parseFaculty = parseInt(fakultasId);
 
                     const res = await fetch(routes.approveYudicium, {
                         method: "POST",

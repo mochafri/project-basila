@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const tbody = document.querySelector('#selection-table tbody');
+    const form = document.getElementById('filterForm');
 
     // Modal atau pop up dari ubah status
     tbody.addEventListener('click', (e) => {
@@ -41,14 +42,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const data = await res.json();
             if (data.success) {
-                const row = tbody.querySelector(`tr[data-nim="${nim}"]`);
-                if (row) {
-                    row.querySelector('.statusSpan').textContent = status;
-                    row.querySelector('.statusSpan').dataset.status = status;
-                    row.querySelector('.alasanSpan').textContent = alasan; 
-                    row.querySelector('.statusSpan').dataset.alasan = alasan;
-                }
-
                 Swal.fire({
                     title: 'Berhasil!',
                     text: 'Status berhasil diubah',
@@ -61,6 +54,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 })
                 document.getElementById('statusModal').classList.add('hidden');
+
+                if(form != null) {
+                    form.dispatchEvent(new Event("submit"));
+                }
             } else {
                 Swal.fire("Gagal!",
                     data.message || "Terjadi kesalahan", "error");

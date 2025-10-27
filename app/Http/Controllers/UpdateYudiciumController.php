@@ -12,8 +12,14 @@ class UpdateYudiciumController extends Controller
     {
         $routeName = $request->route()->getName();
 
+        $mhsYud = (new YudiciumController)->getMahasiswa($request->id);
+        $datas = collect($mhsYud->getData()->mahasiswa);
+
+
         if (in_array($routeName, ['index5', 'index7'])) {
-            return view("dashboard.$routeName");
+            return view("dashboard.$routeName", [
+                "datas"=> $datas,
+            ]);
         }
     }
 

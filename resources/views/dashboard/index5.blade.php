@@ -15,7 +15,7 @@
 
 @section('content')
     <h1 id="title" class="text-2xl font-semibold text-gray-600 mb-5">Penetapan Yudisium</h1>
-    
+
     <!-- Daftar Mahasiswa -->
     <div class="bg-white p-6 rounded-xl shadow-md">
         <!-- Tabel Mahasiswa -->
@@ -146,7 +146,76 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                @foreach ($datas as $idx => $data)
+                                    <tr> <!-- class="{{ $loop->odd ? 'bg-blue-100' : 'bg-white' }}"  untuk membedakan background row-->
+                                        <td>
+                                            <div class="form-check style-check flex items-center">
+                                                {{-- <input class="form-check-input" type="checkbox"> --}}
+                                                <label class="ms-2 form-check-label">
+                                                    {{ $idx + 1 }}
+                                                </label>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="flex items-center">
+                                                <h6 class="text-base mb-0 ">
+                                                    {{ $data->nim }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center">
+                                                <h6>
+                                                    {{ $data->name }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <h6>
+                                                    {{ $data->study_period }}
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center">
+                                                <h6>{{ $data->pass_sks }}</h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center">
+                                                <h6>{{ $data->ipk }}</h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center">
+                                                <h6>{{ $data->predikat }}</h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="statusSpan px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer
+                                                {{ $data->status === 'Eligible' ? 'bg-success-100 text-success-600' : 'bg-danger-100 text-danger-600' }}"
+                                                    data-nim="{{ $data->nim }}" data-status="{{ $data->status }}"
+                                                    data-alasan="{{ $data->alasan_status ?? '-' }}"
+                                                    data-fakultas="{{ $data->fakultas_id }}"
+                                                >
+                                                {{ $data->status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if ($data->alasan_status)
+                                                <span class="text-xs text-gray-500">{{ $data->alasan_status }}</span>
+                                            @else
+                                                '-'
+                                            @endif
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -186,7 +255,7 @@
 
         <div class="flex flex-col md:flex-row items-center gap-4">
             <!-- <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
-                                placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
+                                                    placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
 
             <button type="buttton" id="btnTetapkan"
                 class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
