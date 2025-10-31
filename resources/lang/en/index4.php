@@ -5,6 +5,7 @@ return [
     'yudisium' => 'Yudicium',
     'faculty' => 'Faculty',
     'select_faculty' => '-- Select Faculty --',
+    'select_period' => '-- Select Period --',
     'semester' => 'Semester',
     'odd24' => 'Odd 2024/2025',
     'even24' => 'Even 2024/2025',

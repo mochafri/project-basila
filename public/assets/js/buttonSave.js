@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         body: JSON.stringify({
                             fakultas_id: facultyId,
-                            prody_id: prodiId,
-                            alasan: alasan,
-                            status: status
+                            prodi_id: prodiId,
+                            alasan: alasan || null,
+                            status: status || null
                         })
                     });
 

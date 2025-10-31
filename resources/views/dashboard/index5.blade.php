@@ -14,7 +14,7 @@
 @endphp
 
 @section('content')
-    <h1 class="text-2xl font-semibold text-gray-600 mb-5">Penetapan Draft Yudisium</h1>
+    <h1 class="text-2xl font-semibold text-gray-600 mb-5">{{ __('index5.title') }}</h1>
     
     <!-- Daftar Mahasiswa -->
     <div class="bg-white p-6 rounded-xl shadow-md">
@@ -22,20 +22,20 @@
         <div class="grid grid-cols-12 mt-6">
             <div class="col-span-12">
                 <div class="card border-0 overflow-hidden">
-                    <h2 class="text-lg font-semibold mb-1">Daftar Mahasiswa Yudisium</h2>
-                    <p class="text-sm text-gray-500 mb-4">Berikut daftar yudisium periode Ganjil 2024/2025</p>
+                    <h2 class="text-lg font-semibold mb-1">{{ __('index5.student_list') }}</h2>
+                    <p class="text-sm text-gray-500 mb-4">{{ __('index5.list_subtitle') }}</p>
 
                     <!-- Statistik -->
                     <div class="flex gap-6 mb-4">
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span class="text-sm text-neutral-950">Total Eligible</span>
+                            <span class="text-sm text-neutral-950">{{ __('index5.eligible') }}</span>
                             <span id="totalEligible" class="font-semibold text-neutral-950">0</span>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <span class="text-sm text-neutral-950">Total Tidak Eligible</span>
+                            <span class="text-sm text-neutral-950">{{ __('index5.not_eligible') }}</span>
                             <span id="totalTidakEligible" class="font-semibold text-neutral-950">0</span>
                         </div>
                     </div>
@@ -48,13 +48,13 @@
                                     <th scope="col" class="text-neutral-800 dark:text-white">
                                         <div class="form-check style-check flex items-center">
                                             <label class="ms-2 text-neutral-950 form-check-label" for="serial">
-                                                No
+                                                {{ __('index5.no') }}
                                             </label>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            NIM
+                                            {{ __('index5.nim') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -64,7 +64,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Nama
+                                            {{ __('index5.name') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -74,7 +74,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Masa Studi
+                                            {{ __('index5.study_duration') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -84,7 +84,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            SKS Lulus
+                                            {{ __('index5.credits') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -94,7 +94,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            IPK
+                                            {{ __('index5.gpa') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -104,7 +104,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Predikat
+                                            {{ __('index5.predicate') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Status
+                                            {{ __('index5.status') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -128,7 +128,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Alasan
+                                            {{ __('index5.reason') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -140,7 +140,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Action
+                                            {{ __('index5.action') }}
                                         </div>
                                     </th>
                                 </tr>
@@ -156,29 +156,29 @@
         <!-- Modal Ubah Status -->
         <div id="statusModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6">
-                <h2 class="text-lg font-semibold mb-4">Ubah Status Mahasiswa</h2>
+                <h2 class="text-lg font-semibold mb-4">{{ __('index5.change_status') }}</h2>
                 <form id="statusForm">
                     @csrf
                     <input type="hidden" id="modalNim" name="nim">
 
                     <!-- Pilih Status -->
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status Baru</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('index5.new_status') }}</label>
                     <select id="modalStatus" name="status" class="form-select w-full border rounded p-2 mb-4" required>
-                        <option value="">-- Pilih Status --</option>
-                        <option value="Eligible">Eligible</option>
-                        <option value="Tidak Eligible">Tidak Eligible</option>
+                        <option value="">{{ __('index5.select_status') }}</option>
+                        <option value="Eligible">{{ __('index5.eligible') }}</option>
+                        <option value="Tidak Eligible">{{ __('index5.not_eligible') }}</option>
                     </select>
 
                     <!-- Alasan -->
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Alasan</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('index5.reason') }} </label>
                     <textarea id="modalAlasan" name="alasan" rows="3"
                         class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
 
                     <!-- Tombol -->
                     <div class="flex justify-end gap-2">
                         <button type="button" id="closeModal"
-                            class="bg-gray-400 text-white px-4 py-2 rounded">Batal</button>
-                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
+                            class="bg-gray-400 text-white px-4 py-2 rounded">{{ __('index5.cancel') }}</button>
+                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">{{ __('index5.save') }}</button>
                     </div>
                 </form>
             </div>
@@ -190,7 +190,7 @@
 
             <button type="buttton" id="btnTetapkan"
                 class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
-                Tetapkan Yudicium
+                {{ __('index5.set_yudisium') }}
             </button>
         </div>
     </div>

@@ -294,6 +294,20 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+//route ganti bahasa
+Route::get('/change-language/{lang}', function ($lang) {
+    // Pastikan hanya bahasa yang tersedia
+    $availableLangs = ['id', 'en'];
+
+    if (in_array($lang, $availableLangs)) {
+        Session::put('locale', $lang);
+        App::setLocale($lang);
+    }
+
+    // Kembali ke halaman sebelumnya
+    return redirect()->back();
+})->name('change.language');
+
 // routes/web.php
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');
 Route::post('/authentication/sign-in', [AuthController::class, 'processSignIn'])->name('signin.process');

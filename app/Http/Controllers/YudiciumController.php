@@ -123,7 +123,7 @@ class YudiciumController extends Controller
                 'Dengan Pujian (Cumlaude)',
                 'Sangat Memuaskan (Very Good)',
                 'Memuaskan (Good)',
-                'Tanpa Predikat',
+                'Tanpa Predikat (No Predicate)',
             ];
 
             $dataPredikat = [];
@@ -221,7 +221,7 @@ class YudiciumController extends Controller
     {
         $validate = $request->validate([
             'fakultas_id' => 'required|integer',
-            'prody_id' => 'required|integer',
+            'prodi_id' => 'required|integer',
             'alasan' => 'nullable|string',
             'status' => 'nullable|string',
         ]);
@@ -230,25 +230,25 @@ class YudiciumController extends Controller
 
         $yudicium = Yudicium::create([
             'fakultas_id' => $validate['fakultas_id'],
-            'prodi_id' => $validate['prody_id'],
+            'prodi_id' => $validate['prodi_id'],
             'periode' => null,
             'no_yudicium' => null,
         ]);
 
-        // $prodi_id = $validate['prodi_id'];
-        // $url = $this->url . '&id=' . $prodi_id;
+        $prodi_id = $validate['prodi_id'];
+        $url = $this->url . '&id=' . $prodi_id;
 
-        // $response = Http::get($url);
-        // $listMahasiswa = $response->json();
+        $response = Http::get($url);
+        $listMahasiswa = $response->json();
 
-        $mahasiswaDb = Mahasiswa::select()
-            ->where('STUDYPROGRAMID', $validate['prody_id'])
-            ->get()
-            ->toArray();
+        // $mahasiswaDb = Mahasiswa::select()
+        //     ->where('STUDYPROGRAMID', $validate['prody_id'])
+        //     ->get()
+        //     ->toArray();
 
-        \Log::info('Data mahasiswa', $mahasiswaDb);
+        \Log::info('Data mahasiswa', $listMahasiswa);
 
-        if (empty($mahasiswaDb)) {
+        if (empty($listMahasiswa)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak ada data mahasiswa, silahkan coba lagi.'
@@ -257,7 +257,7 @@ class YudiciumController extends Controller
 
         $eligibleMhs = [];
 
-        foreach ($mahasiswaDb as $mhs) {
+        foreach ($listMahasiswa as $mhs) {
             $tempStatus = TempStatus::select('status', 'alasan')
                 ->where('nim', $mhs['STUDENTID']);
 
@@ -286,8 +286,6 @@ class YudiciumController extends Controller
             }
         }
 
-        \Log::info('Eligible mhs', $eligibleMhs);
-
         if (!empty($eligibleMhs)) {
             MhsYud::insert($eligibleMhs);
         }
@@ -310,7 +308,7 @@ class YudiciumController extends Controller
             $id = $validate['id'];
             $mappingFaculties = [3 => 'IT', 4 => 'IK', 5 => 'TE', 6 => 'RI', 7 => 'IF', 8 => 'EB', 9 => 'KB', 10 => 'SBY', 11 => 'PWT'];
             $fakultasInitial = $mappingFaculties[$validate['facultyId']] ?? 'XX';
-            $tahun = date('d-m-Y');
+            $tahun = date('Y-m-d');
             $nomorYudisium = $id . '/AKD100/' . $fakultasInitial . '/' . $tahun;
 
             $yudicium = Yudicium::where('id', $validate['id'])

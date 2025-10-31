@@ -41,11 +41,11 @@
                                 </div>
 
                                 <div class="flex justify-between items-center">
-                                    <label for="Semester" class="text-neutral-800">Semester</label>
+                                    <label for="Semester" class="text-neutral-800">{{ __('index4.semester') }}</label>
                                     <form action="{{ route('index4') }}" method="GET">
                                         <select name="periode" id="periodeSelect"
-                                            class="border border-gray-300 rounded-md p-2 text-gray-600">
-                                            <option value="Pilih">-- Pilih Periode --</option>
+                                            class="border border-gray-300 rounded-md  w-[55%] p-2 text-gray-600">
+                                            <option value="Pilih">{{ __('index3.select_period') }}</option>
                                             @foreach ($periodes as $p)
                                                 <option value="{{ $p['value'] }}"
                                                     {{ $periode == $p['value'] ? 'selected' : '' }}>
@@ -56,8 +56,8 @@
                                     </form>
                                 </div>
                                 <button id="filterButton"
-                                    class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1">
-                                    Tampilkan
+                                    class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1 setPeriodeBtn">
+                                    {{ __('index4.show') }}
                                 </button>
                             </div>
                         </div>
@@ -71,9 +71,9 @@
                                     </div>
                                     <div class="flex flex-col text-center">
                                         <h2 class="text-4xl text-white font-bold leading-tight">
-                                            {{ optional($datas->first())->approval_status === 'Approved' ? $countApproval : 0 }}
+                                            {{ $countApproval }}
                                         </h2>
-                                        <p class="text-sm">Total Yudisium</p>
+                                        <p class="text-sm">{{ __('index4.total_yudisium') }}</p>
                                     </div>
                                 </div>
 
@@ -85,9 +85,9 @@
                                     </div>
                                     <div class="flex flex-col text-center">
                                         <h2 class="text-4xl text-white font-bold leading-tight">
-                                            {{ optional($datas->first())->approval_status === 'Approved' ? $totalMhsYud : 0 }}
+                                            {{ $totalMhsYud }}
                                         </h2>
-                                        <p class="text-sm">Total Mahasiswa</p>
+                                        <p class="text-sm">{{ __('index4.total_graduates') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -325,10 +325,10 @@
                                             <option value="Tidak Eligible">{{ __('index4.not_eligible') }}</option>
                                         </select>
 
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('index4.note') }}</label>
                                         <textarea id="catatan" rows="3" class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
                                         <button id="btn-simpan"
-                                            class="bg-red-600 text-white px-4 py-2 rounded">Simpan</button>
+                                            class="bg-red-600 text-white px-4 py-2 rounded">{{ __('index4.save') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -347,7 +347,7 @@
         </script>
         <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
         <script>
-            document.getElementById('setPeriodeBtn').addEventListener('click', function() {
+            document.getElementsByClassName('setPeriodeBtn').addEventListener('click', function() {
                 const periode = document.getElementById('periodeSelect').value;
                 window.location.href = `?periode=${encodeURIComponent(periode)}`;
             });

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Penetapan Yudisium',
+    'title' => 'Penetapan Draft Yudisium',
     'subtitle' => 'Tambah',
     'student_yudisium' => 'Mahasiswa Yudisium',
     'instruction' => 'Pastikan data yang dipilih telah sesuai untuk menampilkan data mahasiswa',
@@ -11,8 +11,7 @@ return [
     'odd' => 'Ganjil',
     'even' => 'Genap',
     'study_program' => 'Program Studi',
-    'select_study' => '-- Pilih Program Study --',
-    'select_period' => '-- Pilih Periode --',
+    'select_study_program' => '-- Pilih Program Studi --',
     'show' => 'Tampilkan',
     'student_list' => 'Daftar Mahasiswa Yudisium',
     'list_subtitle' => 'Berikut daftar yudisium periode Ganjil 2024/2025',

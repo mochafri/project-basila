@@ -36,23 +36,23 @@
                 @csrf
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.faculty') }}</label>
                     <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
-                        <option value="">-- Pilih Fakultas --</option>
+                        <option value="">{{ __('index3.select_faculty') }}</option>
                     </select>
                 </div>
 
                 <!-- Semester -->
                 <div class="col-span-12 md:col-span-5">
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Semester</label>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.semester') }}</label>
                     <select name="periode" id="periodeSelect"
                         class="form-select border border-gray-300 rounded-md p-2 text-gray-600">
-                        <option value="Pilih">-- Pilih Periode --</option>
-                        @foreach ($periodes as $p)
+                        <option value="Pilih">{{ __('index3.select_period') }}<option>
+                        <!-- @foreach ($periodes as $p)
                             <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
                                 {{ $p['label'] }}
                             </option>
-                        @endforeach
+                        @endforeach -->
                     </select>
                 </div>
 
@@ -61,9 +61,9 @@
 
                 <!-- Program Studi -->
                 <div class="col-span-12 md:col-span-5">
-                    <label class="block text-sm font-medium text-gray-500 mb-1">Program Studi</label>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.study_program') }}</label>
                     <select id="prodi" name="prodi" class="form-select w-full border rounded p-2">
-                        <option value="">-- Pilih Program Studi --</option>
+                        <option value="">{{ __('index3.select_study') }}</option>
                     </select>
                 </div>
 
@@ -109,13 +109,13 @@
                                     <th scope="col" class="text-neutral-800 dark:text-white">
                                         <div class="form-check style-check flex items-center">
                                             <label class="ms-2 text-neutral-950 form-check-label" for="serial">
-                                                No
+                                            {{ __('index3.no') }}
                                             </label>
                                         </div>
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            NIM
+                                            {{ __('index3.nim') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -125,7 +125,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Nama
+                                            {{ __('index3.name') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -135,7 +135,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Masa Studi
+                                            {{ __('index3.study_duration') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round"
@@ -146,7 +146,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            SKS Lulus
+                                            {{ __('index3.credits') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -158,7 +158,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            IPK
+                                            {{ __('index3.gpa') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -170,7 +170,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Predikat
+                                            {{ __('index3.predicate') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -182,7 +182,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Status
+                                            {{ __('index3.status') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -194,7 +194,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Alasan
+                                            {{ __('index3.reason') }}
                                             <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -206,7 +206,7 @@
                                     </th>
                                     <th scope="col" class="text-neutral-950">
                                         <div class="flex items-center gap-2">
-                                            Action
+                                            {{ __('index3.action') }}
                                         </div>
                                     </th>
                                 </tr>
@@ -236,7 +236,7 @@
                 </select>
 
                     <!-- Alasan -->
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Alasan</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('index3.reason') }}</label>
                     <textarea id="modalAlasan" name="alasan" rows="3"
                         class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
 
@@ -255,7 +255,7 @@
 
             <button type="buttton" id="btnSimpan"
                 class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
-                Simpan draft
+                {{ __('index3.save_draft') }}
             </button>
         </div>
     </div>

@@ -4,8 +4,8 @@
     $title = 'Penetapan Yudisium';
     $subTitle = 'Daftar Yudisium';
     $script = '
-                <script src="' . asset('assets/js/data-table.js') . '" defer></script>
-            ';
+                    <script src="' . asset('assets/js/data-table.js') . '" defer></script>
+                ';
 @endphp
 
 @section('content')
@@ -21,14 +21,19 @@
                         <label for="semester" class="text-sm font-medium text-neutral-700 whitespace-nowrap">
                             {{ __('penetapan.semester') }}
                         </label>
-                        <select id="semester" name="semester" class="form-select text-neutral-950 w-full sm:w-48">
-                            <option>Ganjil 2024/2025</option>
-                            <option>Genap 2024/2025</option>
-                            <option>Ganjil 2025/2026</option>
-                            <option>Genap 2025/2026</option>
-                        </select>
+                        <form action="{{ route('index2') }}" method="GET">
+                            <select name="periode" id="periodeSelect"
+                                class="border border-gray-300 rounded-md p-2 text-gray-600">
+                                <option value="Pilih">-- Pilih Periode --</option>
+                                @foreach ($periodes as $p)
+                                    <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
+                                        {{ $p['label'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
                     </div>
-                    <button
+                    <button id="setPeriodeBtn"
                         class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-full sm:w-fit">
                         {{ __('penetapan.show') }}
                     </button>
@@ -44,12 +49,10 @@
                             <iconify-icon icon="clarity:gavel-solid" class="text-white text-4xl"></iconify-icon>
                         </div>
                         <div class="flex flex-col text-center">
-                            <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
-                            <p class="text-sm">{{ __('penetapan.total_yudisium') }}</p>
                             <h2 class="text-4xl text-white font-bold leading-tight">
-                                {{ optional($datas->first())->approval_status === 'Approved' ? $countApproval : 0 }}
+                                {{ $countApproval }}
                             </h2>
-                            <p class="text-sm">Total Yudisium</p>
+                            <p class="text-sm">{{ __('penetapan.total_yudisium') }}</p>
                         </div>
                     </div>
 
@@ -59,13 +62,11 @@
                         <div class="w-16 h-16 bg-[#2f812f] rounded-full flex items-center justify-center">
                             <iconify-icon icon="ph:student-fill" class="text-white text-4xl"></iconify-icon>
                         </div>
-                        <div class="flex flex-col text-center sm:text-left">
-                            <h2 class="text-4xl text-white font-bold">{{ $totalMhsYud }}</h2>
-                            <p class="text-sm">{{ __('penetapan.total_graduate') }}</p>
+                        <div class="flex flex-col text-center ">
                             <h2 class="text-4xl text-white font-bold">
-                                {{ optional($datas->first())->approval_status === 'Approved' ? $totalMhsYud : 0 }}
+                                {{ $totalMhsYud }}
                             </h2>
-                            <p class="text-sm">Total Mahasiswa</p>
+                            <p class="text-sm">{{ __('penetapan.total_graduate') }}</p>
                         </div>
                     </div>
 
@@ -233,9 +234,16 @@
                                             </div>
                                         @elseif($data->approval_status === 'Rejected')
                                             <div class="flex items-center">
-                                                <span
-                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Rejected</span>
+                                                <a href="{{ route('index7', ['id' => $data->id]) }}"
+                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Rejected</a>
                                             </div>
+
+                                        @elseif($data->approval_status === 'Draft')
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="bg-blue-100  text-blue-600  px-6 py-1.5 rounded-full font-medium text-sm">{{ $data->approval_status}}</span>
+                                            </div>
+
                                         @else
                                             <div class="flex items-center">
                                                 <span
@@ -245,7 +253,8 @@
                                     </td>
                                     <td>
                                         @if ($data->approval_status === 'Rejected' && !empty($data->catatan))
-                                            <div class="flex items-start justify-start text-gray-700 px-2 py-1 leading-relaxed text-sm whitespace-pre-line break-words">
+                                            <div
+                                                class="flex items-start justify-start text-gray-700 px-2 py-1 leading-relaxed text-sm whitespace-pre-line break-words">
                                                 {{ $data->catatan }}
                                             </div>
                                         @else
@@ -266,7 +275,7 @@
                                             data-id={{ $data->id }}>
                                             <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
                                         </button>
-                                        <a href="{{ route('index3', ['id' => $data->id]) }}"
+                                        <a href="{{ route('index5', ['id' => $data->id]) }}"
                                             class="w-8 h-8 bg-warning-100 dark:bg-warning-600/25 text-warning-600 dark:text-warning-400 rounded-full inline-flex items-center justify-center">
                                             <iconify-icon icon="mingcute:edit-2-line"></iconify-icon>
                                         </a>
@@ -351,7 +360,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                {{ __('penetapan.') }}
+                                                {{ __('penetapan.gpa') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -363,7 +372,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                Predikat
+                                                {{ __('penetapan.predicate') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -375,7 +384,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                Status
+                                                {{ __('penetapan.status') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -385,9 +394,10 @@
                                                 </svg>
                                             </div>
                                         </th>
+
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                Alasan
+                                                {{ __('penetapan.reason') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -417,4 +427,10 @@
         @endforeach --}}
     </div>
     <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
+    <script>
+        document.getElementById('setPeriodeBtn').addEventListener('click', function () {
+            const periode = document.getElementById('periodeSelect').value;
+            window.location.href = `?periode=${encodeURIComponent(periode)}`;
+        });
+    </script>
 @endsection

@@ -17,6 +17,9 @@ return [
     'sk_number' => 'Nomor SK',
     'yudisium_number' => 'Nomor Yudisium',
     'faculty' => 'Fakultas',
+    'select_faculty' => '--Pilih Fakultas--',
+    'select_period' => '--Pilih Periode--',
+    'select_study' => '--Pilih Program Studi--',
     'study_program' => 'Program Studi',
     'approval' => 'Approval Dekan/Dir',
     'reason' => 'Alasan',
@@ -32,4 +35,5 @@ return [
     'status' => 'Status',
     'total_yudisium_label' => 'Total Yudisium',
     'total_lulusan_label' => 'Total Lulusan',
+    'save_draft' => 'Simpan Draft',
 ];

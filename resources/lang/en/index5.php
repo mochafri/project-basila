@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Yudicium Determination',
+    'title' => 'Yudicium Determination Draft',
     'subtitle' => 'Add',
     'student_yudisium' => 'Yudicium Students',
     'instruction' => 'Ensure the selected data is correct to display student data',
