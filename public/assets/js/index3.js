@@ -1,85 +1,13 @@
-let faculty_Id;
-let prodi_Id;
 
-document.addEventListener('DOMContentLoaded', async () => {
+
+document.addEventListener('DOMContentLoaded', async (e) => {
     const fakultasSelect = document.getElementById('fakultas');
     const prodiSelect = document.getElementById('prodi');
     const form = document.getElementById('filterForm');
     const tbody = document.querySelector('#selection-table tbody');
     const totalEligibleSpan = document.getElementById('totalEligible');
     const totalTidakEligibleSpan = document.getElementById('totalTidakEligible');
-    const btnTetapkan = document.getElementById('btnTetapkan');
 
-    try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-
-        const res = await fetch(`/index3/${id}`);
-
-        if (!res.ok)
-            throw new Error('Failed to fetch');
-
-        const data = await res.json();
-
-        console.log("Data : ", data);
-
-        if (Array.isArray(data.data) && Array.isArray(data.data)) {
-            data.data.forEach((mhs, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                        <td>${idx + 1}</td>
-                        <td>${mhs.nim}</td>
-                        <td>${mhs.name}</td>
-                        <td>${mhs.study_period} Semester</td>
-                        <td>${mhs.pass_sks}</td>
-                        <td>${mhs.ipk}</td>
-                        <td>${mhs.predikat}</td>
-                        <td>
-                            <span
-                                class="statusSpan ${mhs.status === "Eligible"
-                        ? "bg-success-100 text-success-600"
-                        : "bg-danger-100 text-danger-600"
-                    } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
-                                data-nim="${mhs.nim}"
-                                data-status="${mhs.status}"
-                                data-alasan="${mhs.alasan_status}">
-                                ${mhs.status}
-                            </span>
-                        </td>
-                        <td>
-                            ${mhs.alasan_status
-                        ? `<span class="text-xs text-gray-500">${mhs.alasan_status}</span>`
-                        : '-'
-                    }
-                        </td>
-                        <td>
-                            <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
-                                <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                            </a>
-                        </td>
-                    `;
-
-                tbody.appendChild(tr);
-
-                faculty_Id = mhs.fakultas;
-                prodi_Id = mhs.prodi;
-
-                console.log("ProdiId : ", prodi_Id);
-
-                console.log("Fakultas : ", mhs.fakultas);
-                console.log("Prodi : ", mhs.prodi);
-
-                console.log("FakultasId : ", faculty_Id);
-
-                if (mhs.status === "Eligible") totalEligible++;
-                else totalTidakEligible++;
-            });
-        }
-    } catch (err) {
-        console.error(err);
-    }
-
-    // Ambil data fakultas dari API
     try {
         const res = await fetch(routes.showFaculties);
         const data = await res.json();
@@ -96,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fakultasSelect.appendChild(opt);
             });
         }
+
     } catch (err) {
         console.error('Gagal memuat fakultas:', err);
         fakultasSelect.innerHTML = '<option value="">Gagal memuat data fakultas</option>';
@@ -139,11 +68,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         console.log("Clicked");
 
-        if (!facultyId || !prodiId) {
-            alert('Pilih Fakultas dan Program Studi terlebih dahulu');
-            return;
-        }
-
         try {
             const res = await fetch(routes.filterMhs, {
                 method: "POST",
@@ -166,41 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (Array.isArray(data.mahasiswa) && data.mahasiswa.length > 0) {
                 data.mahasiswa.forEach((mhs, idx) => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${idx + 1}</td>
-                        <td>${mhs.nim}</td>
-                        <td>${mhs.name}</td>
-                        <td>${mhs.study_period} Semester</td>
-                        <td>${mhs.pass_sks}</td>
-                        <td>${mhs.ipk}</td>
-                        <td>${mhs.predikat}</td>
-                        <td>
-                            <span
-                                class="statusSpan ${mhs.status === "Eligible"
-                            ? "bg-success-100 text-success-600"
-                            : "bg-danger-100 text-danger-600"
-                        } px-6 py-1.5 rounded-full font-medium text-sm inline-block cursor-pointer"
-                                data-nim="${mhs.nim}"
-                                data-status="${mhs.status}"
-                                data-alasan="${mhs.alasan_status}">
-                                ${mhs.status}
-                            </span>
-                        </td>
-                        <td>
-                            ${mhs.alasan_status
-                            ? `<span class="text-xs text-gray-500">${mhs.alasan_status}</span>`
-                            : '-'
-                        }
-                        </td>
-                        <td>
-                            <a href="javascript:void(0)" class="w-8 h-8 bg-primary-50 text-primary-600 rounded-full inline-flex items-center justify-center">
-                                <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                            </a>
-                        </td>
-                    `;
-
-                    tbody.appendChild(tr);
+                    getMahasiswa(mhs, idx);
 
                     if (mhs.status === "Eligible") totalEligible++;
                     else totalTidakEligible++;
@@ -215,169 +105,5 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error(err);
         }
     });
-
-    // Listener Event buat button tetapkan
-    btnTetapkan.addEventListener('click', async (e) => {
-        const status = document.getElementById('modalStatus').value;
-        const alasan = document.getElementById('modalAlasan').value;
-
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Yudisium akan ditetapkan untuk fakultas & prodi yang dipilih.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Tetapkan!',
-            cancelButtonText: 'Batal',
-            buttonsStyling: false,
-            reverseButtons: true,
-            customClass: {
-                confirmButton: 'btn-tetapkan',
-                cancelButton: 'btn-batal'
-            }
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    facultyId = parseInt(fakultasSelect.value) || null;
-                    prodiId = parseInt(prodiSelect.value) || null;
-
-                    console.log("Fakultas : ", facultyId);
-                    console.log("Prodi : ", prodiId);
-
-                    const res = await fetch(routes.approveYudisium, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify({
-                            fakultas_id: facultyId || faculty_Id,
-                            prodi_id: prodiId ||  prodi_Id,
-                            status: status,
-                            alasan_status: alasan
-                        })
-                    });
-
-                    if (res.status === 403) {
-                        const errData = await res.json();
-                        Swal.fire({
-                            title: 'Gagal!',
-                            text: errData.message || 'Tidak ada mahasiswa yang eligible.',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            buttonsStyling: false,
-                            customClass: { confirmButton: 'btn-ok' }
-                        });
-                        return;
-                    }
-
-                    if (!res.ok) {
-                        const errData = await res.json().catch(() => ({}));
-                        throw new Error(errData.message || "Terjadi kesalahan server");
-                    }
-
-                    const data = await res.json();
-                    console.log("Data nya : ", data);
-
-                    if (data.success) {
-                        Swal.fire({
-                            title: 'Berhasil!',
-                            text: data.message || 'Yudisium berhasil ditetapkan.',
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            buttonsStyling: false,
-                            customClass: { confirmButton: 'btn-ok' }
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '/dashboard/penetapan-yudisium';
-                            }
-                        });
-                    }
-
-
-                } catch (err) {
-                    console.error("Error:", err);
-                    Swal.fire({
-                        title: 'Error!',
-                        text: err.message || 'Terjadi kesalahan saat mengirim data.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        buttonsStyling: false,
-                        customClass: { confirmButton: 'btn-ok' }
-                    })
-                }
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire({
-                    title: 'Dibatalkan',
-                    text: 'Penetapan yudisium dibatalkan.',
-                    icon: 'info',
-                    confirmButtonText: 'OK',
-                    buttonsStyling: false,
-                    customClass: { confirmButton: 'btn-ok' }
-                })
-            }
-        });
-    });
-
-    // Modal atau pop up dari ubah status
-    tbody.addEventListener('click', (e) => {
-        if (e.target.classList.contains('statusSpan')) {
-            document.getElementById('modalNim').value = e.target.dataset.nim;
-            document.getElementById('modalStatus').value = e.target.dataset.status;
-            document.getElementById('modalAlasan').value = e.target.dataset.alasan || '';
-            document.getElementById('statusModal').classList.remove('hidden');
-        }
-    });
-
-    document.getElementById('closeModal').addEventListener('click', () => {
-        document.getElementById('statusModal').classList.add('hidden');
-    });
-
-    // Submit ke database buat status sama alasan nya
-    document.getElementById('statusForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const status = document.getElementById('modalStatus').value;
-        const alasan = document.getElementById('modalAlasan').value;
-        const nim = document.getElementById('modalNim').value;
-
-        console.log("Nim : ", nim);
-
-        try {
-            const res = await fetch(routes.ubahStatus, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({
-                    status: status,
-                    alasan: alasan,
-                    nim: nim
-                })
-            });
-
-            const data = await res.json();
-            if (data.success) {
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: 'Status berhasil diubah',
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK',
-                    buttonsStyling: false,
-                    customClass: {
-                        confirmButton: 'btn-ok'
-                    }
-                })
-                document.getElementById('statusModal').classList.add('hidden');
-                form.dispatchEvent(new Event("submit"));
-            } else {
-                Swal.fire("Gagal!",
-                    data.message || "Terjadi kesalahan", "error");
-            }
-        } catch (err) {
-            console.error(err);
-            Swal.fire("Error!", "Tidak bisa mengubah status", "error");
-        }
-    });
 });
+

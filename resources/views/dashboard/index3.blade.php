@@ -1,12 +1,15 @@
 @extends('layout.layout')
 
 @php
-$title = 'Penetapan Yudisium';
-$subTitle = 'Tambah';
-$script = '
-<script src="' . asset('assets/js/data-table.js') . '"></script>
-<script src="' . asset('assets/js/index3.js') . '"></script>
-';
+    $title = 'Penetapan Yudisium';
+    $subTitle = 'Tambah';
+    $script = '
+        <script src="' . asset('assets/js/data-table.js') . '"></script>
+        <script src="' . asset('assets/js/getMahasiswa.js') . '"></script>
+        <script src="' . asset('assets/js/index3.js') . '"></script>
+        <script src="' . asset('assets/js/buttonSave.js') . '"></script>
+        <script src="' . asset('assets/js/modalStatus.js') . '"></script>
+    ';
 @endphp
 
 
@@ -19,44 +22,50 @@ $script = '
     </p>
     <hr class="mb-6">
 
-    <div class="grid grid-cols-12 gap-6 items-start">
-        <!-- Ilustrasi -->
-        <div class="col-span-12 md:col-span-2 flex justify-center">
-            <img src="{{ asset('assets/images/buku.png') }}" alt="Graduation" class="w-50 h-50">
-        </div>
-
-        <!-- Form -->
-
-
-        <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4">
-            @csrf
-            <!-- Fakultas -->
-            <div class="col-span-12 md:col-span-5">
-                <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.faculty') }}</label>
-                <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
-                    <option value="">{{ __('index3.select_faculty') }}</option>
-                </select>
+        <div class="grid grid-cols-12 gap-6 items-start">
+            <!-- Ilustrasi -->
+            <div class="col-span-12 md:col-span-2 flex justify-center">
+                <img src="{{ asset('assets/images/buku.png') }}" alt="Graduation" class="w-50 h-50">
             </div>
 
-            <!-- Semester -->
-            <div class="col-span-12 md:col-span-5">
-                <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.semester') }}</label>
-                <select class="form-select w-full text-neutral-900 bg-gray-100" name="semester">
-                    <option>Ganjil 2024/2025</option>
-                    <option>Genap 2025/2026</option>
-                </select>
-            </div>
+            <!-- Form -->
 
-            <!-- Spacer -->
-            <div class="hidden md:block md:col-span-2"></div>
 
-            <!-- Program Studi -->
-            <div class="col-span-12 md:col-span-5">
-                <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.study_program') }}</label>
-                <select id="prodi" name="prodi" class="form-select w-full border rounded p-2">
-                    <option value="">{{ __('index3.select_study_program') }}</option>
-                </select>
-            </div>
+            <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4" action="{{ route('index3') }}"
+                method="GET">
+                @csrf
+                <!-- Fakultas -->
+                <div class="col-span-12 md:col-span-5">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Fakultas</label>
+                    <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
+                        <option value="">-- Pilih Fakultas --</option>
+                    </select>
+                </div>
+
+                <!-- Semester -->
+                <div class="col-span-12 md:col-span-5">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Semester</label>
+                    <select name="periode" id="periodeSelect"
+                        class="form-select border border-gray-300 rounded-md p-2 text-gray-600">
+                        <option value="Pilih">-- Pilih Periode --</option>
+                        @foreach ($periodes as $p)
+                            <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
+                                {{ $p['label'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Spacer -->
+                <div class="hidden md:block md:col-span-2"></div>
+
+                <!-- Program Studi -->
+                <div class="col-span-12 md:col-span-5">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Program Studi</label>
+                    <select id="prodi" name="prodi" class="form-select w-full border rounded p-2">
+                        <option value="">-- Pilih Program Studi --</option>
+                    </select>
+                </div>
 
             <!-- Tombol -->
             <div class="col-span-12 md:col-start-6 md:col-span-2 flex items-end">
@@ -92,106 +101,117 @@ $script = '
                     </div>
                 </div>
 
-                <div class="card-body">
-                    <table id="selection-table"
-                        class="border border-neutral-200 dark:border-neutral-600 rounded-lg border-separate	">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-neutral-800 dark:text-white">
-                                    <div class="form-check style-check flex items-center">
-                                        <label class="ms-2 text-neutral-950 form-check-label" for="serial">
-                                            {{ __('index3.no') }}
-                                        </label>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.nim') }}
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.name') }}
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.study_duration') }}
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.credits') }}
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.gpa') }}
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.predicate') }}
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.status') }}
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.reason') }}
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                        </svg>
-                                    </div>
-                                </th>
-                                <th scope="col" class="text-neutral-950">
-                                    <div class="flex items-center gap-2">
-                                        {{ __('index3.action') }}
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="card-body">
+                        <table id="selection-table"
+                            class="border border-neutral-200 dark:border-neutral-600 rounded-lg border-separate	">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-neutral-800 dark:text-white">
+                                        <div class="form-check style-check flex items-center">
+                                            <label class="ms-2 text-neutral-950 form-check-label" for="serial">
+                                                No
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            NIM
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            </svg>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            Nama
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            </svg>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            Masa Studi
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            </svg>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            SKS Lulus
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            </svg>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            IPK
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            </svg>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            Predikat
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            </svg>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            Status
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            </svg>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            Alasan
+                                            <svg class="w-4 h-4 ms-1" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                            </svg>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="text-neutral-950">
+                                        <div class="flex items-center gap-2">
+                                            Action
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
                         </tbody>
                     </table>
@@ -215,9 +235,10 @@ $script = '
                     <option value="Tidak Eligible">{{ __('index3.not_eligible') }}</option>
                 </select>
 
-                <!-- Alasan -->
-                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('index3.reason') }}</label>
-                <textarea id="modalAlasan" name="alasan" rows="3" class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
+                    <!-- Alasan -->
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Alasan</label>
+                    <textarea id="modalAlasan" name="alasan" rows="3"
+                        class="form-input border border-gray-300 rounded w-full p-2 mb-4" required></textarea>
 
                 <!-- Tombol -->
                 <div class="flex justify-end gap-2">
@@ -228,53 +249,28 @@ $script = '
         </div>
     </div>
 
-    <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
-        <!-- <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
-            placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
+        <div class="flex flex-col md:flex-row items-center gap-4">
+            <!-- <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
+                                        placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
 
-        <button type="buttton" id="btnTetapkan" class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
-            {{ __('index3.set_yudisium') }}
-        </button>
-    </div>
-
-    <!-- Debug lewat php -->
-
-    {{-- <form action="{{ route('yudicium.generate') }}" method="POST">
-        @csrf
-
-        <div class="flex flex-col md:flex-row items-center gap-4 mt-6">
-            <input type="hidden" name="fakultas" value="{{ old('fakultas', $selectedFakultas ?? '') }}">
-            <input type="hidden" name="prodi" value="{{ old('prodi', $selectedProdi ?? '') }}">
-            <input type="hidden" name="total_mahasiswa" value="{{ $totalMahasiswa ?? 0 }}">
-
-            <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
-                placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" />
-
-            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
-                Tetapkan Yudisium
+            <button type="buttton" id="btnSimpan"
+                class="bg-red-600 text-white px-4 py-2 rounded shadow w-full md:w-auto">
+                Simpan draft
             </button>
         </div>
-    </form>
-    @if (session('success'))
-    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-        {{ session('success') }}
     </div>
-    @endif
-
-    @if (session('error'))
-    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-        {{ session('error') }}
-    </div>
-    @endif --}}
-
-</div>
-<script>
-    const routes = {
-        showFaculties: "{{ route('show.faculties') }}",
-        filterMhs: "{{ route('filterMhs') }}",
-        approveYudisium: "{{ route('yudicium.approve') }}",
-        ubahStatus: "{{ route('tempStatus') }}",
-        getAllMhs : "{{ route('getAllMhs') }}"
-    };
-</script>
+    <script>
+        const routes = {
+            showFaculties: "{{ route('show.faculties') }}",
+            filterMhs: "{{ route('filterMhs') }}",
+            ubahStatus: "{{ route('tempStatus') }}",
+            saveDraft: "{{ route('yudicium.save') }}",
+        };
+    </script>
+    <script>
+        document.getElementById('setPeriodeBtn').addEventListener('click', function() {
+            const periode = document.getElementById('periodeSelect').value;
+            window.location.href = `?periode=${encodeURIComponent(periode)}`;
+        });
+    </script>
 @endsection

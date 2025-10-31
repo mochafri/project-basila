@@ -8,8 +8,7 @@ class Mahasiswa extends Model
 {
     protected $table = "mahasiswa";
     protected $fillable = [
-        "nim", "name", "study_period", "pass_sks", "ipk",
-        "predikat", "status", "alasan_status", "status_otomatis"
+        "STUDENTID","FULLNAME","MASA_STUDI","PASS_CREDIT","GPA","STATUS","STUDYPROGRAMID","PREDIKAT"
     ];
 
     protected static function booted()
@@ -23,17 +22,6 @@ class Mahasiswa extends Model
                 $mahasiswa->ipk
             );
         });
-    }
-
-    public function hitungPredikat($ipk)
-    {
-        if ($ipk >= 3.51){
-            return 'Very Good (Sangat Memuaskan)';
-        }
-        if ($ipk >= 3.01){
-            return 'Good (Memuaskan)';
-        }
-        return 'Fair (Cukup)';
     }
 
     public function hitungStatus($studyPeriod, $sks, $ipk)

@@ -46,6 +46,10 @@
                         <div class="flex flex-col text-center">
                             <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
                             <p class="text-sm">{{ __('penetapan.total_yudisium') }}</p>
+                            <h2 class="text-4xl text-white font-bold leading-tight">
+                                {{ optional($datas->first())->approval_status === 'Approved' ? $countApproval : 0 }}
+                            </h2>
+                            <p class="text-sm">Total Yudisium</p>
                         </div>
                     </div>
 
@@ -58,6 +62,10 @@
                         <div class="flex flex-col text-center sm:text-left">
                             <h2 class="text-4xl text-white font-bold">{{ $totalMhsYud }}</h2>
                             <p class="text-sm">{{ __('penetapan.total_graduate') }}</p>
+                            <h2 class="text-4xl text-white font-bold">
+                                {{ optional($datas->first())->approval_status === 'Approved' ? $totalMhsYud : 0 }}
+                            </h2>
+                            <p class="text-sm">Total Mahasiswa</p>
                         </div>
                     </div>
 
@@ -343,7 +351,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                {{ __('penetapan.gpa') }}
+                                                {{ __('penetapan.') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -355,7 +363,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                {{ __('penetapan.predicate') }}
+                                                Predikat
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -367,7 +375,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                {{ __('penetapan.status') }}
+                                                Status
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">
@@ -379,7 +387,7 @@
                                         </th>
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
-                                                {{ __('penetapan.reason') }}
+                                                Alasan
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">

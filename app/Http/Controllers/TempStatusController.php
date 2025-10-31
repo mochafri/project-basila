@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MhsYud;
 use App\Models\TempStatus;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,8 @@ class TempStatusController extends Controller
             'alasan' => 'required|string',
             'nim' => 'required|string',
         ]);
+        
+        \Log::info("Validate masuk", $validate);
 
         $status = TempStatus::updateOrCreate(
             ['nim' => $validate['nim']],
@@ -22,6 +25,18 @@ class TempStatusController extends Controller
                 'alasan' => $validate['alasan'],
             ]
         );
+
+        $mhsYud = MhsYud::select('status', 'alasan_status')
+            ->where('nim', $validate['nim'])
+            ->get();
+            
+        if(count($mhsYud) > 0) {
+            MhsYud::where('nim', $validate['nim'])
+                ->update([
+                    'status' => $validate['status'],
+                    'alasan_status' => $validate['alasan'],
+                ]);
+        }
 
         \Log::info('Status berhasil disimpan', $status->toArray());
 
