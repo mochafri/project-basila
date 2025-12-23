@@ -12,12 +12,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 { select: [0, 6], sortable: false }
             ],
             labels: {
-            placeholder: "Search...",
-            perPage: "{select} entries per page",
-            noRows: "", // kosongkan teks “No entries found”
-            info: "",
-        },
-            
+                placeholder: "Search for a user...",
+                noRows: "",
+                info: ""
+            },
+
             rowRender: (row, tr) => {
                 if (!tr.attributes) tr.attributes = {};
                 if (!tr.attributes.class) tr.attributes.class = "";

@@ -33,7 +33,7 @@
                             </select>
                         </form>
                     </div>
-                    <button id="setPeriodeBtn"
+                    <button
                         class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-full sm:w-fit">
                         {{ __('penetapan.show') }}
                     </button>
@@ -203,14 +203,14 @@
                                     <td>
                                         <div class="flex items-center">
                                             <h6 class="text-base mb-0 ">
-                                                {{ $data->no_yudicium }}
+                                                {{ $data->no_yudicium ? $data->no_yudicium : 'Belum ditetapkan' }}
                                             </h6>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="flex items-center">
                                             <h6>
-                                                {{ $data->periode }}
+                                                {{ $data->periode ? $data->periode : 'Belum ditetapkan' }}
                                             </h6>
                                         </div>
                                     </td>
@@ -230,12 +230,12 @@
                                         @if ($data->approval_status === 'Approved')
                                             <div class="flex items-center">
                                                 <span
-                                                    class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Approved</span>
+                                                    class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Approve</span>
                                             </div>
                                         @elseif($data->approval_status === 'Rejected')
                                             <div class="flex items-center">
-                                                <a href="{{ route('index7', ['id' => $data->id]) }}"
-                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Rejected</a>
+                                                <span
+                                                    class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Rejected</span>
                                             </div>
 
                                         @elseif($data->approval_status === 'Draft')
@@ -275,14 +275,18 @@
                                             data-id={{ $data->id }}>
                                             <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
                                         </button>
-                                        <a href="{{ route('index5', ['id' => $data->id]) }}"
-                                            class="w-8 h-8 bg-warning-100 dark:bg-warning-600/25 text-warning-600 dark:text-warning-400 rounded-full inline-flex items-center justify-center">
-                                            <iconify-icon icon="mingcute:edit-2-line"></iconify-icon>
-                                        </a>
-                                        <a href="javascript:void(0)"
-                                            class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
-                                            <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
-                                        </a>
+                                        @if ($data->approval_status == 'Draft' || $data->approval_status == 'Rejected')
+                                            <a href="{{ route($data->approval_status == 'Draft' ? 'index5' : 'index7', ['id' => $data->id]) }}"
+                                                class="w-8 h-8 bg-warning-100 dark:bg-warning-600/25 text-warning-600 dark:text-warning-400 rounded-full inline-flex items-center justify-center">
+                                                <iconify-icon icon="mingcute:edit-2-line"></iconify-icon>
+                                            </a>
+                                        @endif
+                                        @if ($data->approval_status == 'Draft')
+                                            <a href="javascript:void(0)"
+                                                class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
+                                                <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

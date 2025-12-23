@@ -114,7 +114,7 @@ class Index3Controller extends Controller
         $postCount = Post::count();
 
 
-        if ($routeName === 'index3' || $routeName === 'index4') {
+        if ($routeName === 'index3' || $routeName === 'index4'|| $routeName === 'index6') {
             return view("dashboard.$routeName", compact('kode', 'postCount', 'periodes', 'periode'));
         }
     }
@@ -132,11 +132,15 @@ class Index3Controller extends Controller
             if ($response->successful()) {
                 $data = $response->json();
 
-                $mahasiswa = collect($data ?? [])
-                    ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
-                    ->map(function ($mhs) {
-                        $tempStatus = TempStatus::select('status', 'alasan')
-                            ->where('nim', $mhs['STUDENTID']);
+                // if(empty($data)){
+                //     $data = $mahasiswaDb ;
+                // }
+
+            $mahasiswa = collect($data ?? [])
+                ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
+                ->map(function ($mhs) {
+                    $tempStatus = TempStatus::select('status', 'alasan')
+                        ->where('nim', $mhs['STUDENTID']);
 
                         $statusFromTemp = $tempStatus->value('status');
                         $alasanFromTemp = $tempStatus->value('alasan');
@@ -144,6 +148,8 @@ class Index3Controller extends Controller
                         $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
 
                         return [
+                            'fakultas' => $mhs['FACULTYNAME'] ?? '-',
+                            'prodi' => $mhs['STUDYPROGRAMNAME'] ?? '-',
                             'nim' => $mhs['STUDENTID'] ?? '-',
                             'name' => $mhs['FULLNAME'] ?? '-',
                             'study_period' => $mhs['MASA_STUDI'] ?? '-',

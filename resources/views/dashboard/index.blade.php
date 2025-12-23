@@ -71,7 +71,7 @@ $script = '
             <iconify-icon icon="mdi:file-document" class="text-white text-4xl"></iconify-icon>
         </div>
         <div class="flex flex-col text-center">
-            <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
+            <h2 class="text-4xl text-white font-bold leading-tight">{{ $countApproval }}</h2>
             <p class="text-sm">{{ __('dashboard.total_sk') }}</p>
         </div>
     </div>
@@ -82,7 +82,7 @@ $script = '
             <iconify-icon icon="fa6-solid:file-signature" class="text-white text-4xl"></iconify-icon>
         </div>
         <div class="flex flex-col text-center">
-            <h2 class="text-4xl text-white font-bold leading-tight">214</h2>
+            <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
             <p class="text-sm">{{ __('dashboard.total_pisn') }}</p>
         </div>
     </div>

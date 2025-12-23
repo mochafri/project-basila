@@ -36,4 +36,12 @@ return [
     'save' => 'Simpan',
     'save_draft' => 'Simpan Draft',
     'set_yudisium' => 'Tetapkan Yudisium',
+    'info_yudisium' => 'Informasi Penetapan Draft Yudisium',
+    'jika_ingin' => ' Jika ingin',
+    'tambah_baru' => 'menambahkan mahasiswa baru',
+    'maka_perlu' => 'maka perlu dilakukan',
+    'penetapan_ulang' => 'penetapan ulang yudisium',
+    'menghapus' => 'menghapus mahasiswa',
+    'dari_periode' => 'dari periode yudisium,ubah status mahasiswa tersebut menjadi',
+    
 ];

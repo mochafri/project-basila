@@ -74,7 +74,7 @@ $script = '
                                     <iconify-icon icon="mdi:file-document" class="text-white text-4xl"></iconify-icon>
                                 </div>
                                 <div class="flex flex-col text-center">
-                                    <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
+                                    <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
                                     <p class="text-sm">{{ __('index6.total_sk') }}</p>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@ $script = '
                                         class="text-white text-4xl"></iconify-icon>
                                 </div>
                                 <div class="flex flex-col text-center">
-                                    <h2 class="text-4xl text-white font-bold leading-tight">43</h2>
+                                    <h2 class="text-4xl text-white font-bold leading-tight">{{ $totalMhsYud }}</h2>
                                     <p class="text-sm">{{ __('index6.total_dkd') }}</p>
                                 </div>
                             </div>
@@ -128,8 +128,8 @@ $script = '
                                         <label for="fakultas" class="text-neutral-500">{{ __('index6.type_report') }}</label>
                                         <select name="fakultas" id="fakultas"
                                             class="text-neutral-500  w-[50%] form-select text-sm">
-                                            <option value="informatika">{{ __('index6.yudisium') }}</option>
-                                            <option value="Ilmu Terapan">{{ __('index6.not_yudisium') }}</option>
+                                            <option value="">{{ __('index6.yudicium') }}</option>
+                                            <option value="">{{ __('index6.news_event') }}</option>
 
                                         </select>
                                     </div>

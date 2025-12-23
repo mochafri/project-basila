@@ -6,6 +6,8 @@ return[
     'total_yudisium' => 'Total Yudisium',
     'total_graduate' => 'Total Lulusan',
     'total_sk' => 'Total SK Terbit',
+    'news_event' => 'Berita Acara',
+    'yudicium' => 'Yudisium',
     'total_dkd' => 'Total DKD',
     'total_pisn' => 'Total Reservasi PiSN',
     'eligible' => 'Total Eligible :',

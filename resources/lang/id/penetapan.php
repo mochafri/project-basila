@@ -36,4 +36,6 @@ return [
     'total_yudisium_label' => 'Total Yudisium',
     'total_lulusan_label' => 'Total Lulusan',
     'save_draft' => 'Simpan Draft',
+    'approved' => 'Disetujui',
+    'rejected' => 'Ditolak'
 ];

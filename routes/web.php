@@ -4,6 +4,7 @@ use App\Http\Controllers\Index3Controller;
 use App\Http\Controllers\TempStatusController;
 use App\Http\Controllers\TetapKanController;
 use App\Http\Controllers\UpdateYudicium;
+use App\Http\Controllers\UpdateYudiciumController;
 use App\Http\Controllers\YudiciumController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -127,18 +128,19 @@ Route::middleware(['auth'])->group(function () {
             Route::redirect('/dashboard/index-2', '/dashboard/penetapan-yudisium');
 
             Route::get('/laporan', 'index')->name('index6');
-            Route::redirect('/d
-            shboard/index-6', '/dashboard/laporan');
-
+            Route::redirect('/dashboard/index-6', '/dashboard/laporan');
 
             Route::get('/approval-yudisium', 'index')->name('index4');
             Route::redirect('/dashboard/index-4', '/dashboard/approval-yudisium');
         });
 
         // Update Yudisium route 
-        Route::controller(UpdateYudicium::class)->group(function () {
+        Route::controller(UpdateYudiciumController::class)->group(function () {
             Route::get('/update-yudisium', 'index')->name('index7');
-            Route::redirect('/dashboard/index-7', '/dashboard/update-yudisium');
+            Route::redirect('/dashboard/index-7/', '/dashboard/update-yudisium');
+
+            Route::get('/Tetapkan-yudisium', 'index')->name('index5');
+            Route::redirect('/dashboard/index-5/', '/dashboard/index-5');
         });
 
         // Index3 routes
@@ -147,11 +149,10 @@ Route::middleware(['auth'])->group(function () {
             Route::redirect('/dashboard/index-3', '/dashboard/tambah-yudisium');
 
             Route::post('/index-3/generate', 'generate')->name('index3.generate');
-        });
 
-        Route::controller(TetapKanController::class)->group(function () {
-            Route::get('/Tetapkan-yudisium', 'index')->name('index5');
-            Route::redirect('/dashboard/index-5', '/dashboard/index-5'); 
+            Route::middleware(['auth'])->group(function () {
+                Route::post('/filter-mhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
+            });
         });
 
         // Dashboard routes 
@@ -236,10 +237,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::post('/filter-mhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
-    });
-
-    Route::middleware(['auth'])->group(function () {
         Route::post('/temp-status', [TempStatusController::class, 'postStatus'])->name('tempStatus');
     });
 
@@ -277,7 +274,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::post('/update-status', [UpdateYudicium::class, 'updateYudicium'])->name('update.status'); 
+        Route::post('/update-status', [UpdateYudicium::class, 'updateYudicium'])->name('update.status');
     });
 
     Route::middleware(['auth'])->group(function () {
@@ -290,7 +287,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::get('all-yud', [YudiciumController::class,'getAllYudicium'])->name('yudicium.getAll');
+        Route::get('all-yud', [YudiciumController::class, 'getAllYudicium'])->name('yudicium.getAll');
     });
 });
 

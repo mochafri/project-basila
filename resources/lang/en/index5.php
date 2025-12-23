@@ -37,5 +37,12 @@ return [
     'save' => 'Save',
     'save_draft' => 'Save Draft',
     'set_yudisium' => 'Set Yudicium',
+    'info_yudisium' => 'Information on the Determination of the Yudisium Draft',
+    'jika_ingin' => ' If you want',
+    'tambah_baru' => 'to add new students',
+    'maka_perlu' => 'it is necessary to',
+    'penetapan_ulang' => 're-establish the graduation determination',
+    'menghapus' => 'to remove a student',
+    'dari_periode' => ' from the graduation period, change the students to',
 
 ];

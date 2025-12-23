@@ -6,12 +6,13 @@
         <script src="' . asset('assets/js/homeFourChart.js') . '"></script>
         <script src="' . asset('assets/js/data-table.js') . '" defer></script>
         <script src="' . asset('assets/js/approveYudcium.js') . '" defer></script>
+        <script src="' . asset('assets/js/fakultasSelect.js') . '"></script>
     ';
 @endphp
 
 @section('content')
     <!-- Crypto Home Widgets Start -->
-    <h1 class="text-2xl font-semibold text-gray-600 mb-5">{{ __('index4.title') }}</h1>
+    <h1 class="text-2xl font-semibold text-gray-600 mb-5">Approval Yudisium</h1>
 
     <!-- Crypto Home Widgets End -->
 
@@ -55,10 +56,12 @@
                                         </select>
                                     </form>
                                 </div>
-                                <button id="filterButton"
-                                    class="text-neutral-100 border background-primary rounded-md shadow-xl w-1/3 px-2 py-1 setPeriodeBtn">
+                               <button id="filterButton"
+                                    class="h-[38px] w-[133px] px-6 bg-red-600 text-white rounded-md font-semibold
+                                        hover:bg-red-700 transition setPeriodeBtn">
                                     {{ __('index4.show') }}
                                 </button>
+
                             </div>
                         </div>
                         <div class="right">
@@ -94,6 +97,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="grid grid-cols-12">
                     <div class="col-span-12">
                         <div class="card border-0 overflow-hidden">
@@ -143,7 +147,7 @@
                                             <th scope="col" class="text-neutral-800 dark:text-white"
                                                 style="color: black;">
                                                 <div class="flex items-center gap-2">
-                                                    {{ __('index4.faculty') }}
+                                                    {{ __('index4.faculty_col') }}
                                                     <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         fill="none" viewBox="0 0 24 24">
@@ -188,7 +192,57 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($yudicium as $idx => $data)
+                                            <tr> <!-- class="{{ $loop->odd ? 'bg-blue-100' : 'bg-white' }}"  untuk membedakan background row-->
+                                                <td>
+                                                    <div class="form-check style-check flex items-center">
+                                                        {{-- <input class="form-check-input" type="checkbox"> --}}
+                                                        <label class="ms-2 form-check-label">
+                                                            {{ $idx + 1 }}
+                                                        </label>
+                                                    </div>
+                                                </td>
 
+                                                <td>
+                                                    <div class="flex items-center">
+                                                        <h6 class="text-base mb-0 ">
+                                                            {{ $data->no_yudicium }}
+                                                        </h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex items-center">
+                                                        <h6>
+                                                            {{ $data->periode }}
+                                                        </h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <h6>
+                                                            {{ $data->fakultasname }}
+                                                        </h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex items-center">
+                                                        <h6>{{ $data->prodiname }}</h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex items-center">
+                                                        <h6>{{ $data->total_mhs }}</h6>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        class="btn-popup w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center"
+                                                        data-id="{{ $data->id }}">
+                                                        <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
