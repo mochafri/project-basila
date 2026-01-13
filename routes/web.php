@@ -305,6 +305,10 @@ Route::get('/change-language/{lang}', function ($lang) {
     return redirect()->back();
 })->name('change.language');
 
+Route::get('/yudicium/print/{id}', [YudiciumController::class, 'printPdf'])
+    ->name('yudicium.print');
+
+
 // routes/web.php
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');
 Route::post('/authentication/sign-in', [AuthController::class, 'processSignIn'])->name('signin.process');

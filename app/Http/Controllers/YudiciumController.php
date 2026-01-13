@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\MhsYud;
 use App\Models\Yudicium;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
+use App\Models\YudiciumDetail;
 use App\Models\Mahasiswa;
 
 class YudiciumController extends Controller
@@ -36,6 +38,8 @@ class YudiciumController extends Controller
         if ($periode) {
             $selectedPeriode = collect($periodes)->firstWhere('value', $periode);
         }
+
+        $periodeLabel = $selectedPeriode['label'] ?? null;
 
         // 3️⃣ Ambil data yudicium sesuai periode (jika dipilih)
         $datasQuery = DB::table('yudiciums');
@@ -161,6 +165,7 @@ class YudiciumController extends Controller
                 'waitingApproval' => $approvalWaiting,
                 'periode' => $periode,
                 'periodes' => $periodes,
+                'periodeLabel' => $periodeLabel,
             ]);
 
         } elseif ($routeName == 'index4') {
@@ -177,7 +182,8 @@ class YudiciumController extends Controller
                 'waitingApproval' => $approvalWaiting,
                 'periode' => $periode,
                 'periodes' => $periodes,
-                'yudicium' => $yudicium
+                'yudicium' => $yudicium,
+                'periodeLabel' => $periodeLabel,
             ]);
         }
 
@@ -211,7 +217,8 @@ class YudiciumController extends Controller
                 'totalMhsYud' => $totalMhsYud,
                 'countApproval' => $countApproval,
                 'periode' => $periode,
-                'periodes' => $periodes
+                'periodes' => $periodes,
+                'periodeLabel' => $periodeLabel,
             ]);
         }
     }
@@ -578,24 +585,38 @@ class YudiciumController extends Controller
         $periodes = [];
 
         for ($year = $currentYear; $year >= $currentYear - 2; $year--) {
-            // Semester Genap: Februari–Juli
+
+            // ✅ Genap dulu
             $periodes[] = [
                 'value' => "{$year}-02-01",
-                'label' => "Genap {$year}/" . ($year + 1),
+                'label' => __('dashboard.even') . " {$year}/" . ($year + 1),
                 'start' => "{$year}-02-01",
-                'end' => "{$year}-07-31"
+                'end' => "{$year}-07-31",
+                'order' => 1
             ];
 
-            // Semester Ganjil: Agustus–Januari
+            // ✅ Baru Ganjil
             $periodes[] = [
                 'value' => "{$year}-08-01",
-                'label' => "Ganjil {$year}/" . ($year + 1),
+                'label' => __('dashboard.odd') . " {$year}/" . ($year + 1),
                 'start' => "{$year}-08-01",
-                'end' => ($year + 1) . "-01-31"
+                'end' => ($year + 1) . "-01-31",
+                'order' => 2
             ];
         }
 
-        usort($periodes, fn($a, $b) => strcmp($b['value'], $a['value']));
+        // 🔽 Sort berdasarkan tahun DESC lalu order ASC (Genap → Ganjil)
+        usort($periodes, function ($a, $b) {
+            $yearA = substr($a['value'], 0, 4);
+            $yearB = substr($b['value'], 0, 4);
+
+            if ($yearA == $yearB) {
+                return $a['order'] <=> $b['order'];
+            }
+
+            return $yearB <=> $yearA;
+        });
+
         return $periodes;
     }
 
@@ -660,5 +681,30 @@ class YudiciumController extends Controller
             'success' => true,
             'data' => $result
         ]);
+    }
+
+    public function printPdf($id)
+    {
+        // Ambil data yudisium
+        $yudicium = Yudicium::findOrFail($id);
+
+        // 🔐 Proteksi: hanya boleh cetak jika Approved
+        if ($yudicium->approval_status !== 'Approved') {
+            abort(403, 'Yudisium belum disetujui');
+        }
+
+        // Ambil mahasiswa yang TERKAIT yudisium ini
+        // (status mahasiswa tidak difilter ulang karena
+        // yang masuk MhsYud sudah hasil seleksi Eligible)
+        $mahasiswas = MhsYud::where('yudicium_id', $id)->get();
+
+        // Generate PDF
+        $pdf = Pdf::loadView('dashboard.yudiciumPrint', [
+            'yudicium' => $yudicium,
+            'mahasiswas' => $mahasiswas
+        ])->setPaper('A4', 'portrait');
+
+        $filename = 'yudicium-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $yudicium->no_yudicium) . '.pdf';
+        return $pdf->stream($filename);
     }
 }

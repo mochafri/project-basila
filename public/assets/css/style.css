@@ -1830,6 +1830,7 @@ input:checked + .toggle-bg {
     opacity: 1;
 }
 
+
 .has-indicator::before {
     position: absolute;
     content: "";

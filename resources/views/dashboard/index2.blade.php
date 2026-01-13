@@ -4,8 +4,8 @@
     $title = 'Penetapan Yudisium';
     $subTitle = 'Daftar Yudisium';
     $script = '
-                    <script src="' . asset('assets/js/data-table.js') . '" defer></script>
-                ';
+                                <script src="' . asset('assets/js/data-table.js') . '" defer></script>
+                            ';
 @endphp
 
 @section('content')
@@ -21,22 +21,25 @@
                         <label for="semester" class="text-sm font-medium text-neutral-700 whitespace-nowrap">
                             {{ __('penetapan.semester') }}
                         </label>
-                        <form action="{{ route('index2') }}" method="GET">
+                        <form action="{{ route('index2') }}" method="GET"
+                            class="flex flex-col sm:flex-row sm:items-center gap-3">
+
                             <select name="periode" id="periodeSelect"
                                 class="border border-gray-300 rounded-md p-2 text-gray-600">
-                                <option value="Pilih">-- Pilih Periode --</option>
+                                <option value="">-- Pilih Periode --</option>
                                 @foreach ($periodes as $p)
                                     <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
                                         {{ $p['label'] }}
                                     </option>
                                 @endforeach
                             </select>
+
+                            <button type="submit"
+                                class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition">
+                                {{ __('penetapan.show') }}
+                            </button>
                         </form>
                     </div>
-                    <button
-                        class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition w-full sm:w-fit">
-                        {{ __('penetapan.show') }}
-                    </button>
                 </div>
 
                 <!-- Statistik -->
@@ -81,7 +84,15 @@
                 <div class="card-header flex justify-between items-center">
                     <div>
                         <h6 class="card-title mb-0 text-lg font-bold">{{ __('penetapan.list_title') }}</h6>
-                        <h6 class="card-title mb-0 text-xs text-gray-600">{{ __('penetapan.list_subtitle') }}
+                        <h6 class="card-title mb-0 text-xs text-gray-600">
+                            @if ($periodeLabel)
+                                {{ __('penetapan.list_subtitle') }}
+                                <span class="font-semibold text-gray-800">
+                                    {{ $periodeLabel }}
+                                </span>
+                            @else
+                                {{ __('penetapan.list_subtitle') }}
+                            @endif
                         </h6>
                     </div>
                     <!-- Tombol Tambah -->
@@ -270,24 +281,41 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <button
-                                            class="btn-popup w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center"
-                                            data-id={{ $data->id }}>
-                                            <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
-                                        </button>
-                                        @if ($data->approval_status == 'Draft' || $data->approval_status == 'Rejected')
-                                            <a href="{{ route($data->approval_status == 'Draft' ? 'index5' : 'index7', ['id' => $data->id]) }}"
-                                                class="w-8 h-8 bg-warning-100 dark:bg-warning-600/25 text-warning-600 dark:text-warning-400 rounded-full inline-flex items-center justify-center">
-                                                <iconify-icon icon="mingcute:edit-2-line"></iconify-icon>
-                                            </a>
-                                        @endif
-                                        @if ($data->approval_status == 'Draft')
-                                            <a href="javascript:void(0)"
-                                                class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
-                                                <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
-                                            </a>
-                                        @endif
+                                        <div class="flex flex-col items-center gap-2">
+                                            <!-- Detail -->
+                                            <button
+                                                class="btn-popup w-8 h-8 bg-primary-50 dark:bg-primary-600/10 text-primary-600 dark:text-primary-400 rounded-full inline-flex items-center justify-center"
+                                                data-id="{{ $data->id }}">
+                                                <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
+                                            </button>
+
+                                            <!-- Edit -->
+                                            @if ($data->approval_status == 'Draft' || $data->approval_status == 'Rejected')
+                                                <a href="{{ route($data->approval_status == 'Draft' ? 'index5' : 'index7', ['id' => $data->id]) }}"
+                                                    class="w-8 h-8 bg-warning-100 dark:bg-warning-600/25 text-warning-600 dark:text-warning-400 rounded-full inline-flex items-center justify-center">
+                                                    <iconify-icon icon="mingcute:edit-2-line"></iconify-icon>
+                                                </a>
+                                            @endif
+
+                                            <!-- Delete -->
+                                            @if ($data->approval_status == 'Draft')
+                                                <a href="javascript:void(0)"
+                                                    class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
+                                                    <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
+                                                </a>
+                                            @endif
+
+                                            <!-- PRINT PDF (ONLY APPROVED) -->
+                                            @if ($data->approval_status === 'Approved')
+                                                <a href="{{ route('yudicium.print', ['id' => $data->id]) }}" target="_blank"
+                                                    class="w-8 h-8 bg-red-100 dark:bg-red-600/25 text-red-600 dark:text-red-400 rounded-full inline-flex items-center justify-center"
+                                                    title="Cetak PDF">
+                                                    <iconify-icon icon="mdi:file-pdf-box"></iconify-icon>
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
+
                                 </tr>
                             @endforeach
                         </tbody>

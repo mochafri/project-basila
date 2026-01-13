@@ -320,7 +320,7 @@
 
                 <!-- HEADER MERAH -->
                 <div class="bg-red-700 text-white px-5 py-3 flex justify-between items-center">
-                    <h2 class="text-lg font-semibold">{{ __('index3.detail_student') }}</h2>
+                    <h2 class="text-lg font-semibold text-white">{{ __('index3.detail_student') }}</h2>
                     <button id="closeDetailModal" class="text-white text-lg">✕</button>
                 </div>
 

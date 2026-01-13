@@ -165,21 +165,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         setHTML("dm-prodi", mhs.prodi);
         setHTML("dm-fakultas", mhs.fakultas);
 
+
+        const isTrue = (val) =>
+        val === true ||
+        val === 1 ||
+        val === "1" ||
+        val === "YA" ||
+        val === "LULUS" ||
+        val === "VALID";
+
         // Icon helper
-        const icon = (id, val) => setHTML(id, val ? "✔️" : "❌");
+       const icon = (id, val) =>
+                    setHTML(
+                        id,
+                        val
+                        ? `<iconify-icon icon="mingcute:check-fill" class="text-green-500 text-lg w-24px h-24px "></iconify-icon>`
+                        : `<iconify-icon icon="mingcute:close-fill" class="text-red-500 text-lg w-24px h-24px "></iconify-icon>`
+                    );
+
 
         icon("dm-study_period_icon", mhs.study_period >= 1);
         icon("dm-semester_lulus_icon", mhs.SMT_CURRENT >= 1);
-        icon("dm-ipk_icon", mhs.ipk >= 0);
-        icon("dm-sks_icon", mhs.pass_sks >= 1);
-        icon("dm-mk_icon", mhs.STATUS);
-        icon("dm-bahasa_icon", mhs.BAHASA_ASING);
-        icon("dm-publikasi_icon", mhs.PUBLIKASI);
-        icon("dm-tak_icon", mhs.TAK);
-        icon("dm-administratif_icon", mhs.ADMINISTRATIF);
-        icon("dm-bpp_icon", mhs.BPP);
-        icon("dm-oplib_icon", mhs.OPENLIB);
-        icon("dm-sanksi_icon", mhs.SANKSI);
+        icon("dm-ipk_icon", mhs.ipk >= 2.0);
+        icon("dm-sks_icon", mhs.pass_sks >= 144);
+
+        icon("dm-mk_icon", isTrue(mhs.STATUS));
+        icon("dm-bahasa_icon", isTrue(mhs.BAHASA_ASING));
+        icon("dm-publikasi_icon", isTrue(mhs.PUBLIKASI));
+        icon("dm-tak_icon", isTrue(mhs.TAK));
+        icon("dm-administratif_icon", isTrue(mhs.ADMINISTRATIF));
+        icon("dm-bpp_icon", isTrue(mhs.BPP));
+        icon("dm-oplib_icon", isTrue(mhs.OPENLIB));
+        icon("dm-sanksi_icon", isTrue(mhs.SANKSI));
+
     });
 
     // Close modal

@@ -11,7 +11,7 @@ return [
     'total_yudisium' => 'Total Yudisium',
     'total_graduate' => 'Total Graduates',
     'list_title' => 'Yudisium List',
-    'list_subtitle' => 'Here is the list of Yudisium for the Odd 2024/2025 period',
+    'list_subtitle' => 'Here is the list of Yudisium for the :',
     'add' => '+ Add',
     'no' => 'No',
     'sk_number' => 'SK Number',

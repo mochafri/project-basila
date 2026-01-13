@@ -13,7 +13,7 @@ $script = '
         <div class="relative">
             <form action="{{ route('index') }}" method="GET">
                 <select name="periode" id="periodeSelect" class="border border-gray-300 rounded-md p-2 text-gray-600">
-                    <option value="Pilih">-- Pilih Periode --</option>
+                    <option value="Pilih">{{ __('dashboard.select_period') }}</option>
                     @foreach ($periodes as $p)
                     <option value="{{ $p['value'] }}" {{ $periode==$p['value'] ? 'selected' : '' }}>
                         {{ $p['label'] }}
@@ -32,12 +32,6 @@ $script = '
             <iconify-icon icon="ph:graduation-cap-bold"></iconify-icon>
             <span>{{ __('dashboard.set_period') }}</span>
         </button>
-
-
-
-
-
-
     </div>
 </div>
 
@@ -96,7 +90,16 @@ $script = '
             <!-- Judul dan Deskripsi -->
             <div>
                 <h3 class="text-xl font-bold text-gray-900">{{ __('dashboard.yudisium_period') }}</h3>
-                <p class="text-xs text-gray-500">{{ __('dashboard.yudisium_detail') }}</p>
+                   <h6 class="card-title mb-0 text-xs text-gray-600">
+                            @if ($periodeLabel)
+                                {{ __('dashboard.yudisium_detail') }}
+                                <span class="font-semibold text-gray-800">
+                                    {{ $periodeLabel }}
+                                </span>
+                            @else
+                                {{ __('dashboard.yudisium_detail') }}
+                            @endif
+                    </h6>
             </div>
 
             <!-- Total Yudisium dengan Gavel -->
@@ -122,7 +125,16 @@ $script = '
         <div class="flex justify-between items-start mb-6">
             <div>
                 <h3 class="text-xl font-bold text-gray-900">{{ __('dashboard.graduate_predicate') }}</h3>
-                <p class="text-xs text-gray-500">{{ __('dashboard.graduate_detail') }}</p>
+                <h6 class="card-title mb-0 text-xs text-gray-600">
+                            @if ($periodeLabel)
+                                {{ __('dashboard.graduate_detail') }}
+                                <span class="font-semibold text-gray-800">
+                                    {{ $periodeLabel }}
+                                </span>
+                            @else
+                                {{ __('dashboard.graduate_detail') }}
+                            @endif
+                </h6>
             </div>
             <div class="flex items-center space-x-2">
                 <div class="bg-green-600 p-3 rounded-full">

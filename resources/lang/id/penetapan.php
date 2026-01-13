@@ -11,7 +11,7 @@ return [
     'total_yudisium' => 'Total Yudisium',
     'total_graduate' => 'Total Lulusan',
     'list_title' => 'Daftar Yudisium',
-    'list_subtitle' => 'Berikut Daftar Yudisium Periode Ganjil 2024/2025',
+    'list_subtitle' => 'Berikut Daftar Yudisium Periode : ',
     'add' => '+ Tambah',
     'no' => 'No',
     'sk_number' => 'Nomor SK',
