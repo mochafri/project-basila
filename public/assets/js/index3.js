@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const totalDipilihSpan = document.getElementById('totalDipilih');
     const totalTidakDipilihSpan = document.getElementById('totalTidakDipilih');
     const checkAll = document.getElementById('checkAll');
+    const rowsPerPage = 10;
+    let currentPage = 1;
 
     // GLOBAL DATA
     let mahasiswaList = [];
@@ -25,11 +27,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // UPDATE SUMMARY COUNTS
     // ======================================================
     function updateSelectionCount() {
-        const totalCheckbox = qsa('.row-checkbox').length;
-        const checkedCheckbox = qsa('.row-checkbox:checked').length;
+        const total = mahasiswaList.length;
+            const selected = mahasiswaList.filter(m => m.selected).length;
 
-        totalDipilihSpan.textContent = checkedCheckbox;
-        totalTidakDipilihSpan.textContent = totalCheckbox - checkedCheckbox;
+            totalDipilihSpan.textContent = selected;
+            totalTidakDipilihSpan.textContent = total - selected;
+
+            checkAll.checked = (selected === total);
     }
 
 
@@ -58,6 +62,59 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    function renderTable(page = 1) {
+        tbody.innerHTML = '';
+
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const paginatedData = mahasiswaList.slice(start, end);
+
+        if (paginatedData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="10" class="text-center">Tidak ada data</td></tr>`;
+            return;
+        }
+
+        paginatedData.forEach(mhs => renderRow(mhs));
+    }
+
+    document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = true);
+
+
+    function renderPagination() {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        const totalPages = Math.ceil(mahasiswaList.length / rowsPerPage);
+
+        // Tampilkan pagination hanya jika data > 10
+        if (totalPages <= 1) {
+            pagination.classList.add('hidden');
+            return;
+        }
+
+        pagination.classList.remove('hidden');
+
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.className = `
+                px-3 py-1 rounded-md text-sm font-medium border
+                ${i === currentPage
+                    ? 'bg-red-600 text-white border-red-600'
+                    : 'bg-white text-gray-700 hover:bg-gray-100'}
+            `;
+            btn.addEventListener('click', () => {
+                currentPage = i;
+                renderTable(currentPage);
+                renderPagination();
+                updateSelectionCount();
+            });
+            pagination.appendChild(btn);
+        }
+    }
+
+
+
     // ======================================================
     // RENDER 1 ROW MAHASISWA
     // ======================================================
@@ -67,8 +124,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             <td class="text-center">
                 <input type="checkbox"
                     class="row-checkbox w-4 h-4 accent-red-600 cursor-pointer"
-                    value="${mhs.nim}"
-                checked>
+                    data-nim="${mhs.nim}"
+                    ${mhs.selected ? 'checked' : ''}
+                >
             </td>
             <td>${mhs.nim}</td>
             <td>${mhs.name}</td>
@@ -106,7 +164,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             const data = await res.json();
-            mahasiswaList = data.mahasiswa || [];
+            mahasiswaList = (data.mahasiswa || []).map(mhs => ({
+                ...mhs,
+                selected: true
+            }));
+
 
             tbody.innerHTML = '';
 
@@ -115,10 +177,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 updateSelectionCount();
                 return;
             }
+                currentPage = 1;
+                renderTable(currentPage);
+                renderPagination();
 
-            mahasiswaList.forEach((mhs, idx) => renderRow(mhs, idx));
-            checkAll.checked = true;
-            updateSelectionCount();
+                checkAll.checked = true;
+                updateSelectionCount();
+
 
         } catch (err) {
             console.error("Error fetching mahasiswa:", err);
@@ -129,17 +194,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     // CHECK ALL CHECKBOXES
     // ======================================================
     checkAll.addEventListener('change', () => {
-        qsa('.row-checkbox').forEach(cb => (cb.checked = checkAll.checked));
+        mahasiswaList.forEach(m => m.selected = checkAll.checked);
+        renderTable(currentPage);
         updateSelectionCount();
     });
 
     // Sync checkAll when individual checkbox clicked
     document.addEventListener('change', (e) => {
         if (e.target.classList.contains('row-checkbox')) {
-            const all = qsa('.row-checkbox');
-            const checked = qsa('.row-checkbox:checked');
+            if (!e.target.classList.contains('row-checkbox')) return;
 
-            checkAll.checked = (all.length === checked.length);
+            const nim = e.target.dataset.nim;
+            const mhs = mahasiswaList.find(m => m.nim == nim);
+            if (!mhs) return;
+
+            mhs.selected = e.target.checked;
 
             updateSelectionCount();
         }

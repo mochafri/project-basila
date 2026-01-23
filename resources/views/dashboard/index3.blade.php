@@ -275,6 +275,7 @@
 
                             </tbody>
                         </table>
+                        <div id="pagination" class="flex justify-center mt-4 gap-2 hidden"></div>
                     </div>
                 </div>
             </div>
