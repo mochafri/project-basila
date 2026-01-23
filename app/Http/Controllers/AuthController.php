@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function showSignIn()
     {
-        return view('authentication.signin'); // sesuai folder resources/views/authentication/signin.blade.php
+        return view('authentication.signin');
     }
 
     public function processSignIn(Request $request)

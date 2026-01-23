@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\Models\YudiciumDetail;
 use App\Models\Mahasiswa;
+use App\Models\Pejabat;
 
 class YudiciumController extends Controller
 {
@@ -688,23 +689,84 @@ class YudiciumController extends Controller
         // Ambil data yudisium
         $yudicium = Yudicium::findOrFail($id);
 
-        // 🔐 Proteksi: hanya boleh cetak jika Approved
+        // Proteksi: hanya Approved
         if ($yudicium->approval_status !== 'Approved') {
             abort(403, 'Yudisium belum disetujui');
         }
 
-        // Ambil mahasiswa yang TERKAIT yudisium ini
-        // (status mahasiswa tidak difilter ulang karena
-        // yang masuk MhsYud sudah hasil seleksi Eligible)
+        // ================= PENANDATANGAN =================
+        $penandatangan = Pejabat::penandatanganYudisium($yudicium->fakultas_id)
+            ->first();
+
+        // Mahasiswa terkait yudisium
         $mahasiswas = MhsYud::where('yudicium_id', $id)->get();
 
-        // Generate PDF
+        // Fakultas dari API
+        $facultyRes = Http::withToken($this->token)->get($this->urlFakultas);
+        $faculties = collect($facultyRes->successful() ? $facultyRes->json() : []);
+
+        $prodyCache = [];
+
+        $mahasiswas->transform(function ($mhs) use ($faculties, &$prodyCache) {
+
+            // ================= FAKULTAS =================
+            $faculty = $faculties->firstWhere(
+                'facultyid',
+                (string) $mhs->fakultas_id
+            );
+            
+
+            $mhs->facultyname = $faculty['facultyname'] ?? 'Unknown';
+
+            $facultyId = $faculty['facultyid'] ?? null;
+
+            // ================= PRODI =================
+            if ($facultyId) {
+
+                if (!isset($prodyCache[$facultyId])) {
+                    $prodyRes = Http::withToken(env('KEY_TOKEN'))
+                        ->get(env('URL_PRODY') . $facultyId);
+
+                    $prodyCache[$facultyId] = collect(
+                        $prodyRes->successful() ? $prodyRes->json() : []
+                    );
+                }
+
+                $prody = $prodyCache[$facultyId];
+
+                $mhs->prodyname = $prody->firstWhere(
+                    'studyprogramid',
+                    (string) $mhs->prody_id
+                )['studyprogramname'] ?? 'Unknown';
+
+            } else {
+                $mhs->prodyname = 'Unknown';
+            }
+            
+            // tahun masuk
+            if (!empty($mhs->ID_SMT_MASUK)) {
+                $mhs->tahun_masuk = substr($mhs->ID_SMT_MASUK, 0, 4);
+            } else {
+                $mhs->tahun_masuk = '-';
+            }
+
+            $mhs->pass_sks = $mhs->pass_sks ?? '-';
+
+            return $mhs;
+        });
+
+        // Generate PDF LANDSCAPE
         $pdf = Pdf::loadView('dashboard.yudiciumPrint', [
             'yudicium' => $yudicium,
-            'mahasiswas' => $mahasiswas
-        ])->setPaper('A4', 'portrait');
+            'mahasiswas' => $mahasiswas,
+            'penandatangan' => $penandatangan
+        ])->setPaper('A4', 'landscape');
 
-        $filename = 'yudicium-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $yudicium->no_yudicium) . '.pdf';
+        $filename = 'yudicium-' .
+            preg_replace('/[^A-Za-z0-9\-]/', '-', $yudicium->no_yudicium) .
+            '.pdf';
+
         return $pdf->stream($filename);
     }
+
 }

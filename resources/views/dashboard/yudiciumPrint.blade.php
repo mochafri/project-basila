@@ -1,59 +1,144 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <title>Yudisium {{ $yudicium->no_yudicium }}</title>
+    <title>Lampiran Yudisium</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #000; padding: 6px; }
-        th { background: #f2f2f2; text-align: center; }
-        h2, h4 { text-align: center; margin: 0; }
+        body {
+            font-family: "Times New Roman", serif;
+            font-size: 12pt;
+            line-height: 1.4;
+        }
+
+        .title {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .centerFont {
+            font-size: 12pt;
+            line-height: 0.5;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mt-30 {
+            margin-top: 30px;
+        }
+
+        .mt-50 {
+            margin-top: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 11pt;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 6px;
+            vertical-align: middle;
+        }
+
+        th {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .no-border td {
+            border: none;
+            padding: 3px;
+        }
     </style>
 </head>
+
 <body>
 
-<h2>DAFTAR MAHASISWA YUDISIUM</h2>
-<h4>{{ $yudicium->no_yudicium }}</h4>
-<h4>Periode: {{ $yudicium->periode }}</h4>
+    @php
+        $faculty = $mahasiswas->first()->facultyname ?? '-';
+        $prodi = $mahasiswas->first()->prodyname ?? '-';
+    @endphp
 
-<table>
-    <thead>
-        <tr>
-            <th>No</th>
-            <th>NIM</th>
-            <th>Nama Mahasiswa</th>
-            <th>IPK</th>
-            <th>Predikat</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($mahasiswas as $index => $mhs)
+    <!-- HEADER -->
+    <p class="title">
+        Lampiran 1 Keputusan Rektor Universitas Telkom tentang Penetapan Lulusan
+        Program Studi {{ strtoupper($prodi) }}
+        Fakultas {{ strtoupper($faculty) }}
+        Universitas Telkom periode {{ $yudicium->periode }}
+    </p>
+
+    <!-- JUDUL -->
+    <div class="center centerFont mt-30">
+        <p><b>DAFTAR LULUSAN</b></p>
+        <p><b>PROGRAM STUDI {{ strtoupper($prodi) }}</b></p>
+        <p><b>FAKULTAS {{ strtoupper($faculty) }}</b></p>
+        <p><b>UNIVERSITAS TELKOM</b></p>
+        <p><b>PERIODE {{ strtoupper($yudicium->periode) }}</b></p>
+    </div>
+
+    <!-- TABEL MAHASISWA -->
+    <table class="mt-20">
+        <thead>
             <tr>
-                <td align="center">{{ $index + 1 }}</td>
-                <td>{{ $mhs->nim }}</td>
-                <td>{{ $mhs->name }}</td>
-                <td align="center">{{ $mhs->ipk }}</td>
-                <td>{{ $mhs->predikat }}</td>
-                <td align="center">Lulus</td>
+                <th>NO</th>
+                <th>NIM</th>
+                <th>NAMA</th>
+                <th>TMP LAHIR</th>
+                <th>TGL LAHIR</th>
+                <th>THN MASUK</th>
+                <th>LULUS</th>
+                <th>IPK</th>
+                <th>SKS</th>
+                <th>YUDISIUM</th>
             </tr>
-        @endforeach
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach ($mahasiswas as $i => $mhs)
+                <tr>
+                    <td align="center">{{ $i + 1 }}</td>
+                    <td align="center">{{ $mhs->nim }}</td>
+                    <td>{{ $mhs->name }}</td>
+                    <td></td>
+                    <td align="center">
 
-<br><br>
+                    </td>
+                    <td align="center">{{ $mhs->tahun_masuk ?? '-' }}</td>
+                    <td align="center">
+                        {{ date('d F Y', strtotime($yudicium->periode)) }}
+                    </td>
+                    <td align="center">{{ $mhs->ipk }}</td>
+                    <td align="center">{{ $mhs->pass_sks ?? '-' }}</td>
+                    <td align="center">{{ $mhs->predikat ?? '-' }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-<table width="100%" style="border: none">
-    <tr>
-        <td style="border:none; width:60%"></td>
-        <td style="border:none; text-align:center">
-            Mengetahui,<br>
-            Ketua Sidang Yudisium<br><br><br>
-            <b>(_____________________)</b>
-        </td>
-    </tr>
-</table>
+    <!-- TANDA TANGAN -->
+    <table class="no-border mt-50">
+        <tr>
+            <td width="60%"></td>
+            <td class="center">
+                Ditetapkan di : Bandung<br>
+                Pada tanggal : Sesuai pengesahan sistem<br><br>
+                <b>UNIVERSITAS TELKOM</b><br><br><br><br>
+                <b><u>{{ $penandatangan->nama_lengkap }}</u></b><br>
+                {{ $penandatangan->jabatan }}
+            </td>
+        </tr>
+    </table>
 
 </body>
+
 </html>
