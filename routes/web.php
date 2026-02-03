@@ -313,6 +313,8 @@ Route::get('/yudicium/print/{id}', [YudiciumController::class, 'printPdf'])
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');
 Route::post('/authentication/sign-in', [AuthController::class, 'processSignIn'])->name('signin.process');
 
+// routes/print rekap laporan yudisium
+Route::get('/yudisium/print-rekap',[YudiciumController::class, 'printRekapPdf'])->name('yudisium.print.rekap');
 
 Route::get('/', function () {
     return redirect()->route('signin.show');

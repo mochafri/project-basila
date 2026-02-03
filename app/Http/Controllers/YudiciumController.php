@@ -769,4 +769,101 @@ class YudiciumController extends Controller
         return $pdf->stream($filename);
     }
 
+
+    public function printRekapPdf(Request $request)
+{
+    $validate = $request->validate([
+        'fakultas_id' => 'required|integer',
+        'periode' => 'required|date',
+    ]);
+
+    // Ambil info periode
+    $periodes = $this->generatePeriodeDropdown();
+    $selectedPeriode = collect($periodes)
+        ->firstWhere('value', $validate['periode']);
+
+    if (!$selectedPeriode) {
+        abort(404, 'Periode tidak valid');
+    }
+
+    // ===============================
+    // Ambil SEMUA mahasiswa Approved
+    // ===============================
+    $mahasiswas = MhsYud::join(
+            'yudiciums',
+            'mhs_yudiciums.yudicium_id',
+            '=',
+            'yudiciums.id'
+        )
+        ->where('yudiciums.approval_status', 'Approved')
+        ->where('mhs_yudiciums.fakultas_id', $validate['fakultas_id'])
+        ->whereBetween('yudiciums.periode', [
+            $selectedPeriode['start'],
+            $selectedPeriode['end']
+        ])
+        ->select(
+            'mhs_yudiciums.*',
+            'yudiciums.no_yudicium',
+            'yudiciums.periode'
+        )
+        ->orderBy('yudiciums.no_yudicium')
+        ->get();
+
+    if ($mahasiswas->isEmpty()) {
+        abort(404, 'Tidak ada data mahasiswa yudisium');
+    }
+
+    // ===============================
+    // Fakultas & Prodi dari API
+    // ===============================
+    $facultyRes = Http::withToken($this->token)->get($this->urlFakultas);
+    $faculties = collect($facultyRes->successful() ? $facultyRes->json() : []);
+
+    $prodyCache = [];
+
+    $mahasiswas->transform(function ($mhs) use ($faculties, &$prodyCache) {
+
+        // Fakultas
+        $faculty = $faculties->firstWhere(
+            'facultyid',
+            (string) $mhs->fakultas_id
+        );
+        $mhs->facultyname = $faculty['facultyname'] ?? '-';
+
+        // Prodi
+        if ($faculty) {
+            $facultyId = $faculty['facultyid'];
+
+            if (!isset($prodyCache[$facultyId])) {
+                $prodyRes = Http::withToken(env('KEY_TOKEN'))
+                    ->get(env('URL_PRODY') . $facultyId);
+
+                $prodyCache[$facultyId] = collect(
+                    $prodyRes->successful() ? $prodyRes->json() : []
+                );
+            }
+
+            $prody = $prodyCache[$facultyId];
+            $mhs->prodyname = $prody->firstWhere(
+                'studyprogramid',
+                (string) $mhs->prody_id
+            )['studyprogramname'] ?? '-';
+        } else {
+            $mhs->prodyname = '-';
+        }
+
+        return $mhs;
+    });
+
+    // ===============================
+    // Generate PDF
+    // ===============================
+    $pdf = Pdf::loadView('dashboard.yudiciumRekapPrint', [
+        'mahasiswas' => $mahasiswas,
+        'periodeLabel' => $selectedPeriode['label']
+    ])->setPaper('A4', 'landscape');
+
+    return $pdf->stream('rekap-yudisium.pdf');
+}
+
 }

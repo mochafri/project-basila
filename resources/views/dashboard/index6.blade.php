@@ -3,7 +3,8 @@
     $title = 'Dashboard';
     $subTitle = 'LMS / Learning System';
     $script = '
-        <script></script>';
+                    <script src="' . asset('assets/js/fakultasSelect.js') . '"></script>
+                ';
 @endphp
 
 @section('content')
@@ -120,30 +121,38 @@
                             </div>
                             <div class="GenerateLaporan my-5">
                                 <h1 class="text-xl font-bold mb-5">{{ __('index6.generate') }}</h1>
-                                <form action="">
+                                <form action="{{ route('yudisium.print.rekap') }}" method="GET" target="_blank">
                                     <div class="w-[60%] flex flex-col gap-2 font-medium">
-                                        <div class="flex justify-between items-center">
-                                            <label for="fakultas"
-                                                class="text-neutral-500">{{ __('index6.type_report') }}</label>
-                                            <select name="fakultas" id="fakultas"
-                                                class="text-neutral-500  w-[50%] form-select text-sm">
-                                                <option value="">{{ __('index6.yudicium') }}</option>
-                                                <option value="">{{ __('index6.news_event') }}</option>
 
-                                            </select>
-                                        </div>
+                                        {{-- Fakultas --}}
                                         <div class="flex justify-between items-center">
-                                            <label for="Semester" class="text-neutral-500">{{ __('index6.format') }}</label>
-                                            <select name="Semester" id="Semester"
-                                                class="text-neutral-500 w-[50%] form-select text-sm">
-                                                <option value="genap24">Excel</option>
-                                                <option value="ganjil24">PDF</option>
+                                            <label class="text-neutral-500">{{ __('index6.faculty') }}</label>
+                                            <select name="fakultas_id" id="fakultas"
+                                                class="text-neutral-500 w-[50%] form-select text-sm" required>
+                                                <option value="">{{ __('index6.select_faculty') }}</option>
                                             </select>
                                         </div>
+
+                                        {{-- Periode --}}
+                                        <div class="flex justify-between items-center">
+                                            <label class="text-neutral-500">{{ __('index6.period') }}</label>
+                                            <select name="periode"
+                                                class="border border-gray-300 w-[50%] form-select text-neutral-500 text-sm"
+                                                required>
+                                                <option value="">{{ __('index6.select_period') }}</option>
+                                                @foreach ($periodes as $p)
+                                                    <option value="{{ $p['value'] }}">{{ $p['label'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
                                         <button
-                                            class="text-neutral-100 border bg-blue-800 rounded-md shadow-xl w-1/3 px-2 py-1">{{ __('index6.btn_report') }}</button>
+                                            class="text-neutral-100 border bg-blue-800 rounded-md shadow-xl w-1/3 px-2 py-1">
+                                            {{ __('index6.btn_report') }}
+                                        </button>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -151,5 +160,11 @@
             </div>
         </div>
     </div>
+    <script>
+        const routes = {
+            showFaculties: "{{ route('show.faculties') }}"
+        };
+    </script>
+
 
 @endsection
