@@ -315,9 +315,11 @@
         </div>
 
         <div id="infoDetailMahasiswa"
-            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50
+           opacity-0 pointer-events-none transition-opacity duration-300 ease-out">
 
-            <div class="bg-white w-full max-w-xl rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-white w-full max-w-xl rounded-xl shadow-lg overflow-hidden
+               transform scale-95 transition-transform duration-300 ease-out">
 
                 <!-- HEADER MERAH -->
                 <div class="bg-red-700 text-white px-5 py-3 flex justify-between items-center">

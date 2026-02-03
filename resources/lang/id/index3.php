@@ -11,7 +11,7 @@ return [
     'odd' => 'Ganjil',
     'even' => 'Genap',
     'study_program' => 'Program Studi',
-'select_study' => '-- Pilih Program Studi --',
+    'select_study' => '-- Pilih Program Studi --',
     'select_period' => '-- Pilih Periode --',
     'show' => 'Tampilkan',
     'student_list' => 'Daftar Mahasiswa Yudisium',

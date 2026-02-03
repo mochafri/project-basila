@@ -215,6 +215,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // ======================================================
+    // DETAIL MODAL FADE HELPERS
+    // ======================================================
+    const detailModal = qs("#infoDetailMahasiswa");
+    const detailContent = detailModal.querySelector('.transform');
+
+    function openDetailModal() {
+        detailModal.classList.remove('opacity-0', 'pointer-events-none');
+        detailModal.classList.add('opacity-100');
+
+        detailContent.classList.remove('scale-95');
+        detailContent.classList.add('scale-100');
+    }
+
+    function closeDetailModal() {
+        detailModal.classList.add('opacity-0', 'pointer-events-none');
+        detailModal.classList.remove('opacity-100');
+
+        detailContent.classList.add('scale-95');
+        detailContent.classList.remove('scale-100');
+    }
+
+    // ======================================================
     // DETAIL MODAL
     // ======================================================
     document.addEventListener('click', (e) => {
@@ -226,7 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!mhs) return;
 
         // Show modal
-        qs("#infoDetailMahasiswa").classList.remove("hidden");
+        openDetailModal();
 
         // Identitas
         setHTML("dm-nama", mhs.name);
@@ -269,9 +291,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     });
 
-    // Close modal
-    qs("#closeDetailModal").addEventListener('click', () => {
-        qs("#infoDetailMahasiswa").classList.add("hidden");
+    // Close modal button
+    qs("#closeDetailModal").addEventListener('click', closeDetailModal);
+
+    // Klik backdrop untuk close
+    detailModal.addEventListener('click', (e) => {
+        if (e.target === detailModal) {
+            closeDetailModal();
+        }
     });
 
 });
