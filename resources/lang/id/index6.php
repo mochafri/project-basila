@@ -1,8 +1,8 @@
 <?php
 return[
     'title' => 'Laporan',
-    'set_period' => 'Tetapkan Periode',
-    'select_period' => '--Pilih Periode--',
+    'set_semester' => 'Tetapkan Semester',
+    'select_semester' => '--Pilih Semester--',
     'faculty' => 'Fakultas',
     'select_faculty' => '-- Pilih Fakultas --',
     'period' => 'Periode',

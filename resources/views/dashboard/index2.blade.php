@@ -26,7 +26,7 @@
 
                             <select name="periode" id="periodeSelect"
                                 class="border border-gray-300 rounded-md p-2 text-gray-600">
-                                <option value="">-- Pilih Periode --</option>
+                                <option value="">{{ __('penetapan.select_semester') }}</option>
                                 @foreach ($periodes as $p)
                                     <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
                                         {{ $p['label'] }}
@@ -144,6 +144,16 @@
                                 </th>
                                 <th scope="col" class="text-neutral-950">
                                     <div class="flex items-center gap-2">
+                                        {{ __('penetapan.semester') }}
+                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+                                        </svg>
+                                    </div>
+                                </th>
+                                <th scope="col" class="text-neutral-950">
+                                    <div class="flex items-center gap-2">
                                         {{ __('penetapan.faculty') }}
                                         <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -226,6 +236,13 @@
                                         </div>
                                     </td>
                                     <td>
+                                        <div class="flex items-center">
+                                            <h6>
+                                                {{ $data->periode ? $data->periode : 'Belum ditetapkan' }}
+                                            </h6>
+                                        </div>
+                                    </td>
+                                    <td>
                                         <div>
                                             <h6>
                                                 {{ $data->facultyname }}
@@ -237,29 +254,21 @@
                                             <h6>{{ $data->prodyname }}</h6>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="text-center align-middle">
                                         @if ($data->approval_status === 'Approved')
-                                            <div class="flex items-center">
                                                 <span
                                                     class="bg-success-100  text-success-600  px-6 py-1.5 rounded-full font-medium text-sm">Approve</span>
-                                            </div>
                                         @elseif($data->approval_status === 'Rejected')
-                                            <div class="flex items-center">
                                                 <span
                                                     class="bg-danger-100  text-danger-600  px-6 py-1.5 rounded-full font-medium text-sm">Rejected</span>
-                                            </div>
-
                                         @elseif($data->approval_status === 'Draft')
-                                            <div class="flex items-center">
                                                 <span
                                                     class="bg-blue-100  text-blue-600  px-6 py-1.5 rounded-full font-medium text-sm">{{ $data->approval_status}}</span>
-                                            </div>
 
                                         @else
-                                            <div class="flex items-center">
                                                 <span
                                                     class="bg-warning-100  text-warning-600  px-6 py-1.5 rounded-full font-medium text-sm">{{ $data->approval_status}}</span>
-                                            </div>
+
                                         @endif
                                     </td>
                                     <td>
@@ -417,19 +426,6 @@
                                         <th scope="col" class="text-neutral-950">
                                             <div class="flex items-center gap-2">
                                                 {{ __('penetapan.status') }}
-                                                <svg class="w-4 h-4 ms-1" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2"
-                                                        d="m8 15 4 4 4-4m0-6-4-4-4 4" />
-                                                </svg>
-                                            </div>
-                                        </th>
-
-                                        <th scope="col" class="text-neutral-950">
-                                            <div class="flex items-center gap-2">
-                                                {{ __('penetapan.reason') }}
                                                 <svg class="w-4 h-4 ms-1" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                                     viewBox="0 0 24 24">

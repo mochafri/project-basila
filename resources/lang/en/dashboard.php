@@ -2,8 +2,8 @@
 
 return [
     'title' => 'Dashboard',
-    'set_period' => 'SET PERIOD',
-    'select_period' => '-- Select period --',
+    'set_semester' => 'SET SEMESTER',
+    'select_semester' => '-- Select Semester --',
     'total_yudisium' => 'Total Yudisium',
     'total_graduate' => 'Total Graduates',
     'total_sk' => 'Total SK Issued',

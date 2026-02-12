@@ -12,7 +12,7 @@ return [
     'even' => 'Even',
     'study_program' => 'Study Program',
     'select_study' => '-- Select Study Program --',
-    'select_period' => '-- Select Period --',
+    'select_semester' => '-- Select Semester --',
     'show' => 'Show',
     'student_list' => 'Yudicium Student List',
     'list_subtitle' => 'Here is the list of Yudicium for the Odd 2024/2025 period',

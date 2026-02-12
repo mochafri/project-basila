@@ -13,7 +13,7 @@ $script = '
         <div class="relative">
             <form action="{{ route('index') }}" method="GET">
                 <select name="periode" id="periodeSelect" class="border border-gray-300 rounded-md p-2 text-gray-600">
-                    <option value="Pilih">{{ __('dashboard.select_period') }}</option>
+                    <option value="Pilih">{{ __('dashboard.select_semester') }}</option>
                     @foreach ($periodes as $p)
                     <option value="{{ $p['value'] }}" {{ $periode==$p['value'] ? 'selected' : '' }}>
                         {{ $p['label'] }}
@@ -30,7 +30,7 @@ $script = '
         <button id="setPeriodeBtn"
             class="bg-[#e51411] hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full flex items-center space-x-2">
             <iconify-icon icon="ph:graduation-cap-bold"></iconify-icon>
-            <span>{{ __('dashboard.set_period') }}</span>
+            <span>{{ __('dashboard.set_semester') }}</span>
         </button>
     </div>
 </div>

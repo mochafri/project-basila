@@ -5,7 +5,7 @@ return [
     'yudisium' => 'Yudisium',
     'faculty' => 'Fakultas',
     'select_faculty' => '-- Pilih Fakultas --',
-    'select_period' => '-- Pilih Periode --',
+    'select_period' => '-- Pilih Semester --',
     'semester' => 'Semester',
     'odd24' => 'Ganjil 2024/2025',
     'even24' => 'Genap 2024/2025',

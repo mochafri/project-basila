@@ -2,8 +2,8 @@
 
 return [
     'title' => 'Dashboard',
-    'set_period' => 'TETAPKAN PERIODE',
-    'select_period' => '-- Pilih Periode --',
+    'set_semester' => 'TETAPKAN SEMESTER',
+    'select_semester' => '-- Pilih Semester --',
     'total_yudisium' => 'Total Yudisium',
     'total_graduate' => 'Total Lulusan',
     'total_sk' => 'Total SK Terbit',

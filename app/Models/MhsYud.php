@@ -30,11 +30,16 @@ class MhsYud extends Model
             return 'Sempurna (Summa Cumlaude)';
         elseif ($gpa >= 3.51 && $gpa < 4.00)
             return 'Dengan Pujian (Cumlaude)';
-        elseif($gpa >= 3.00)
+        elseif ($gpa >= 3.00)
             return 'Sangat Memuaskan (Very Good)';
         elseif ($gpa >= 2.75)
             return 'Memuaskan (Good)';
         else
-        return 'Tanpa Predikat';
+            return 'Tanpa Predikat';
+    }
+
+    public function yudicium()
+    {
+        return $this->belongsTo(Yudicium::class, 'yudicium_id');
     }
 }

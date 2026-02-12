@@ -7,6 +7,7 @@ return [
     'instruction' => 'Pastikan data yang dipilih telah sesuai untuk menampilkan data mahasiswa',
     'faculty' => 'Fakultas',
     'select_faculty' => '-- Pilih Fakultas --',
+    'select_semester' => '-- Pilih Semester --',
     'semester' => 'Semester',
     'odd' => 'Ganjil',
     'even' => 'Genap',

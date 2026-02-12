@@ -1,8 +1,8 @@
 <?php
 return[
     'title' => 'Report',
-    'set_period' => 'Set Period',
-    'select_period' => '--Select period--',
+    'set_semester' => 'Set Semester',
+    'select_period' => '--Select Semester--',
     'faculty' => 'Faculty',
     'select_faculty' => '-- Select Faculty --',
     'period' => 'Period',

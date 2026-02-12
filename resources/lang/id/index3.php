@@ -12,7 +12,7 @@ return [
     'even' => 'Genap',
     'study_program' => 'Program Studi',
     'select_study' => '-- Pilih Program Studi --',
-    'select_period' => '-- Pilih Periode --',
+    'select_semester' => '-- Pilih Semester --',
     'show' => 'Tampilkan',
     'student_list' => 'Daftar Mahasiswa Yudisium',
     'list_subtitle' => 'Berikut daftar yudisium periode Ganjil 2024/2025',

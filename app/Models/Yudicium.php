@@ -16,4 +16,5 @@ class Yudicium extends Model
         'periode',
         'approval_status',
     ];
+    
 }

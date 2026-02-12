@@ -2,6 +2,8 @@
 <html>
 
 <head>
+
+    <title>REKAP YUDISIUM {{ strtoupper($periodeLabel) }}</title>
     <style>
         body {
             font-family: "Times New Roman", serif;
