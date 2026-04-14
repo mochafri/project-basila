@@ -314,8 +314,6 @@
                     </div>
                 </div>
                 <!-- Language Switch Dropdown End -->
-
-
                 <button data-dropdown-toggle="dropdownProfile" class="flex justify-center items-center rounded-full"
                     type="button">
                     <img src="{{ session('profilephoto') }}" alt="image"

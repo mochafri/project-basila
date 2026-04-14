@@ -238,7 +238,7 @@
                                     <td>
                                         <div class="flex items-center">
                                             <h6>
-                                                {{ $data->periode ? $data->periode : 'Belum ditetapkan' }}
+                                                <h6>{{ $data->semester_label }}</h6>
                                             </h6>
                                         </div>
                                     </td>
@@ -283,13 +283,13 @@
                                             </div>
                                         @endif
                                     </td>
-                                    <td>
-                                        <div class="flex items-center">
+                                    <td class="text-center align-middle">
+                                        <div>
                                             <span
                                                 class="bg-success-100 dark:bg-success-600/25 text-success-600 dark:text-success-400 px-6 py-1.5 rounded-full font-medium text-sm">Done</span>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="text-center align-middle">
                                         <div class="flex flex-col items-center gap-2">
                                             <!-- Detail -->
                                             <button

@@ -209,6 +209,9 @@ class YudiciumController extends Controller
                     $item->prodyname = 'Unknown';
                 }
 
+                 // 🔽 TAMBAHKAN INI
+                $item->semester_label = $this->getSemesterLabel($item->periode);
+
                 return $item;
             });
 
@@ -223,6 +226,24 @@ class YudiciumController extends Controller
             ]);
         }
     }
+
+    private function getSemesterLabel($periode)
+{
+    if (!$periode) {
+        return 'Belum ditetapkan';
+    }
+
+    $bulan = date('m', strtotime($periode));
+    $tahun = date('Y', strtotime($periode));
+
+    // Februari – Juli = Genap
+    if ($bulan >= 2 && $bulan <= 7) {
+        return __('dashboard.even') . " {$tahun}/" . ($tahun + 1);
+    }
+
+    // Agustus – Januari = Ganjil
+    return __('dashboard.odd') . " {$tahun}/" . ($tahun + 1);
+}
 
     public function approve($id)
     {

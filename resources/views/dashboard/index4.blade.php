@@ -30,7 +30,7 @@
                                     <div class="flex justify-between items-center">
                                         <label for="fakultas" class="text-neutral-800">{{ __('index4.faculty') }}</label>
                                         <select name="fakultas" id="fakultas"
-                                            class="text-neutral-800 uppercase w-[55%] form-select text-sm">
+                                            class="border border-gray-300 rounded-md  w-[55%] p-2 text-gray-600">
                                             <option value="">{{ __('index4.select_faculty') }}</option>
                                             {{-- <option value="">-- Pilih Fakultas --</option>
                                             @foreach ($faculties as $faculty)
@@ -38,15 +38,15 @@
                                                     {{ $faculty['facultyname'] }}
                                                 </option>
                                                 @endforeach --}}
-                                    </select>
-                                </div>
+                                        </select>
+                                    </div>
 
                                 <div class="flex justify-between items-center">
                                     <label for="Semester" class="text-neutral-800">{{ __('index4.semester') }}</label>
                                     <form action="{{ route('index4') }}" method="GET">
                                         <select name="periode" id="periodeSelect"
                                             class="border border-gray-300 rounded-md  w-[55%] p-2 text-gray-600">
-                                            <option value="Pilih">{{ __('index3.select_period') }}</option>
+                                            <option value="Pilih">{{ __('index3.select_semester') }}</option>
                                             @foreach ($periodes as $p)
                                                 <option value="{{ $p['value'] }}"
                                                     {{ $periode == $p['value'] ? 'selected' : '' }}>

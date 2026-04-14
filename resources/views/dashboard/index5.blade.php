@@ -26,7 +26,6 @@
                     <p class="text-sm text-gray-500 mb-4">{{ __('index5.list_subtitle') }}</p>
 
                     <!-- Statistik -->
-                    <!-- Statistik -->
                     <div class="mb-4">
                         <!-- Baris total -->
                         <div class="flex flex-wrap gap-6 mb-4">

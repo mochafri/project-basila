@@ -2,7 +2,7 @@
 return[
     'title' => 'Laporan',
     'set_semester' => 'Tetapkan Semester',
-    'select_semester' => '--Pilih Semester--',
+    'select_semester' => '-- Pilih Semester --',
     'faculty' => 'Fakultas',
     'select_faculty' => '-- Pilih Fakultas --',
     'period' => 'Periode',

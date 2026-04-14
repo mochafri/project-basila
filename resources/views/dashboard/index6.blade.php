@@ -25,7 +25,7 @@
                 <button type="submit"
                     class="bg-[#e51411] hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full flex items-center space-x-2">
                     <iconify-icon icon="ph:graduation-cap-bold"></iconify-icon>
-                    <span>{{ __('index6.set_period') }}</span>
+                    <span>{{ __('index6.set_semester') }}</span>
                 </button>
 
             </form>
@@ -139,7 +139,7 @@
                                             <select name="periode"
                                                 class="border border-gray-300 w-[50%] form-select text-neutral-500 text-sm"
                                                 required>
-                                                <option value="">{{ __('index6.select_period') }}</option>
+                                                <option value="">{{ __('index6.select_semester') }}</option>
                                                 @foreach ($periodes as $p)
                                                     <option value="{{ $p['value'] }}">{{ $p['label'] }}</option>
                                                 @endforeach

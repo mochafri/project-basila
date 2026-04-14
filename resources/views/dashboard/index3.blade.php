@@ -48,7 +48,7 @@
                     <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.semester') }}</label>
                     <select name="periode" id="periodeSelect"
                         class="form-select border border-gray-300 rounded-md p-2 text-gray-600">
-                        <option value="Pilih">{{ __('index3.select_period') }}
+                        <option value="Pilih">{{ __('index3.select_semester') }}
                         <option>
                             <!-- @foreach ($periodes as $p)
                                 <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
