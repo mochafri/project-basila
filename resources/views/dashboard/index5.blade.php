@@ -31,14 +31,14 @@
                         <div class="flex flex-wrap gap-6 mb-4">
                             <div class="flex items-center gap-2">
                                 <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                                <span class="text-sm text-neutral-950">{{ __('index3.total_eligible') }}</span>
-                                <span id="totalEligible" class="font-semibold text-neutral-950">0</span>
+                                <span class="text-sm text-neutral-950">{{ __('index3.total_selected') }}</span>
+                                <span id="totalDipilih" class="font-semibold text-neutral-950">0</span>
                             </div>
 
                             <div class="flex items-center gap-2">
                                 <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                                <span class="text-sm text-neutral-950">{{ __('index3.total_not_eligible') }}</span>
-                                <span id="totalTidakEligible" class="font-semibold text-neutral-950">0</span>
+                                <span class="text-sm text-neutral-950">{{ __('index3.total_not_selected') }}</span>
+                                <span id="totalTidakDipilih" class="font-semibold text-neutral-950">0</span>
                             </div>
                         </div>
 
@@ -72,7 +72,8 @@
                                 <tr>
                                     <th scope="col" class="text-neutral-800 dark:text-white">
                                         <div class="form-check style-check flex items-center">
-                                            <label class="ms-2 text-neutral-950 form-check-label" for="serial">
+                                            <input class="form-check-input" type="checkbox" id="checkAll">
+                                            <label class="ms-2 text-neutral-950 form-check-label" for="checkAll">
                                                 {{ __('index5.no') }}
                                             </label>
                                         </div>
@@ -169,7 +170,7 @@
                                     <tr> <!-- class="{{ $loop->odd ? 'bg-blue-100' : 'bg-white' }}"  untuk membedakan background row-->
                                         <td>
                                             <div class="form-check style-check flex items-center">
-                                                {{-- <input class="form-check-input" type="checkbox"> --}}
+                                                <input class="form-check-input row-checkbox" type="checkbox" data-nim="{{ $data->nim }}" {{ $data->selected ? 'checked' : '' }}>
                                                 <label class="ms-2 form-check-label">
                                                     {{ $idx + 1 }}
                                                 </label>
@@ -230,7 +231,27 @@
                                             @endif
                                         </td>
                                         <td>
-
+                                            <button type="button" class="btn-detail bg-blue-100 text-blue-600 px-3 py-1 rounded hover:bg-blue-200 transition"
+                                                data-nim="{{ $data->nim }}"
+                                                data-name="{{ $data->name }}"
+                                                data-prodi="{{ $data->prodi_name ?? $data->prodi_id }}"
+                                                data-fakultas="{{ $data->fakultas_name ?? $data->fakultas_id }}"
+                                                data-study="{{ $data->study_period }}"
+                                                data-sks="{{ $data->pass_sks }}"
+                                                data-ipk="{{ $data->ipk }}"
+                                                data-predikat="{{ $data->predikat }}"
+                                                data-status="{{ $data->status }}"
+                                                data-smtmasuk="{{ $data->id_smt_masuk ?? '-' }}"
+                                                data-basing="{{ $data->bahasa_asing ?? '-' }}"
+                                                data-publikasi="{{ $data->publikasi ?? '-' }}"
+                                                data-tak="{{ $data->tak ?? '-' }}"
+                                                data-admin="{{ $data->administratif ?? '-' }}"
+                                                data-bpp="{{ $data->bpp ?? '-' }}"
+                                                data-openlib="{{ $data->openlib ?? '-' }}"
+                                                data-sanksi="{{ $data->sanksi ?? '-' }}"
+                                                data-smtcurrent="{{ $data->smt_current ?? '-' }}">
+                                                Detail
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -272,6 +293,44 @@
             </div>
         </div>
 
+        <div id="infoDetailMahasiswa" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-out">
+            <div class="bg-white w-full max-w-xl rounded-xl shadow-lg overflow-hidden transform scale-95 transition-transform duration-300 ease-out">
+                <!-- HEADER MERAH -->
+                <div class="bg-red-700 text-white px-5 py-3 flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-white">{{ __('index3.detail_student') }}</h2>
+                    <button id="closeDetailModal" class="text-white text-lg">✕</button>
+                </div>
+                <div class="px-6 py-4">
+                    <!-- INFORMASI UTAMA -->
+                    <div class="grid grid-cols-2 gap-y-2 text-[15px]">
+                        <p>{{ __('index3.faculty') }}</p><p>: <span id="dm-fakultas"></span></p>
+                        <p>{{ __('index3.study_program') }}</p><p>: <span id="dm-prodi"></span></p>
+                        <p>{{ __('index3.nim') }}</p><p>: <span id="dm-nim"></span></p>
+                        <p>{{ __('index3.name') }}</p><p>: <span id="dm-nama"></span></p>
+                    </div>
+                    <div class="border-t border-gray-300 my-4"></div>
+                    <!-- STATUS ELIGIBILITAS -->
+                    <div class="text-[15px]">
+                        <p class="font-semibold mb-2">{{ __('index3.status_eligibility') }}</p>
+                        <ul class="space-y-1 pl-1">
+                            <li class="flex items-center gap-2"><span id="dm-study_period_icon"></span> {{ __('index3.study_duration') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-semester_lulus_icon"></span> {{ __('index3.graduation_semester') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-ipk_icon"></span> {{ __('index3.gpa_minimum') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-sks_icon"></span> {{ __('index3.credits') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-mk_icon"></span>{{ __('index3.status_mk') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-bahasa_icon"></span> {{ __('index3.eprt') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-publikasi_icon"></span> {{ __('index3.publikasi') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-tak_icon"></span> {{ __('index3.tak') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-administratif_icon"></span>{{ __('index3.administratif') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-bpp_icon"></span> {{ __('index3.bpp') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-oplib_icon"></span> {{ __('index3.oplib') }}</li>
+                            <li class="flex items-center gap-2"><span id="dm-sanksi_icon"></span> {{ __('index3.sanksi') }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="flex flex-col md:flex-row items-center gap-4">
             <!-- <input type="text" id="nomorYudisium" class="form-input border border-gray-300 rounded w-full md:w-1/3"
                                                             placeholder="Nomor Yudisium" readonly value="{{ old('no_yudicium') }}" /> -->
@@ -283,7 +342,7 @@
     </div>
     <script>
         const routes = {
-            approveYudicium: "{{ route('yudicium.approve') }}",
+            approveYudicium: "{{ route('yudicium.tetapkan') }}",
             ubahStatus: "{{ route('tempStatus') }}",
         };
     </script>

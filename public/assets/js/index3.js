@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-
     // ======================================================
     // DOM ELEMENTS
     // ======================================================
@@ -10,11 +9,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const totalDipilihSpan = document.getElementById('totalDipilih');
     const totalTidakDipilihSpan = document.getElementById('totalTidakDipilih');
     const checkAll = document.getElementById('checkAll');
-    const rowsPerPage = 10;
-    let currentPage = 1;
 
     // GLOBAL DATA
-    let mahasiswaList = [];
+    window.mahasiswaList = [];
 
     // ======================================================
     // UTILITIES
@@ -27,8 +24,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // UPDATE SUMMARY COUNTS
     // ======================================================
     function updateSelectionCount() {
-        const total = mahasiswaList.length;
-            const selected = mahasiswaList.filter(m => m.selected).length;
+        const total = window.mahasiswaList.length;
+            const selected = window.mahasiswaList.filter(m => m.selected).length;
 
             totalDipilihSpan.textContent = selected;
             totalTidakDipilihSpan.textContent = total - selected;
@@ -61,56 +58,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             prodiSelect.innerHTML = '<option value="">Gagal memuat data prodi</option>';
         }
     });
+    const periodeSelect = document.getElementById('periodeSelect');
+    
+    function renderTable() {
+        const tableEl = document.querySelector('#selection-table');
+        if (!tableEl) return;
 
-    function renderTable(page = 1) {
-        tbody.innerHTML = '';
-
-        const start = (page - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-        const paginatedData = mahasiswaList.slice(start, end);
-
-        if (paginatedData.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="10" class="text-center">Tidak ada data</td></tr>`;
-            return;
+        // Jika sudah ada instance, hancurkan dulu supaya bersih
+        if (window.selectionTable) {
+            window.selectionTable.destroy();
         }
 
-        paginatedData.forEach(mhs => renderRow(mhs));
-    }
+        // Inisialisasi ulang DataTable
+        window.selectionTable = new simpleDatatables.DataTable('#selection-table', {
+            searchable: true,
+            perPageSelect: false,
+            columns: [{ select: [0, 8], sortable: false }],
+            labels: {
+                placeholder: 'Search for a user...',
+                noRows: 'Tidak ada data',
+                info: ''
+            }
+        });
 
-    document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = true);
+        if (window.mahasiswaList.length === 0) return;
 
+        const headings = null; 
+        const rows = window.mahasiswaList.map((mhs) => {
+            const checkbox = `<input type="checkbox" class="row-checkbox w-4 h-4 accent-red-600 cursor-pointer" data-nim="${mhs.nim}" ${mhs.selected ? 'checked' : ''}>`;
+            const detail   = `<button class="btn-detail" data-nim="${mhs.nim}"><iconify-icon icon="iconamoon:eye-light"></iconify-icon></button>`;
+            return [checkbox, mhs.nim, mhs.name, mhs.study_period, mhs.pass_sks, mhs.ipk, mhs.predikat, mhs.status, detail];
+        });
 
-    function renderPagination() {
-        const pagination = document.getElementById('pagination');
-        pagination.innerHTML = '';
-
-        const totalPages = Math.ceil(mahasiswaList.length / rowsPerPage);
-
-        // Tampilkan pagination hanya jika data > 10
-        if (totalPages <= 1) {
-            pagination.classList.add('hidden');
-            return;
-        }
-
-        pagination.classList.remove('hidden');
-
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement('button');
-            btn.textContent = i;
-            btn.className = `
-                px-3 py-1 rounded-md text-sm font-medium border
-                ${i === currentPage
-                    ? 'bg-red-600 text-white border-red-600'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'}
-            `;
-            btn.addEventListener('click', () => {
-                currentPage = i;
-                renderTable(currentPage);
-                renderPagination();
-                updateSelectionCount();
-            });
-            pagination.appendChild(btn);
-        }
+        window.selectionTable.insert({ headings, data: rows });
     }
 
 
@@ -147,8 +127,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ======================================================
     // FETCH FILTERED MAHASISWA
     // ======================================================
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
         try {
             const res = await fetch(routes.filterMhs, {
@@ -159,45 +140,36 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 body: JSON.stringify({
                     fakultas: fakultasSelect.value,
-                    prodi: prodiSelect.value
+                    prodi: prodiSelect.value,
+                    periode: periodeSelect.value
                 })
             });
 
             const data = await res.json();
-            mahasiswaList = (data.mahasiswa || []).map(mhs => ({
+            window.mahasiswaList = (data.mahasiswa || []).map(mhs => ({
                 ...mhs,
                 selected: true
             }));
 
-
-            tbody.innerHTML = '';
-
-            if (mahasiswaList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="text-center">Tidak ada data</td></tr>`;
-                updateSelectionCount();
-                return;
-            }
-                currentPage = 1;
-                renderTable(currentPage);
-                renderPagination();
-
-                checkAll.checked = true;
-                updateSelectionCount();
-
+            renderTable();
+            updateSelectionCount();
 
         } catch (err) {
             console.error("Error fetching mahasiswa:", err);
         }
     });
+}
 
     // ======================================================
     // CHECK ALL CHECKBOXES
     // ======================================================
-    checkAll.addEventListener('change', () => {
-        mahasiswaList.forEach(m => m.selected = checkAll.checked);
-        renderTable(currentPage);
-        updateSelectionCount();
-    });
+    if (checkAll) {
+        checkAll.addEventListener('change', () => {
+            window.mahasiswaList.forEach(m => m.selected = checkAll.checked);
+            renderTable();
+            updateSelectionCount();
+        });
+    }
 
     // Sync checkAll when individual checkbox clicked
     document.addEventListener('change', (e) => {
@@ -205,7 +177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!e.target.classList.contains('row-checkbox')) return;
 
             const nim = e.target.dataset.nim;
-            const mhs = mahasiswaList.find(m => m.nim == nim);
+            const mhs = window.mahasiswaList.find(m => m.nim == nim);
             if (!mhs) return;
 
             mhs.selected = e.target.checked;
@@ -244,7 +216,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!btn) return;
 
         const nim = btn.dataset.nim;
-        const mhs = mahasiswaList.find(m => m.nim == nim);
+        const mhs = window.mahasiswaList.find(m => m.nim == nim);
         if (!mhs) return;
 
         // Show modal
@@ -300,5 +272,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             closeDetailModal();
         }
     });
+
+    // --- Info Modal Logic ---
+    const openInfoBtn  = document.getElementById("openInfoModal");
+    const closeInfoBtn = document.getElementById("closeInfoModal");
+    const infoMdl      = document.getElementById("infoModal");
+    const infoCnt      = document.getElementById("infoModalContent");
+
+    if (openInfoBtn && infoMdl) {
+        const openInfo = () => {
+            infoMdl.classList.remove('opacity-0', 'pointer-events-none');
+            infoMdl.classList.add('opacity-100');
+            if (infoCnt) {
+                infoCnt.classList.remove('scale-95');
+                infoCnt.classList.add('scale-100');
+            }
+        };
+
+        const closeInfo = () => {
+            infoMdl.classList.add('opacity-0', 'pointer-events-none');
+            infoMdl.classList.remove('opacity-100');
+            if (infoCnt) {
+                infoCnt.classList.add('scale-95');
+                infoCnt.classList.remove('scale-100');
+            }
+        };
+
+        openInfoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openInfo();
+        });
+
+        if (closeInfoBtn) closeInfoBtn.addEventListener('click', closeInfo);
+        infoMdl.addEventListener('click', (e) => {
+            if (e.target === infoMdl) closeInfo();
+        });
+    }
 
 });

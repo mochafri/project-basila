@@ -13,28 +13,15 @@ document.addEventListener('DOMContentLoaded', function () {
             ],
             labels: {
                 placeholder: "Search for a user...",
-                noRows: "",
+                noRows: "Tidak ada data",
                 info: ""
             },
-
-            rowRender: (row, tr) => {
-                if (!tr.attributes) tr.attributes = {};
-                if (!tr.attributes.class) tr.attributes.class = "";
-
-                if (row.selected) {
-                    tr.attributes.class += " selected";
-                } else {
-                    tr.attributes.class = tr.attributes.class.replace(" selected", "");
-                }
-
-                return tr;
-            }
         });
 
         return table;
     }
 
-    const selectionTable = initTable("selection-table");
+    window.selectionTable = initTable("selection-table");
 
     const popupTable = initTable("popup-table");
 });

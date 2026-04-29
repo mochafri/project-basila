@@ -220,7 +220,13 @@
                                             </label>
                                         </div>
                                     </td>
-                                    <td><a href="javascript:void(0)" class="text-primary-600"></a></td>
+                                    <td>
+                                        <div class="flex items-center">
+                                            <h6 class="text-base mb-0 ">
+                                                {{ $data->no_sk ? $data->no_sk : '-' }}
+                                            </h6>
+                                        </div>
+                                    </td>
                                     <td>
                                         <div class="flex items-center">
                                             <h6 class="text-base mb-0 ">
@@ -308,7 +314,7 @@
 
                                             <!-- Delete -->
                                             @if ($data->approval_status == 'Draft')
-                                                <a href="javascript:void(0)"
+                                                <a href="javascript:void(0)" onclick="deleteYudicium({{ $data->id }})"
                                                     class="w-8 h-8 bg-danger-100 dark:bg-danger-600/25 text-danger-600 dark:text-danger-400 rounded-full inline-flex items-center justify-center">
                                                     <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
                                                 </a>
@@ -460,5 +466,65 @@
             const periode = document.getElementById('periodeSelect').value;
             window.location.href = `?periode=${encodeURIComponent(periode)}`;
         });
+        
+        function deleteYudicium(id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak dapat mengembalikan draft yang telah dihapus!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn-tetapkan',
+                    cancelButton: 'btn-batal'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Menghapus...',
+                        text: 'Mohon tunggu sementara draft dihapus dan API disinkronisasi.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    });
+
+                    fetch(`/yudicium/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire(
+                                'Terhapus!',
+                                data.message,
+                                'success'
+                            ).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                data.message || 'Terjadi kesalahan saat menghapus.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'Terjadi kesalahan pada sistem.',
+                            'error'
+                        );
+                    });
+                }
+            })
+        }
     </script>
 @endsection

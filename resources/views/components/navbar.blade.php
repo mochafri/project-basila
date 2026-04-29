@@ -329,7 +329,7 @@
                                 <h6 class="text-lg text-neutral-900 font-semibold mb-0 normal-case">
                                     {{ session('username') }}
                                 </h6>
-                                <span class="text-neutral-500">Admin</span>
+                                <span class="text-neutral-500">{{ session('active_role', 'Admin') }}</span>
                             </div>
                         </div>
                         <button type="button" class="text-red-400 hover:text-danger-600 ">

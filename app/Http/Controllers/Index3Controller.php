@@ -9,12 +9,13 @@ use App\Models\MhsYud;
 use App\Models\Mahasiswa;
 use App\Models\TempStatus;
 use App\Models\Post;
+use Illuminate\Support\Facades\Log;
 
 class Index3Controller extends Controller
 {
     public function __construct()
     {
-        $this->url = env('URL_ACADEMIC');
+        $this->url = trim(env('URL_ACADEMIC'), " '\"");
     }
 
     public function index(Request $request)
@@ -123,21 +124,29 @@ class Index3Controller extends Controller
     {
         try {
             $prodiId = $request->prodi;
-            $url = $this->url . '&id=' . $prodiId;
+            // stt=7 requires a periode parameter to return selection info (SELECTED/PERIODE)
+            $url = $this->url . '&periode=' . date('Y-m-d') . '&t=' . time();
             $response = Http::get($url);
-            // $mahasiswaDb = Mahasiswa::select()->get()->toArray();
+            $data = $response->json();
 
             $mahasiswa = [];
+            $periode = $request->periode;
+            $smtFilter = $request->periode; // Use the dropdown value directly if it's a semester code (e.g. 20252)
 
             if ($response->successful()) {
-                $data = $response->json();
+                $mahasiswa = collect($data ?? [])
+                ->filter(function($mhs) use ($prodiId, $smtFilter) {
+                    $matchProdi   = $mhs['STUDYPROGRAMID'] == $prodiId;
+                    
+                    // Hanya tampilkan mahasiswa yang belum dipilih (SELECTED dan PERIODE harus kosong/null)
+                    $valSelected = $mhs['SELECTED'] ?? null;
+                    $valPeriode  = $mhs['PERIODE'] ?? null;
 
-                // if(empty($data)){
-                //     $data = $mahasiswaDb ;
-                // }
-
-            $mahasiswa = collect($data ?? [])
-                ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
+                    $notSelected = (is_null($valSelected) || $valSelected === 'null' || $valSelected === 'NULL' || $valSelected === 'N' || empty($valSelected)) &&
+                                   (is_null($valPeriode) || $valPeriode === 'null' || $valPeriode === 'NULL' || empty($valPeriode));
+                    
+                    return $matchProdi && $notSelected;
+                })
                 ->map(function ($mhs) {
                     $tempStatus = TempStatus::select('status', 'alasan')
                         ->where('nim', $mhs['STUDENTID']);
@@ -158,6 +167,7 @@ class Index3Controller extends Controller
                             'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
                             'status' => !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi,
                             'alasan_status' => !empty($alasanFromTemp) ? $alasanFromTemp : '-',
+                            'SMT_CURRENT' => $mhs['SMT_CURRENT'] ?? '-',
                         ];
                     })
                     ->toArray();
@@ -177,31 +187,47 @@ class Index3Controller extends Controller
             ], 500);
         }
     }
+    
+    public function getSemesters($prodiId)
+    {
+        try {
+            $url = $this->url . '&id=' . $prodiId;
+            $response = Http::get($url);
+            
+            if ($response->successful()) {
+                $data = $response->json();
+                $semesters = collect($data ?? [])
+                    ->filter(fn($mhs) => $mhs['STUDYPROGRAMID'] == $prodiId)
+                    ->pluck('SMT_CURRENT')
+                    ->unique()
+                    ->sortDesc()
+                    ->map(function ($smt) {
+                        if (empty($smt) || $smt == '-') return null;
+                        
+                        $year = substr($smt, 0, 4);
+                        $term = substr($smt, 4, 1);
+                        $label = ($term == '1' ? 'Ganjil' : ($term == '2' ? 'Genap' : 'Semester ' . $term)) . " {$year}/" . ($year + 1);
+                        return [
+                            'value' => $smt,
+                            'label' => $label
+                        ];
+                    })
+                    ->filter()
+                    ->values();
+
+                return response()->json([
+                    'success' => true,
+                    'semesters' => $semesters
+                ]);
+            }
+            return response()->json(['success' => false, 'message' => 'Gagal mengambil data'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 
     private function generatePeriodeDropdown()
     {
-        $currentYear = date('Y');
-        $periodes = [];
-
-        for ($year = $currentYear; $year >= $currentYear - 2; $year--) {
-            // Semester Genap: Februari–Juli
-            $periodes[] = [
-                'value' => "{$year}-02-01",
-                'label' => "Genap {$year}/" . ($year + 1),
-                'start' => "{$year}-02-01",
-                'end' => "{$year}-07-31"
-            ];
-
-            // Semester Ganjil: Agustus–Januari
-            $periodes[] = [
-                'value' => "{$year}-08-01",
-                'label' => "Ganjil {$year}/" . ($year + 1),
-                'start' => "{$year}-08-01",
-                'end' => ($year + 1) . "-01-31"
-            ];
-        }
-
-        usort($periodes, fn($a, $b) => strcmp($b['value'], $a['value']));
-        return $periodes;
+        return app(\App\Services\YudiciumService::class)->generatePeriodeDropdown();
     }
 }

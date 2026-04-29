@@ -8030,7 +8030,8 @@ h6,
     border-radius: 6px;
     padding: 8px 16px;
     border: none;
-    margin-left: 10px;
+    margin: 5px;
+    display: inline-block;
 }
 .btn-tetapkan:hover {
     background-color: #218838 !important; 
@@ -8038,27 +8039,38 @@ h6,
 
 .btn-batal {
     background-color: #6c757d !important; 
-    color: #fff;
+    color: #fff !important;
     border-radius: 6px;
     padding: 8px 16px;
     border: none;
-    margin-right: 10px;
+    margin: 5px;
+    display: inline-block;
 }
-
 .btn-batal:hover {
     background-color: #5a6268 !important;
 }
 
-.btn-ok{
- background-color: #7066e0 !important;
-  color: #fff !important;
-  border-radius: 6px;
+.btn-ok {
+    background-color: #7066e0 !important;
+    color: #fff !important;
+    border-radius: 6px;
     padding: 8px 16px;
     border: none;
+    margin: 5px;
+    display: inline-block;
 }
-
 .btn-ok:hover {
     background-color: #5e55c0 !important; 
+}
+
+/* Force SweetAlert buttons to be visible if they are being reset by Tailwind */
+.swal2-styled.swal2-confirm {
+    background-color: #3085d6 !important;
+    color: #fff !important;
+}
+.swal2-styled.swal2-cancel {
+    background-color: #d33 !important;
+    color: #fff !important;
 }
 
 

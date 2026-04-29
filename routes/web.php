@@ -24,13 +24,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\IndexController;
 
-Route::get('/yudicium', [YudiciumController::class, 'index']);
-
-
-
-// Route::controller(DashboardController::class)->group(function () {
-//     Route::get('/', 'index')->name('index');
-// });
+Route::get('/yudicium', [App\Http\Controllers\YudiciumDashboardController::class, 'index']);
 
 Route::middleware(['auth'])->group(function () {
 
@@ -120,39 +114,25 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::prefix('dashboard')->group(function () {
         // Yudicium routes
-        Route::controller(YudiciumController::class)->group(function () {
-            Route::get('/kelola-dashboard', 'index')->name('index');
-            Route::redirect('/dashboard/index', '/dashboard/kelola-dashboard');
+        Route::get('/kelola-dashboard', [App\Http\Controllers\YudiciumDashboardController::class, 'index'])->name('index');
+        Route::redirect('/dashboard/index', '/dashboard/kelola-dashboard');
 
-            Route::get('/penetapan-yudisium', 'index')->name('index2');
-            Route::redirect('/dashboard/index-2', '/dashboard/penetapan-yudisium');
+        Route::get('/penetapan-yudisium', [App\Http\Controllers\YudiciumDashboardController::class, 'penetapan'])->name('index2');
+        Route::redirect('/dashboard/index-2', '/dashboard/penetapan-yudisium');
 
-            Route::get('/laporan', 'index')->name('index6');
-            Route::redirect('/dashboard/index-6', '/dashboard/laporan');
+        Route::get('/laporan', [App\Http\Controllers\YudiciumDashboardController::class, 'laporan'])->name('index6');
+        Route::redirect('/dashboard/index-6', '/dashboard/laporan');
 
-            Route::get('/approval-yudisium', 'index')->name('index4');
-            Route::redirect('/dashboard/index-4', '/dashboard/approval-yudisium');
-        });
-
-        // Update Yudisium route 
-        Route::controller(UpdateYudiciumController::class)->group(function () {
-            Route::get('/update-yudisium', 'index')->name('index7');
-            Route::redirect('/dashboard/index-7/', '/dashboard/update-yudisium');
-
-            Route::get('/Tetapkan-yudisium', 'index')->name('index5');
-            Route::redirect('/dashboard/index-5/', '/dashboard/index-5');
-        });
+        Route::get('/approval-yudisium', [App\Http\Controllers\YudiciumDashboardController::class, 'approval'])->name('index4');
+        Route::redirect('/dashboard/index-4', '/dashboard/approval-yudisium');
 
         // Index3 routes
         Route::controller(Index3Controller::class)->group(function () {
             Route::get('/tambah-yudisium', 'index')->name('index3');
             Route::redirect('/dashboard/index-3', '/dashboard/tambah-yudisium');
-
             Route::post('/index-3/generate', 'generate')->name('index3.generate');
-
-            Route::middleware(['auth'])->group(function () {
-                Route::post('/filter-mhs', [Index3Controller::class, 'filterMhs'])->name('filterMhs');
-            });
+            Route::post('/filter-mhs', 'filterMhs')->name('filterMhs');
+            Route::get('/get-semesters/{prodiId}', 'getSemesters')->name('getSemesters');
         });
 
         // Dashboard routes 
@@ -161,21 +141,27 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/index-9', 'index9')->name('index9');
             Route::get('/basilaDashboard', 'basilaDashboard')->name('basilaDashboard');
         });
+
+        // Update Yudisium routes
+        Route::controller(UpdateYudiciumController::class)->group(function () {
+            Route::get('/update-yudisium', 'index')->name('index7');
+            Route::redirect('/dashboard/index-7/', '/dashboard/update-yudisium');
+
+            Route::get('/Tetapkan-yudisium', 'index')->name('index5');
+            Route::redirect('/dashboard/index-5/', '/dashboard/index-5');
+            
+            Route::post('/tetapkan-yudisium', 'tetapkanYudisium')->name('yudicium.tetapkan');
+        });
     });
 
-    //box predikat dashboard
-
     Route::get('/', [IndexController::class, 'index'])->name('dashboard.index');
-
 
     // generate nomor
     Route::post('/yudisium/generate-nomor', [App\Http\Controllers\NoYudiciumController::class, 'ajaxGenerateNomor'])
         ->name('yudisium.generateNomor');
 
-
     // ubah status
     Route::post('/ubahStatus', [Index3Controller::class, 'ubahStatus'])->name('ubahStatus');
-
 
     // Forms
     Route::prefix('forms')->group(function () {
@@ -230,91 +216,47 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Route get mahasiswa and filter mahasiswa with api academic or database local
+    Route::get('/get-all-mhs', [Index3Controller::class, 'getAllMhs'])->name('getAllMhs');
+    Route::post('/temp-status', [TempStatusController::class, 'postStatus'])->name('tempStatus');
+    Route::get('/faculties', [FacultyController::class, 'faculty'])->name('show.faculties');
+    Route::get('/faculties/{id}', [FacultyController::class, 'prody'])->name('show.prody');
 
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/get-all-mhs', [Index3Controller::class, 'getAllMhs'])->name('getAllMhs');
-    });
+    // Yudicium specific actions
+    Route::get('/yudicium/{id}/mahasiswa', [App\Http\Controllers\YudiciumApprovalController::class, 'getMahasiswa'])->name('yudicium.mahasiswa');
+    Route::get('all-yud', [App\Http\Controllers\YudiciumApprovalController::class, 'getAllYudicium'])->name('yudicium.getAll');
+    Route::post('/yudicium-filter', [App\Http\Controllers\YudiciumApprovalController::class, 'filterYudisium'])->name('yudicium.filter');
+    
+    Route::get('/index3/{id}', [App\Http\Controllers\YudiciumOperationController::class, 'edit'])->name('edit');
+    Route::post('/index3/{id}', [App\Http\Controllers\YudiciumOperationController::class, 'getDraft'])->name('yudicium.update');
+    Route::post('/yudicium-save', [App\Http\Controllers\YudiciumOperationController::class, 'saveDraft'])->name('yudicium.save');
+    Route::delete('/yudicium/{id}', [App\Http\Controllers\YudiciumOperationController::class, 'destroy'])->name('yudicium.destroy');
 
-    Route::middleware(['auth'])->group(function () {
-        Route::post('/temp-status', [TempStatusController::class, 'postStatus'])->name('tempStatus');
-    });
+    Route::post('/yudicium-approve', [App\Http\Controllers\YudiciumApprovalController::class, 'generateCode'])->name('yudicium.approve');
+    Route::post('/yudicium-update', [App\Http\Controllers\YudiciumApprovalController::class, 'updateStatus'])->name('yudicium.update');
+    Route::get('/yudicium-approve-single/{id}', [App\Http\Controllers\YudiciumApprovalController::class, 'approve'])->name('yudicium.approve_single');
 
-    // Route get data fakultas and prodi from api telkom university
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/faculties', [FacultyController::class, 'faculty'])->name('show.faculties');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/faculties/{id}', [FacultyController::class, 'prody'])->name('show.prody');
-    });
-
-    // Yudicium Routes
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/yudicium/{id}/mahasiswa', [YudiciumController::class, 'getMahasiswa'])
-            ->name('yudicium.mahasiswa');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/index3/{id}', [YudiciumController::class, 'edit'])->name('edit');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::post('/yudicium-approve', [YudiciumController::class, 'generateCode'])->name('yudicium.approve');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::post('/yudicium-filter', [YudiciumController::class, 'filterYudisium'])->name('yudicium.filter');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::post('/index3/{id}', [YudiciumController::class, 'getDraft'])->name('yudicium.update');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::post('/update-status', [UpdateYudicium::class, 'updateYudicium'])->name('update.status');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::post('/yudicium-update', [YudiciumController::class, 'updateStatus'])->name('yudicium.update');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::post('/yudicium-save', [YudiciumController::class, 'saveDraft'])
-            ->name('yudicium.save');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('all-yud', [YudiciumController::class, 'getAllYudicium'])->name('yudicium.getAll');
-    });
+    // Print
+    Route::get('/yudicium/print/{id}', [App\Http\Controllers\YudiciumPrintController::class, 'printPdf'])->name('yudicium.print');
+    Route::get('/yudisium/print-rekap', [App\Http\Controllers\YudiciumPrintController::class, 'printRekapPdf'])->name('yudisium.print.rekap');
 });
 
 //route ganti bahasa
 Route::get('/change-language/{lang}', function ($lang) {
-    // Pastikan hanya bahasa yang tersedia
     $availableLangs = ['id', 'en'];
-
     if (in_array($lang, $availableLangs)) {
         Session::put('locale', $lang);
         App::setLocale($lang);
     }
-
-    // Kembali ke halaman sebelumnya
     return redirect()->back();
 })->name('change.language');
 
-Route::get('/yudicium/print/{id}', [YudiciumController::class, 'printPdf'])
-    ->name('yudicium.print');
-
-
-// routes/web.php
+// Authentication routes
 Route::get('/authentication/sign-in', [AuthController::class, 'showSignIn'])->name('signin.show');
 Route::post('/authentication/sign-in', [AuthController::class, 'processSignIn'])->name('signin.process');
-
-// routes/print rekap laporan yudisium
-Route::get('/yudisium/print-rekap',[YudiciumController::class, 'printRekapPdf'])->name('yudisium.print.rekap');
+Route::get('/authentication/select-role', [AuthController::class, 'showSelectRole'])->name('role.select.show');
+Route::post('/authentication/select-role', [AuthController::class, 'processSelectRole'])->name('role.select.process');
+Route::get('/authentication/local-login', [AuthController::class, 'showLocalLogin'])->name('local.login.show');
+Route::post('/authentication/local-login', [AuthController::class, 'processLocalLogin'])->name('local.login.process');
 
 Route::get('/', function () {
     return redirect()->route('signin.show');

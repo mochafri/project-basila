@@ -32,8 +32,8 @@
             <!-- Form -->
 
 
-            <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4" action="{{ route('index3') }}"
-                method="GET">
+            <form id="filterForm" class="col-span-12 md:col-span-10 grid grid-cols-12 gap-4" action="{{ route('filterMhs') }}"
+                method="POST">
                 @csrf
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
@@ -43,18 +43,16 @@
                     </select>
                 </div>
 
-                <!-- Semester -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.semester') }}</label>
                     <select name="periode" id="periodeSelect"
-                        class="form-select border border-gray-300 rounded-md p-2 text-gray-600">
-                        <option value="Pilih">{{ __('index3.select_semester') }}
-                        <option>
-                            <!-- @foreach ($periodes as $p)
-                                <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
-                                    {{ $p['label'] }}
-                                </option>
-                            @endforeach -->
+                        class="form-select border border-gray-300 rounded-md p-2 text-gray-600 w-full">
+                        <option value="">{{ __('index3.select_semester') }}</option>
+                        @foreach ($periodes as $p)
+                            <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
+                                {{ $p['label'] }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -107,7 +105,8 @@
                         <!-- Tombol Informasi -->
                             <button id="openInfoModal"
                                 class="flex items-center gap-2 px-3 py-1.5 text-sm 
-                                    bg-green-50 border border-green-200 text-green-700 rounded-md shadow-sm hover:bg-green-100 transition">
+                                    bg-green-50 border border-green-200 text-green-700 rounded-md shadow-sm hover:bg-green-100 
+                                    active:scale-95 transition-all duration-200">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-700" viewBox="0 0 24 24"
                                     fill="none" stroke="green" stroke-width="2">
@@ -123,9 +122,10 @@
 
                         <!-- Modal Informasi -->
                         <div id="infoModal"
-                            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
 
-                            <div class="bg-white w-full max-w-2xl rounded-lg shadow-lg p-6">
+                            <div id="infoModalContent" 
+                                class="bg-white w-full max-w-2xl rounded-lg shadow-lg p-6 transform scale-95 transition-transform duration-300">
 
                                 <!-- COPY EXACT INFO BOX -->
                                 <div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg shadow-sm">
@@ -411,22 +411,14 @@
         };
     </script>
     <script>
-        document.getElementById('setPeriodeBtn').addEventListener('click', function () {
-            const periode = document.getElementById('periodeSelect').value;
-            window.location.href = `?periode=${encodeURIComponent(periode)}`;
-        });
-    </script>
-    <script>
-        const modal = document.getElementById("infoModal");
-        const openBtn = document.getElementById("openInfoModal");
-        const closeBtn = document.getElementById("closeInfoModal");
-
-        openBtn.addEventListener("click", () => modal.classList.remove("hidden"));
-        closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
-
-        // Klik area gelap untuk menutup
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) modal.classList.add("hidden");
-        });
+        const setPeriodeBtn = document.getElementById('setPeriodeBtn');
+        if (setPeriodeBtn) {
+            setPeriodeBtn.addEventListener('click', function () {
+                const periodeSelect = document.getElementById('periodeSelect');
+                if (periodeSelect) {
+                    window.location.href = `?periode=${encodeURIComponent(periodeSelect.value)}`;
+                }
+            });
+        }
     </script>
 @endsection

@@ -353,7 +353,7 @@
                                                         </svg>
                                                     </div>
                                                 </th>
-                                                <th scope="col" class="text-neutral-950">
+                                                <!-- <th scope="col" class="text-neutral-950">
                                                     <div class="flex items-center gap-2">
                                                         {{ __('index4.reason') }}
                                                         <svg class="w-4 h-4 ms-1" aria-hidden="true"
@@ -364,7 +364,7 @@
                                                                 d="m8 15 4 4 4-4m0-6-4-4-4 4" />
                                                         </svg>
                                                     </div>
-                                                </th>
+                                                </th> -->
                                             </tr>
                                         </thead>
                                         <tbody id="popup-body">

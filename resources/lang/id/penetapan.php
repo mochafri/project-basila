@@ -18,7 +18,7 @@ return [
     'yudisium_number' => 'Nomor Yudisium',
     'faculty' => 'Fakultas',
     'select_faculty' => '-- Pilih Fakultas --',
-    'select_select' => '-- Pilih Semester --',
+    'select_semester' => '-- Pilih Semester --',
     'select_study' => '-- Pilih Program Studi --',
     'study_program' => 'Program Studi',
     'approval' => 'Approval Dekan/Dir',

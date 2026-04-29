@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         ? mhs.status
                         : mhs.status_otomatis
                     }</td>
-                            <td>${mhs.alasan_status || '-'}</td>
+                    
                         </tr>
                     `).join('')}
                 `;
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const option = ['Waiting', 'Approved', 'Rejected'];
 
                     approvalSelect.innerHTML = option.map(opt =>
-                        `<option value="${opt}" ${opt} === ${status} ? 'selected' : ''}>
+                        `<option value="${opt}" ${opt === status ? 'selected' : ''}>
                             ${opt.charAt(0).toUpperCase() + opt.slice(1)}
                         </option>`
                     ).join('');

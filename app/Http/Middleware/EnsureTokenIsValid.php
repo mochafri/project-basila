@@ -15,8 +15,8 @@ class EnsureTokenIsValid
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!session()->has('token')) {
-            return redirect()->route('signin.show')->withError('Silakan login terlebih dahulu');
+        if (!session()->has('token') && !session('is_local')) {
+            return redirect()->route('signin.show')->with('error', 'Silakan login terlebih dahulu');
         }
 
         return $next($request);

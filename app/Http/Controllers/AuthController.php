@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Auth;
 
 
 class AuthController extends Controller
@@ -66,6 +67,19 @@ class AuthController extends Controller
                     config(['session.expire_on_close' => true]);
                 }
 
+                // Ambil data role
+                $roleUrl = env('URL_OPTION_ROLE');
+                if ($roleUrl) {
+                    $roleResponse = Http::withToken($token)->get($roleUrl);
+                    if ($roleResponse->successful()) {
+                        $roles = $roleResponse->json();
+                        if (is_array($roles) && count($roles) > 0) {
+                            session(['available_roles' => $roles]);
+                            return redirect()->route('role.select.show');
+                        }
+                    }
+                }
+
                 return redirect()->route('index')->with('success', 'Sign in berhasil');
             } else {
                 return redirect()->route('signin.show');
@@ -87,5 +101,74 @@ class AuthController extends Controller
 
         // Redirect ke halaman sign in
         return redirect()->route('signin.show')->with('success', 'Berhasil logout');
+    }
+
+    public function showSelectRole()
+    {
+        if (!session('available_roles')) {
+            return redirect()->route('index');
+        }
+        
+        return view('authentication.select_role');
+    }
+
+    public function processSelectRole(Request $request)
+    {
+        $request->validate([
+            'role' => 'required'
+        ]);
+
+        session(['active_role' => $request->role]);
+
+        return redirect()->route('index')->with('success', 'Sign in berhasil');
+    }
+
+    public function showLocalLogin()
+    {
+        return view('authentication.local_login');
+    }
+
+    public function processLocalLogin(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        if (Auth::attempt(['username' => $request->username, 'password' => $request->password], $request->has('remember'))) {
+            $user = Auth::user();
+
+            $roles = [];
+            $roleUrl = env('URL_OPTION_ROLE');
+            $adminToken = env('KEY_TOKEN');
+            
+            if ($roleUrl && $adminToken) {
+                $roleResponse = Http::withToken($adminToken)->get($roleUrl);
+                if ($roleResponse->successful()) {
+                    $roles = $roleResponse->json();
+                }
+            }
+
+            if (empty($roles)) {
+                $roles = [
+                    ['role' => 'SUPERADMIN'],
+                    ['role' => 'ADMIN AKADEMIK'],
+                    ['role' => 'DOSEN'],
+                    ['role' => 'BAA'],
+                    ['role' => 'PEGAWAI'],
+                ];
+            }
+
+            session([
+                'username' => $user->username,
+                'profilephoto' => asset('assets/images/user.png'), 
+                'is_local' => true,
+                'available_roles' => $roles
+            ]);
+            
+            return redirect()->route('role.select.show');
+        }
+
+        return back()->withErrors(['signin' => 'Username atau password salah']);
     }
 }

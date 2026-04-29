@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call (YudiciumSeeder::class);
+        $this->call(SuperAdminSeeder::class);
     }
 }

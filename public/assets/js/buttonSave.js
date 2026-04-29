@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     facultyId = parseInt(fakultasSelect.value);
                     prodiId = parseInt(prodiSelect.value);
 
+                    const selectedNims = window.mahasiswaList ? window.mahasiswaList.filter(m => m.selected).map(m => m.nim) : [];
+                    
+
+
                     const res = await fetch(routes.saveDraft, {
                         method: "POST",
                         headers: {
@@ -42,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             fakultas_id: facultyId,
                             prodi_id: prodiId,
                             alasan: alasan || null,
-                            status: status || null
+                            status: status || null,
+                            mahasiswa_nims: selectedNims
                         })
                     });
 

@@ -13,9 +13,12 @@ class MhsYud extends Model
 
     protected $fillable = [
         'nim',
+        'id_smt_masuk',
         'fakultas_id',
         'prody_id',
         'name',
+        'tmp_lahir',
+        'tgl_lahir',
         'study_period',
         'pass_sks',
         'ipk',

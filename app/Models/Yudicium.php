@@ -11,10 +11,13 @@ class Yudicium extends Model
     protected $table = 'yudiciums';
     protected $fillable = [
         'no_yudicium',
+        'no_sk',
         'fakultas_id',
         'prodi_id',
         'periode',
         'approval_status',
+        'catatan',
+        'approved_at',
     ];
     
 }
