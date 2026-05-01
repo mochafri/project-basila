@@ -59,34 +59,58 @@ class YudiciumApprovalController extends Controller
         $yudicium = Yudicium::findOrFail($id);
 
         if ($yudicium->approval_status === 'Waiting') {
-            // Fetch from URL_PICK_ACADEMIC using the set periode
-            $prodiId  = $yudicium->prodi_id;
-            $tanggal  = $yudicium->periode ?? $yudicium->created_at->format('Y-m-d');
-            $list     = $this->yudiciumService->getSelectedAcademicData($prodiId, $tanggal);
+            // Prioritas 1: Cek apakah ada data di mhs_yudiciums (sudah ditetapkan)
+            $mhsYudCount = MhsYud::where('yudicium_id', $id)->count();
+            
+            if ($mhsYudCount > 0) {
+                // Ambil dari database lokal mhs_yudiciums
+                $mahasiswa = MhsYud::select('nim','name','study_period','pass_sks','fakultas_id','ipk','predikat','status')
+                    ->where('yudicium_id', $id)
+                    ->get()
+                    ->map(function ($mhs) {
+                        return [
+                            'nim'            => $mhs->nim,
+                            'name'           => $mhs->name,
+                            'study_period'   => $mhs->study_period,
+                            'pass_sks'       => $mhs->pass_sks,
+                            'ipk'            => $mhs->ipk,
+                            'predikat'       => (new MhsYud)->getPredikat($mhs->ipk),
+                            'status'         => $mhs->status ?? 'final',
+                            'alasan_status'  => '-',
+                            'status_otomatis'=> $mhs->status ?? 'final',
+                            'fakultas_id'    => $mhs->fakultas_id,
+                        ];
+                    })->values();
+            } else {
+                // Prioritas 2: Fetch from URL_PICK_ACADEMIC using the set periode
+                $prodiId  = $yudicium->prodi_id;
+                $tanggal  = $yudicium->periode ?? $yudicium->created_at->format('Y-m-d');
+                $list     = $this->yudiciumService->getSelectedAcademicData($prodiId, $tanggal);
 
-            $mahasiswa = collect($list ?? [])->map(function ($mhs) {
-                $tempStatus = TempStatus::where('nim', $mhs['STUDENTID'])->first();
-                return [
-                    'nim'            => $mhs['STUDENTID'],
-                    'name'           => $mhs['FULLNAME'],
-                    'study_period'   => $mhs['MASA_STUDI'] ?? '-',
-                    'pass_sks'       => $mhs['PASS_CREDIT'] ?? '-',
-                    'ipk'            => $mhs['GPA'] ?? '0',
-                    'predikat'       => (new MhsYud)->getPredikat($mhs['GPA'] ?? 0),
-                    'status'         => $tempStatus ? $tempStatus->status : ucfirst(strtolower($mhs['STATUS'] ?? '-')),
-                    'alasan_status'  => $tempStatus ? $tempStatus->alasan : '-',
-                    'status_otomatis'=> ucfirst(strtolower($mhs['STATUS'] ?? '-')),
-                    'fakultas_id'    => $mhs['FACULTYID'] ?? null,
-                    'prody_id'       => $mhs['STUDYPROGRAMID'] ?? null,
-                    'BAHASA_ASING'   => $mhs['BAHASA_ASING'] ?? null,
-                    'PUBLIKASI'      => $mhs['PUBLIKASI'] ?? null,
-                    'TAK'            => $mhs['TAK'] ?? null,
-                    'ADMINISTRATIF'  => $mhs['ADMINISTRATIF'] ?? null,
-                    'BPP'            => $mhs['BPP'] ?? null,
-                    'OPENLIB'        => $mhs['OPENLIB'] ?? null,
-                    'SANKSI'         => $mhs['SANKSI'] ?? null,
-                ];
-            })->values();
+                $mahasiswa = collect($list ?? [])->map(function ($mhs) {
+                    $tempStatus = TempStatus::where('nim', $mhs['STUDENTID'])->first();
+                    return [
+                        'nim'            => $mhs['STUDENTID'],
+                        'name'           => $mhs['FULLNAME'],
+                        'study_period'   => $mhs['MASA_STUDI'] ?? '-',
+                        'pass_sks'       => $mhs['PASS_CREDIT'] ?? '-',
+                        'ipk'            => $mhs['GPA'] ?? '0',
+                        'predikat'       => (new MhsYud)->getPredikat($mhs['GPA'] ?? 0),
+                        'status'         => $tempStatus ? $tempStatus->status : ucfirst(strtolower($mhs['STATUS'] ?? '-')),
+                        'alasan_status'  => $tempStatus ? $tempStatus->alasan : '-',
+                        'status_otomatis'=> ucfirst(strtolower($mhs['STATUS'] ?? '-')),
+                        'fakultas_id'    => $mhs['FACULTYID'] ?? null,
+                        'prody_id'       => $mhs['STUDYPROGRAMID'] ?? null,
+                        'BAHASA_ASING'   => $mhs['BAHASA_ASING'] ?? null,
+                        'PUBLIKASI'      => $mhs['PUBLIKASI'] ?? null,
+                        'TAK'            => $mhs['TAK'] ?? null,
+                        'ADMINISTRATIF'  => $mhs['ADMINISTRATIF'] ?? null,
+                        'BPP'            => $mhs['BPP'] ?? null,
+                        'OPENLIB'        => $mhs['OPENLIB'] ?? null,
+                        'SANKSI'         => $mhs['SANKSI'] ?? null,
+                    ];
+                })->values();
+            }
 
         } elseif ($yudicium->approval_status === 'Draft' || empty($yudicium->approval_status)) {
             // Draft: fetch from URL_ALL_ACADEMIC (SELECTED=Y only)

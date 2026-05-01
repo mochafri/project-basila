@@ -238,6 +238,18 @@ Route::middleware(['auth'])->group(function () {
     // Print
     Route::get('/yudicium/print/{id}', [App\Http\Controllers\YudiciumPrintController::class, 'printPdf'])->name('yudicium.print');
     Route::get('/yudisium/print-rekap', [App\Http\Controllers\YudiciumPrintController::class, 'printRekapPdf'])->name('yudisium.print.rekap');
+
+    // Penetapan Yudisium - Dual Source (API + Database)
+    Route::prefix('yudisium')->group(function () {
+        Route::controller(App\Http\Controllers\MahasiswaYudisiumController::class)->group(function () {
+            Route::get('/penetapan', 'index')->name('yudisium.penetapan');
+            Route::post('/filter-mahasiswa', 'filterMhs')->name('yudisium.filterMhs');
+            Route::post('/simpan-draft', 'simpanDraft')->name('yudisium.simpanDraft');
+            Route::get('/get-draft', 'getDraft')->name('yudisium.getDraft');
+            Route::post('/tetapkan-yudisium', 'tetapkanYudisium')->name('yudisium.tetapkanYudisium');
+            Route::post('/hapus-draft-api', 'hapusDraftApi')->name('yudisium.hapusDraftApi');
+        });
+    });
 });
 
 //route ganti bahasa

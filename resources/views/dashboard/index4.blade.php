@@ -371,6 +371,10 @@
 
                                         </tbody>
                                     </table>
+                                    
+                                    <!-- Pagination Controls -->
+                                    <div id="pagination-controls" class="mt-4"></div>
+                                    
                                     <div id="approve-yudisium"
                                         class="flex flex-col items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 gap-5">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('index4.approval_status') }}</label>

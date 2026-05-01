@@ -222,9 +222,30 @@ class YudiciumService
                 $item->prodiname = 'Unknown';
             }
 
-            // Ambil total mahasiswa dari API stt=10 (Official Picked)
+            // Prioritas 1: Ambil total mahasiswa dari API stt=10 (Official Picked)
             $listSelected = $this->getSelectedAcademicData($item->prodi, $item->periode);
-            $item->total_mhs = count($listSelected);
+            
+            if (!empty($listSelected)) {
+                // API berhasil, gunakan count dari API
+                $item->total_mhs = count($listSelected);
+                Log::info('Total mahasiswa dari API', [
+                    'yudicium_id' => $item->id,
+                    'total' => $item->total_mhs,
+                    'source' => 'api'
+                ]);
+            } else {
+                // Prioritas 2: Fallback ke database mhs_yudiciums jika API kosong
+                $totalFromDb = DB::table('mhs_yudiciums')
+                    ->where('yudicium_id', $item->id)
+                    ->count();
+                
+                $item->total_mhs = $totalFromDb;
+                Log::info('Total mahasiswa dari database', [
+                    'yudicium_id' => $item->id,
+                    'total' => $item->total_mhs,
+                    'source' => 'database'
+                ]);
+            }
 
             return $item;
         });
