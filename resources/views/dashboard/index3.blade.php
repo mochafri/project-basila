@@ -38,7 +38,7 @@
                 <!-- Fakultas -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.faculty') }}</label>
-                    <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2">
+                    <select id="fakultas" name="fakultas" class="form-select w-full border rounded p-2" required>
                         <option value="">{{ __('index3.select_faculty') }}</option>
                     </select>
                 </div>
@@ -46,7 +46,7 @@
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.semester') }}</label>
                     <select name="periode" id="periodeSelect"
-                        class="form-select border border-gray-300 rounded-md p-2 text-gray-600 w-full">
+                        class="form-select border border-gray-300 rounded-md p-2 text-gray-600 w-full" required>
                         <option value="">{{ __('index3.select_semester') }}</option>
                         @foreach ($periodes as $p)
                             <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
@@ -62,7 +62,7 @@
                 <!-- Program Studi -->
                 <div class="col-span-12 md:col-span-5">
                     <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.study_program') }}</label>
-                    <select id="prodi" name="prodi" class="form-select w-full border rounded p-2">
+                    <select id="prodi" name="prodi" class="form-select w-full border rounded p-2" required>
                         <option value="">{{ __('index3.select_study') }}</option>
                     </select>
                 </div>

@@ -123,22 +123,46 @@ class Index3Controller extends Controller
     public function filterMhs(Request $request)
     {
         try {
+            $fakultasId = $request->fakultas;
             $prodiId = $request->prodi;
-            // stt=7 requires a periode parameter to return selection info (SELECTED/PERIODE)
-            $url = $this->url . '&periode=' . date('Y-m-d') . '&t=' . time();
-            $response = Http::get($url);
-            $data = $response->json();
-
-            $mahasiswa = [];
             $periode = $request->periode;
-            $smtFilter = $request->periode; // Use the dropdown value directly if it's a semester code (e.g. 20252)
 
-            if ($response->successful()) {
+            // Pastikan wajib pilih Fakultas dan Program Studi
+            if (empty($fakultasId) || empty($prodiId)) {
+                return response()->json([
+                    'success' => true,
+                    'source' => 'none',
+                    'mahasiswa' => []
+                ], 200);
+            }
+
+            \Log::info("Filter:", [
+                'fakultas' => $fakultasId,
+                'prodi' => $prodiId,
+                'semester' => $periode
+            ]);
+
+            // API: Kirim parameter filter sebagai query params
+            // Tetap membawa param bawaan url akademik
+            $response = Http::get($this->url, [
+                'periode' => date('Y-m-d'),
+                't' => time(),
+                'fakultas' => $fakultasId,
+                'prodi' => $prodiId,
+                'semester' => $periode
+            ]);
+
+            $data = $response->json();
+            $mahasiswa = [];
+            $source = 'api';
+
+            if ($response->successful() && !empty($data)) {
                 $mahasiswa = collect($data ?? [])
-                ->filter(function($mhs) use ($prodiId, $smtFilter) {
-                    $matchProdi   = $mhs['STUDYPROGRAMID'] == $prodiId;
+                ->filter(function($mhs) use ($prodiId, $periode) {
+                    // Cek jika API tidak melakukan filter, kita bantu filter di sisi backend
+                    $matchProdi   = empty($prodiId) || $mhs['STUDYPROGRAMID'] == $prodiId;
                     
-                    // Hanya tampilkan mahasiswa yang belum dipilih (SELECTED dan PERIODE harus kosong/null)
+                    // Hanya tampilkan mahasiswa yang belum dipilih
                     $valSelected = $mhs['SELECTED'] ?? null;
                     $valPeriode  = $mhs['PERIODE'] ?? null;
 
@@ -152,33 +176,83 @@ class Index3Controller extends Controller
                         ->where('nim', $mhs['STUDENTID']);
 
                         $statusFromTemp = $tempStatus->value('status');
-                        $alasanFromTemp = $tempStatus->value('alasan');
-
                         $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
 
                         return [
-                            'fakultas' => $mhs['FACULTYNAME'] ?? '-',
-                            'prodi' => $mhs['STUDYPROGRAMNAME'] ?? '-',
                             'nim' => $mhs['STUDENTID'] ?? '-',
                             'name' => $mhs['FULLNAME'] ?? '-',
                             'study_period' => $mhs['MASA_STUDI'] ?? '-',
-                            'pass_sks' => $mhs['PASS_CREDIT'] ?? '-',
+                            'sks_lulus' => $mhs['PASS_CREDIT'] ?? '-',
                             'ipk' => $mhs['GPA'] ?? '-',
                             'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
                             'status' => !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi,
-                            'alasan_status' => !empty($alasanFromTemp) ? $alasanFromTemp : '-',
+                            
+                            // Ekstra jika dibutuhkan js
+                            'fakultas' => $mhs['FACULTYNAME'] ?? '-',
+                            'prodi' => $mhs['STUDYPROGRAMNAME'] ?? '-',
                             'SMT_CURRENT' => $mhs['SMT_CURRENT'] ?? '-',
+                            'alasan_status' => $tempStatus->value('alasan') ?? '-',
                         ];
                     })
                     ->toArray();
-
-                \Log::info('Data mahasiswa', $mahasiswa);
             }
+
+            if (empty($mahasiswa)) {
+                $source = 'database';
+                
+                // Alur API: Menampilkan mahasiswa eligible yang BELUM dipilih (belum ada di mhs_yudiciums)
+                $dbData = DB::table('mahasiswa')
+                    ->when($fakultasId, fn($q) => $q->where('FACULTYID', $fakultasId))
+                    ->when($prodiId, fn($q) => $q->where('STUDYPROGRAMID', $prodiId))
+                    // Filter mahasiswa yang belum ada di tabel mhs_yudiciums (seperti SELECTED=null di API)
+                    ->whereNotIn('STUDENTID', function($query) {
+                        $query->select('nim')->from('mhs_yudiciums');
+                    })
+                    ->select(
+                        'STUDENTID as nim',
+                        'FULLNAME as name',
+                        'MASA_STUDI as study_period',
+                        'PASS_CREDIT as sks_lulus',
+                        'GPA as ipk',
+                        'PREDIKAT as predikat',
+                        'STATUS as status'
+                    )
+                    ->get();
+
+                $mahasiswa = collect($dbData)->map(function($mhs) {
+                    $tempStatus = TempStatus::select('status', 'alasan')
+                        ->where('nim', $mhs->nim);
+                    $statusFromTemp = $tempStatus->value('status');
+                    
+                    return [
+                        'nim' => $mhs->nim,
+                        'name' => $mhs->name,
+                        'study_period' => $mhs->study_period,
+                        'sks_lulus' => $mhs->sks_lulus,
+                        'ipk' => $mhs->ipk,
+                        'predikat' => $mhs->predikat,
+                        'status' => !empty($statusFromTemp) ? $statusFromTemp : $mhs->status,
+                        
+                        // Ekstra jika dibutuhkan js
+                        'fakultas' => '-', 
+                        'prodi' => '-',
+                        'SMT_CURRENT' => '-', // Dummy karena di DB mahasiswa tidak ada SMT_CURRENT
+                        'alasan_status' => $tempStatus->value('alasan') ?? '-',
+                    ];
+                })->toArray();
+            }
+
+            \Log::info("Source: " . $source);
+
+            // Format ulang agar tidak index asosiatif (opsional tapi aman)
+            $mahasiswa = array_values($mahasiswa);
 
             return response()->json([
                 'success' => true,
+                'source' => $source,
                 'mahasiswa' => $mahasiswa
             ], 200);
+
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return response()->json([

@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const rows = window.mahasiswaList.map((mhs) => {
             const checkbox = `<input type="checkbox" class="row-checkbox w-4 h-4 accent-red-600 cursor-pointer" data-nim="${mhs.nim}" ${mhs.selected ? 'checked' : ''}>`;
             const detail   = `<button class="btn-detail" data-nim="${mhs.nim}"><iconify-icon icon="iconamoon:eye-light"></iconify-icon></button>`;
-            return [checkbox, mhs.nim, mhs.name, mhs.study_period, mhs.pass_sks, mhs.ipk, mhs.predikat, mhs.status, detail];
+            return [checkbox, mhs.nim, mhs.name, mhs.study_period, mhs.sks_lulus, mhs.ipk, mhs.predikat, mhs.status, detail];
         });
 
         window.selectionTable.insert({ headings, data: rows });
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <td>${mhs.nim}</td>
             <td>${mhs.name}</td>
             <td>${mhs.study_period}</td>
-            <td>${mhs.pass_sks}</td>
+            <td>${mhs.sks_lulus}</td>
             <td>${mhs.ipk}</td>
             <td>${mhs.predikat}</td>
             <td>${mhs.status}</td>
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         icon("dm-study_period_icon", mhs.study_period >= 1);
         icon("dm-semester_lulus_icon", mhs.SMT_CURRENT >= 1);
         icon("dm-ipk_icon", mhs.ipk >= 2.0);
-        icon("dm-sks_icon", mhs.pass_sks >= 144);
+        icon("dm-sks_icon", mhs.sks_lulus >= 144);
 
         icon("dm-mk_icon", isTrue(mhs.STATUS));
         icon("dm-bahasa_icon", isTrue(mhs.BAHASA_ASING));
