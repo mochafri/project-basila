@@ -44,7 +44,7 @@ class MhsYud extends Model
         } elseif ($gpa >= 2.75) {
             return 'Memuaskan (Good)';
         } else {
-            return 'Tanpa Predikat';
+            return 'Tanpa Predikat (No Predicate)';
         }
     }
 

@@ -67,7 +67,9 @@ class UpdateYudiciumController extends Controller
                             'status' => $finalStatus,
                             'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
                             'alasan_status' => $tempStatus->value('alasan') ?? null,
-                            'selected' => ($mhs['SELECTED'] ?? 'N') === 'Y',
+                            // Auto-select jika: selected = 'Y' DAN periode tidak null
+                            'selected' => (($mhs['SELECTED'] ?? 'N') === 'Y') && !empty($tanggal),
+                            'periode' => $tanggal,
                             'id_smt_masuk' => $mhs['ID_SMT_MASUK'] ?? null,
                             'bahasa_asing' => $mhs['BAHASA_ASING'] ?? null,
                             'publikasi' => $mhs['PUBLIKASI'] ?? null,
@@ -135,7 +137,8 @@ class UpdateYudiciumController extends Controller
                         'status' => $finalStatus,
                         'predikat' => $mhs->predikat,
                         'alasan_status' => $tempStatus->value('alasan') ?? null,
-                        'selected' => false, // default tidak terpilih untuk data database
+                        // Auto-select jika status = 'Eligible'
+                        'selected' => $finalStatus === 'Eligible',
                         'id_smt_masuk' => null,
                         'bahasa_asing' => null,
                         'publikasi' => null,

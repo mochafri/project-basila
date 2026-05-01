@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     const totalTidakDipilih = document.getElementById('totalTidakDipilih');
     
     function updateCounts() {
-        const checkboxes = document.querySelectorAll('.row-checkbox');
-        const checked = document.querySelectorAll('.row-checkbox:checked');
+        const checkboxes = document.querySelectorAll('.row-checkbox:not(:disabled)');
+        const checked = document.querySelectorAll('.row-checkbox:checked:not(:disabled)');
         const total = checkboxes.length;
         const selected = checked.length;
         
@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
     if (checkAll) {
         checkAll.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.row-checkbox');
+            // Hanya ubah checkbox yang tidak disabled
+            const checkboxes = document.querySelectorAll('.row-checkbox:not(:disabled)');
             checkboxes.forEach(cb => cb.checked = checkAll.checked);
             updateCounts();
         });

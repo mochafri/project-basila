@@ -27,22 +27,41 @@ class YudiciumDashboardController extends Controller
         $faculties = $data['faculties'];
 
         // 1️⃣ Hitung jumlah per predikat
-        $predikatList = [
-            'Sempurna (Summa Cumlaude)',
-            'Dengan Pujian (Cumlaude)',
-            'Sangat Memuaskan (Very Good)',
-            'Memuaskan (Good)',
-            'Tanpa Predikat (No Predicate)',
+        // Mapping: nilai di database → label tampilan di dashboard
+        $predikatMap = [
+            'Sempurna (Summa Cumlaude)' => 'Sempurna (Summa Cumlaude)',
+            'Dengan Pujian (Cumlaude)'  => 'Dengan Pujian (Cumlaude)',
+            'Cumlaude'                  => 'Dengan Pujian (Cumlaude)',
+            'Sangat Memuaskan (Very Good)' => 'Sangat Memuaskan (Very Good)',
+            'Sangat Memuaskan'          => 'Sangat Memuaskan (Very Good)',
+            'Memuaskan (Good)'          => 'Memuaskan (Good)',
+            'Memuaskan'                 => 'Memuaskan (Good)',
+            'Tanpa Predikat (No Predicate)' => 'Tanpa Predikat (No Predicate)',
+            'Tanpa Predikat'            => 'Tanpa Predikat (No Predicate)',
         ];
 
-        $dataPredikat = [];
-        foreach ($predikatList as $label) {
-            $found = $predikatCounts->firstWhere('predikat', $label);
-            $jumlah = $found ? $found->total : 0;
-            $persen = $totalMhsYud > 0 ? round(($jumlah / $totalMhsYud) * 100, 1) : 0;
+        // Kelompokkan predikatCounts ke label tampilan
+        $predikatDisplay = [
+            'Sempurna (Summa Cumlaude)'     => 0,
+            'Dengan Pujian (Cumlaude)'      => 0,
+            'Sangat Memuaskan (Very Good)'  => 0,
+            'Memuaskan (Good)'              => 0,
+            'Tanpa Predikat (No Predicate)' => 0,
+        ];
 
+        foreach ($predikatCounts as $row) {
+            $dbVal  = $row->predikat ?? '';
+            $mapped = $predikatMap[$dbVal] ?? null;
+            if ($mapped && isset($predikatDisplay[$mapped])) {
+                $predikatDisplay[$mapped] += $row->total;
+            }
+        }
+
+        $dataPredikat = [];
+        foreach ($predikatDisplay as $label => $jumlah) {
+            $persen = $totalMhsYud > 0 ? round(($jumlah / $totalMhsYud) * 100, 1) : 0;
             $dataPredikat[] = [
-                'label' => $label,
+                'label'  => $label,
                 'jumlah' => $jumlah,
                 'persen' => $persen,
             ];
@@ -135,14 +154,14 @@ class YudiciumDashboardController extends Controller
         $countApproval = $countApprovalQuery->count();
 
         $totalMhsYudQuery = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
-            ->where('yudiciums.approval_status', 'approved');
+            ->where('yudiciums.approval_status', 'Approved');
         if ($selectedPeriode) {
             $totalMhsYudQuery->whereBetween('yudiciums.periode', [$selectedPeriode['start'], $selectedPeriode['end']]);
         }
         $totalMhsYud = $totalMhsYudQuery->count();
 
         $predikatCountsQuery = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
-            ->where('yudiciums.approval_status', 'approved')
+            ->where('yudiciums.approval_status', 'Approved')
             ->select('mhs_yudiciums.predikat', DB::raw('COUNT(*) as total'))
             ->groupBy('mhs_yudiciums.predikat');
         if ($selectedPeriode) {
@@ -151,7 +170,7 @@ class YudiciumDashboardController extends Controller
         $predikatCounts = $predikatCountsQuery->get();
 
         $fakultasCountsQuery = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
-            ->where('yudiciums.approval_status', 'approved')
+            ->where('yudiciums.approval_status', 'Approved')
             ->select('mhs_yudiciums.fakultas_id', DB::raw('COUNT(*) as total'))
             ->groupBy('mhs_yudiciums.fakultas_id');
         if ($selectedPeriode) {

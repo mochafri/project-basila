@@ -447,6 +447,10 @@
 
                                 </tbody>
                             </table>
+                            
+                            <!-- Pagination Controls -->
+                            <div id="pagination-controls" class="mt-4"></div>
+                            
                         </div>
                     </div>
                 </div>
@@ -460,7 +464,7 @@
         </form>
         @endforeach --}}
     </div>
-    <script src="{{ asset('assets/js/popup-yudicium.js') }}" defer></script>
+    <script src="{{ asset('assets/js/popup-penetapan.js') }}" defer></script>
     <script>
         document.getElementById('setPeriodeBtn').addEventListener('click', function () {
             const periode = document.getElementById('periodeSelect').value;

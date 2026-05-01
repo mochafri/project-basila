@@ -25,12 +25,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ======================================================
     function updateSelectionCount() {
         const total = window.mahasiswaList.length;
-            const selected = window.mahasiswaList.filter(m => m.selected).length;
+        const selected = window.mahasiswaList.filter(m => m.selected).length;
+        
+        // Hitung hanya mahasiswa eligible
+        const totalEligible = window.mahasiswaList.filter(m => m.status === 'Eligible').length;
+        const selectedEligible = window.mahasiswaList.filter(m => m.selected && m.status === 'Eligible').length;
 
-            totalDipilihSpan.textContent = selected;
-            totalTidakDipilihSpan.textContent = total - selected;
+        totalDipilihSpan.textContent = selected;
+        totalTidakDipilihSpan.textContent = total - selected;
 
-            checkAll.checked = (selected === total);
+        // CheckAll tercentang jika semua eligible sudah dipilih
+        checkAll.checked = (totalEligible > 0 && selectedEligible === totalEligible);
     }
 
 
@@ -85,7 +90,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const headings = null; 
         const rows = window.mahasiswaList.map((mhs) => {
-            const checkbox = `<input type="checkbox" class="row-checkbox w-4 h-4 accent-red-600 cursor-pointer" data-nim="${mhs.nim}" ${mhs.selected ? 'checked' : ''}>`;
+            // Checkbox disabled jika Tidak Eligible
+            const isEligible = mhs.status === 'Eligible';
+            const checkbox = `<input type="checkbox" 
+                class="row-checkbox w-4 h-4 accent-red-600 cursor-pointer" 
+                data-nim="${mhs.nim}" 
+                ${mhs.selected ? 'checked' : ''}
+                ${!isEligible ? 'disabled' : ''}>`;
             const detail   = `<button class="btn-detail" data-nim="${mhs.nim}"><iconify-icon icon="iconamoon:eye-light"></iconify-icon></button>`;
             return [checkbox, mhs.nim, mhs.name, mhs.study_period, mhs.sks_lulus, mhs.ipk, mhs.predikat, mhs.status, detail];
         });
@@ -148,7 +159,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
             window.mahasiswaList = (data.mahasiswa || []).map(mhs => ({
                 ...mhs,
-                selected: true
+                // Auto-check hanya jika status Eligible
+                selected: mhs.status === 'Eligible'
             }));
 
             renderTable();
@@ -165,7 +177,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ======================================================
     if (checkAll) {
         checkAll.addEventListener('change', () => {
-            window.mahasiswaList.forEach(m => m.selected = checkAll.checked);
+            // Hanya ubah mahasiswa yang Eligible
+            window.mahasiswaList.forEach(m => {
+                if (m.status === 'Eligible') {
+                    m.selected = checkAll.checked;
+                }
+            });
             renderTable();
             updateSelectionCount();
         });

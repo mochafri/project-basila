@@ -170,7 +170,18 @@
                                     <tr> <!-- class="{{ $loop->odd ? 'bg-blue-100' : 'bg-white' }}"  untuk membedakan background row-->
                                         <td>
                                             <div class="form-check style-check flex items-center">
-                                                <input class="form-check-input row-checkbox" type="checkbox" data-nim="{{ $data->nim }}" {{ $data->selected ? 'checked' : '' }}>
+                                                <input class="form-check-input row-checkbox" 
+                                                    type="checkbox" 
+                                                    data-nim="{{ $data->nim }}" 
+                                                    {{ $data->selected ? 'checked' : '' }}
+                                                    @if($data->source === 'api')
+                                                        {{-- Untuk API: disabled jika selected='N' atau periode null --}}
+                                                        {{ (!$data->selected || empty($data->periode)) ? 'disabled' : '' }}
+                                                    @else
+                                                        {{-- Untuk Database: disabled jika status bukan Eligible --}}
+                                                        {{ $data->status !== 'Eligible' ? 'disabled' : '' }}
+                                                    @endif
+                                                >
                                                 <label class="ms-2 form-check-label">
                                                     {{ $idx + 1 }}
                                                 </label>

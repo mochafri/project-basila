@@ -14,15 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Commented out - kolom name dan email sudah tidak ada
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
 
         $this->call([
             SuperAdminSeeder::class,
+            UserRoleSeeder::class,
+            PejabatSeeder::class,
             MahasiswaSeeder::class,
             YudisiumSeeder::class,
             MhsYudisiumSeeder::class,

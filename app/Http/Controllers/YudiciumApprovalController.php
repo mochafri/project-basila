@@ -58,36 +58,27 @@ class YudiciumApprovalController extends Controller
     {
         $yudicium = Yudicium::findOrFail($id);
 
-        if ($yudicium->approval_status === 'Waiting') {
-            // Prioritas 1: Cek apakah ada data di mhs_yudiciums (sudah ditetapkan)
-            $mhsYudCount = MhsYud::where('yudicium_id', $id)->count();
-            
-            if ($mhsYudCount > 0) {
-                // Ambil dari database lokal mhs_yudiciums
-                $mahasiswa = MhsYud::select('nim','name','study_period','pass_sks','fakultas_id','ipk','predikat','status')
-                    ->where('yudicium_id', $id)
-                    ->get()
-                    ->map(function ($mhs) {
-                        return [
-                            'nim'            => $mhs->nim,
-                            'name'           => $mhs->name,
-                            'study_period'   => $mhs->study_period,
-                            'pass_sks'       => $mhs->pass_sks,
-                            'ipk'            => $mhs->ipk,
-                            'predikat'       => (new MhsYud)->getPredikat($mhs->ipk),
-                            'status'         => $mhs->status ?? 'final',
-                            'alasan_status'  => '-',
-                            'status_otomatis'=> $mhs->status ?? 'final',
-                            'fakultas_id'    => $mhs->fakultas_id,
-                        ];
-                    })->values();
-            } else {
-                // Prioritas 2: Fetch from URL_PICK_ACADEMIC using the set periode
-                $prodiId  = $yudicium->prodi_id;
-                $tanggal  = $yudicium->periode ?? $yudicium->created_at->format('Y-m-d');
-                $list     = $this->yudiciumService->getSelectedAcademicData($prodiId, $tanggal);
+        $prodiId = $yudicium->prodi_id;
+        $tanggal = $yudicium->periode ?? $yudicium->created_at->format('Y-m-d');
+        $mahasiswa = collect();
 
-                $mahasiswa = collect($list ?? [])->map(function ($mhs) {
+        // ============================================================
+        // PRIORITAS 1: API (selalu coba API dulu untuk semua status)
+        // ============================================================
+        try {
+            if ($yudicium->approval_status === 'Draft' || empty($yudicium->approval_status)) {
+                // Draft → URL_ALL_ACADEMIC, filter SELECTED=Y
+                $list = $this->yudiciumService->getAllAcademicData($prodiId, $tanggal);
+                $list = collect($list ?? [])->filter(fn($m) => ($m['SELECTED'] ?? 'N') === 'Y')->values()->all();
+            } else {
+                // Waiting / Approved / Rejected / Final → URL_PICK_ACADEMIC
+                $list = $this->yudiciumService->getSelectedAcademicData($prodiId, $tanggal);
+            }
+
+            if (!empty($list)) {
+                Log::info("getMahasiswa: data dari API", ['id' => $id, 'count' => count($list)]);
+
+                $mahasiswa = collect($list)->map(function ($mhs) {
                     $tempStatus = TempStatus::where('nim', $mhs['STUDENTID'])->first();
                     return [
                         'nim'            => $mhs['STUDENTID'],
@@ -110,42 +101,53 @@ class YudiciumApprovalController extends Controller
                         'SANKSI'         => $mhs['SANKSI'] ?? null,
                     ];
                 })->values();
+            } else {
+                Log::warning("getMahasiswa: API kosong", ['id' => $id, 'status' => $yudicium->approval_status]);
             }
+        } catch (\Exception $e) {
+            Log::error("getMahasiswa: API error, fallback ke database", [
+                'id'    => $id,
+                'error' => $e->getMessage()
+            ]);
+        }
 
-        } elseif ($yudicium->approval_status === 'Draft' || empty($yudicium->approval_status)) {
-            // Draft: fetch from URL_ALL_ACADEMIC (SELECTED=Y only)
-            $prodiId = $yudicium->prodi_id;
-            $tanggal = $yudicium->created_at ? $yudicium->created_at->format('Y-m-d') : date('Y-m-d');
-            $list    = $this->yudiciumService->getAllAcademicData($prodiId, $tanggal);
+        // ============================================================
+        // PRIORITAS 2: Database fallback jika API kosong / gagal
+        // ============================================================
+        if ($mahasiswa->isEmpty()) {
+            Log::info("getMahasiswa: fallback ke database mhs_yudiciums", ['id' => $id]);
 
-            $mahasiswa = collect($list ?? [])
-                ->filter(fn($mhs) => ($mhs['SELECTED'] ?? 'N') === 'Y')
+            $mahasiswa = MhsYud::select(
+                    'nim','name','study_period','pass_sks',
+                    'fakultas_id','ipk','predikat','status',
+                    'status_otomatis','alasan_status'
+                )
+                ->where('yudicium_id', $id)
+                ->get()
                 ->map(function ($mhs) {
-                    $tempStatus = TempStatus::where('nim', $mhs['STUDENTID'])->first();
                     return [
-                        'nim'            => $mhs['STUDENTID'],
-                        'name'           => $mhs['FULLNAME'],
-                        'study_period'   => $mhs['MASA_STUDI'] ?? '-',
-                        'pass_sks'       => $mhs['PASS_CREDIT'] ?? '-',
-                        'ipk'            => $mhs['GPA'] ?? '0',
-                        'predikat'       => (new MhsYud)->getPredikat($mhs['GPA'] ?? 0),
-                        'status'         => $tempStatus ? $tempStatus->status : ucfirst(strtolower($mhs['STATUS'] ?? '-')),
-                        'alasan_status'  => $tempStatus ? $tempStatus->alasan : '-',
-                        'status_otomatis'=> ucfirst(strtolower($mhs['STATUS'] ?? '-')),
-                        'fakultas_id'    => $mhs['FACULTYID'] ?? null,
+                        'nim'            => $mhs->nim,
+                        'name'           => $mhs->name,
+                        'study_period'   => $mhs->study_period,
+                        'pass_sks'       => $mhs->pass_sks,
+                        'ipk'            => $mhs->ipk,
+                        'predikat'       => (new MhsYud)->getPredikat($mhs->ipk),
+                        'status'         => $mhs->status ?: ($mhs->status_otomatis ?: 'Eligible'),
+                        'alasan_status'  => $mhs->alasan_status ?: '-',
+                        'status_otomatis'=> $mhs->status_otomatis ?: 'Eligible',
+                        'fakultas_id'    => $mhs->fakultas_id,
+                        'prody_id'       => null,
+                        'BAHASA_ASING'   => null,
+                        'PUBLIKASI'      => null,
+                        'TAK'            => null,
+                        'ADMINISTRATIF'  => null,
+                        'BPP'            => null,
+                        'OPENLIB'        => null,
+                        'SANKSI'         => null,
                     ];
                 })->values();
 
-        } else {
-            // Approved / Rejected: from local mhs_yudiciums
-            $mahasiswa = MhsYud::select('nim','name','study_period','pass_sks','fakultas_id','ipk','predikat','status','status_otomatis','alasan_status')
-                ->where('yudicium_id', $id)
-                ->get()
-                ->each(function ($mhs) {
-                    if (empty($mhs->alasan_status)) $mhs->alasan_status = '-';
-                    if (empty($mhs->status))        $mhs->status = $mhs->status_otomatis;
-                    $mhs->predikat = (new MhsYud)->getPredikat($mhs->ipk);
-                });
+            Log::info("getMahasiswa: database result", ['id' => $id, 'count' => $mahasiswa->count()]);
         }
 
         return response()->json([
