@@ -45,33 +45,42 @@ class MahasiswaYudisiumService
                 if (!empty($apiData) && is_array($apiData)) {
                     Log::info('Data berhasil diambil dari API', ['count' => count($apiData)]);
                     
+                    // Ambil daftar NIM yang sudah ada di mhs_yudiciums
+                    $existingNims = MhsYud::pluck('nim')->toArray();
+                    
                     // Format data API dengan source marker dan field lengkap
-                    $formattedData = collect($apiData)->map(function ($item) {
-                        return [
-                            'nim' => $item['nim'] ?? $item['STUDENTID'] ?? null,
-                            'name' => $item['nama'] ?? $item['FULLNAME'] ?? null,
-                            'nama' => $item['nama'] ?? $item['FULLNAME'] ?? null,
-                            'study_period' => $item['masa_studi'] ?? $item['MASA_STUDI'] ?? null,
-                            'masa_studi' => $item['masa_studi'] ?? $item['MASA_STUDI'] ?? null,
-                            'sks_lulus' => $item['sks_lulus'] ?? $item['PASS_CREDIT'] ?? null,
-                            'ipk' => $item['ipk'] ?? $item['GPA'] ?? null,
-                            'predikat' => $item['predikat'] ?? $item['PREDIKAT'] ?? null,
-                            'status' => $item['status'] ?? $item['STATUS'] ?? null,
-                            'prodi' => $item['prodi'] ?? $item['STUDYPROGRAMNAME'] ?? null,
-                            'fakultas' => $item['fakultas'] ?? $item['FACULTYNAME'] ?? null,
-                            // Field detail untuk modal
-                            'SMT_CURRENT' => $item['SMT_CURRENT'] ?? $item['semester_lulus'] ?? null,
-                            'STATUS' => $item['STATUS'] ?? $item['status_mk'] ?? null,
-                            'BAHASA_ASING' => $item['BAHASA_ASING'] ?? $item['bahasa_asing'] ?? null,
-                            'PUBLIKASI' => $item['PUBLIKASI'] ?? $item['publikasi'] ?? null,
-                            'TAK' => $item['TAK'] ?? $item['tak'] ?? null,
-                            'ADMINISTRATIF' => $item['ADMINISTRATIF'] ?? $item['administratif'] ?? null,
-                            'BPP' => $item['BPP'] ?? $item['bpp'] ?? null,
-                            'OPENLIB' => $item['OPENLIB'] ?? $item['openlib'] ?? null,
-                            'SANKSI' => $item['SANKSI'] ?? $item['sanksi'] ?? null,
-                            'source' => 'api'
-                        ];
-                    })->toArray();
+                    // Filter mahasiswa yang belum ada di mhs_yudiciums
+                    $formattedData = collect($apiData)
+                        ->filter(function($item) use ($existingNims) {
+                            $nim = $item['nim'] ?? $item['STUDENTID'] ?? null;
+                            return $nim && !in_array($nim, $existingNims);
+                        })
+                        ->map(function ($item) {
+                            return [
+                                'nim' => $item['nim'] ?? $item['STUDENTID'] ?? null,
+                                'name' => $item['nama'] ?? $item['FULLNAME'] ?? null,
+                                'nama' => $item['nama'] ?? $item['FULLNAME'] ?? null,
+                                'study_period' => $item['masa_studi'] ?? $item['MASA_STUDI'] ?? null,
+                                'masa_studi' => $item['masa_studi'] ?? $item['MASA_STUDI'] ?? null,
+                                'sks_lulus' => $item['sks_lulus'] ?? $item['PASS_CREDIT'] ?? null,
+                                'ipk' => $item['ipk'] ?? $item['GPA'] ?? null,
+                                'predikat' => $item['predikat'] ?? $item['PREDIKAT'] ?? null,
+                                'status' => $item['status'] ?? $item['STATUS'] ?? null,
+                                'prodi' => $item['prodi'] ?? $item['STUDYPROGRAMNAME'] ?? null,
+                                'fakultas' => $item['fakultas'] ?? $item['FACULTYNAME'] ?? null,
+                                // Field detail untuk modal
+                                'SMT_CURRENT' => $item['SMT_CURRENT'] ?? $item['semester_lulus'] ?? null,
+                                'STATUS' => $item['STATUS'] ?? $item['status_mk'] ?? null,
+                                'BAHASA_ASING' => $item['BAHASA_ASING'] ?? $item['bahasa_asing'] ?? null,
+                                'PUBLIKASI' => $item['PUBLIKASI'] ?? $item['publikasi'] ?? null,
+                                'TAK' => $item['TAK'] ?? $item['tak'] ?? null,
+                                'ADMINISTRATIF' => $item['ADMINISTRATIF'] ?? $item['administratif'] ?? null,
+                                'BPP' => $item['BPP'] ?? $item['bpp'] ?? null,
+                                'OPENLIB' => $item['OPENLIB'] ?? $item['openlib'] ?? null,
+                                'SANKSI' => $item['SANKSI'] ?? $item['sanksi'] ?? null,
+                                'source' => 'api'
+                            ];
+                        })->toArray();
 
                     return [
                         'success' => true,
@@ -105,6 +114,11 @@ class MahasiswaYudisiumService
         if ($prodi) {
             $query->where('STUDYPROGRAMID', $prodi);
         }
+
+        // Exclude mahasiswa yang sudah ada di mhs_yudiciums
+        $query->whereNotIn('STUDENTID', function($subQuery) {
+            $subQuery->select('nim')->from('mhs_yudiciums');
+        });
 
         $databaseData = $query->select(
             'STUDENTID as nim',

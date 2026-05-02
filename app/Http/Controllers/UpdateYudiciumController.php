@@ -29,117 +29,32 @@ class UpdateYudiciumController extends Controller
             $prodiId = $yudicium->prodi_id;
             $fakultasId = $yudicium->fakultas_id;
 
-            // A. Coba ambil dari API (stt=9 - ALL_ACADEMIC)
-            $datas = [];
-            $source = 'database'; // default fallback
+            // Cek apakah ini penetapan ulang (Rejected) atau penetapan pertama kali
+            $isRejected = $yudicium->approval_status === 'Rejected';
             
-            try {
-                $urlAllAcademic = trim(env('URL_ALL_ACADEMIC'), " '\"");
-                $apiUrl = str_replace(['IDPRODI', 'TANGGAL'], [$prodiId, $tanggal], $urlAllAcademic);
-
-                Log::info('Fetching from API', ['url' => $apiUrl]);
-                $response = Http::timeout(10)->get($apiUrl);
-                $listMahasiswa = $response->json();
+            // A. Jika Rejected, langsung ambil dari mhs_yudiciums (skip API)
+            if ($isRejected) {
+                Log::info('Penetapan ulang (Rejected), ambil dari mhs_yudiciums', ['yudicium_id' => $yudiciumId]);
                 
-                if (!empty($listMahasiswa) && is_array($listMahasiswa)) {
-                    $source = 'api';
-                    Log::info('Data berhasil diambil dari API', ['count' => count($listMahasiswa)]);
-                    
-                    foreach ($listMahasiswa as $mhs) {
-                        $tempStatus = TempStatus::select('status', 'alasan')
-                            ->where('nim', $mhs['STUDENTID']);
-
-                        $statusFromTemp = $tempStatus->value('status');
-                        $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
-                        $finalStatus = !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi;
-
-                        $datas[] = (object) [
-                            'nim' => $mhs['STUDENTID'],
-                            'name' => $mhs['FULLNAME'],
-                            'fakultas_id' => $mhs['FACULTYID'],
-                            'prodi_id' => $mhs['STUDYPROGRAMID'],
-                            'fakultas_name' => $mhs['FACULTYNAME'] ?? '-',
-                            'prodi_name' => $mhs['STUDYPROGRAMNAME'] ?? '-',
-                            'study_period' => $mhs['MASA_STUDI'],
-                            'pass_sks' => $mhs['PASS_CREDIT'],
-                            'ipk' => $mhs['GPA'],
-                            'status_otomatis' => ucfirst(strtolower($mhs['STATUS'])),
-                            'status' => $finalStatus,
-                            'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
-                            'alasan_status' => $tempStatus->value('alasan') ?? null,
-                            // Auto-select jika: selected = 'Y' DAN periode tidak null
-                            'selected' => (($mhs['SELECTED'] ?? 'N') === 'Y') && !empty($tanggal),
-                            'periode' => $tanggal,
-                            'id_smt_masuk' => $mhs['ID_SMT_MASUK'] ?? null,
-                            'bahasa_asing' => $mhs['BAHASA_ASING'] ?? null,
-                            'publikasi' => $mhs['PUBLIKASI'] ?? null,
-                            'tak' => $mhs['TAK'] ?? null,
-                            'administratif' => $mhs['ADMINISTRATIF'] ?? null,
-                            'bpp' => $mhs['BPP'] ?? null,
-                            'openlib' => $mhs['OPENLIB'] ?? null,
-                            'sanksi' => $mhs['SANKSI'] ?? null,
-                            'smt_current' => $mhs['SMT_CURRENT'] ?? null,
-                            'source' => 'api'
-                        ];
-                    }
-                } else {
-                    Log::warning('API response kosong, fallback ke database');
-                }
-            } catch (\Exception $e) {
-                Log::error('API Error, fallback ke database', [
-                    'error' => $e->getMessage()
-                ]);
-            }
-
-            // B. Fallback ke Database jika API gagal atau kosong
-            if (empty($datas)) {
-                Log::info('Menggunakan data dari database');
+                $mahasiswaFromMhsYud = MhsYud::where('yudicium_id', $yudiciumId)->get();
                 
-                // Ambil dari tabel mahasiswa berdasarkan fakultas dan prodi
-                $mahasiswaFromDb = DB::table('mahasiswa')
-                    ->where('STUDYPROGRAMID', $prodiId)
-                    ->select(
-                        'STUDENTID as nim',
-                        'FULLNAME as name',
-                        'MASA_STUDI',
-                        'PASS_CREDIT as pass_sks',
-                        'GPA as ipk',
-                        'PREDIKAT as predikat',
-                        'STATUS as status',
-                        'FACULTYID as fakultas_id'
-                    )
-                    ->get();
-
-                foreach ($mahasiswaFromDb as $mhs) {
-                    $tempStatus = TempStatus::select('status', 'alasan')
-                        ->where('nim', $mhs->nim);
-
-                    $statusFromTemp = $tempStatus->value('status');
-                    $finalStatus = !empty($statusFromTemp) ? $statusFromTemp : $mhs->status;
-
-                    // Extract numeric value from "10 Semester" format
-                    $studyPeriod = 0;
-                    if (preg_match('/(\d+)/', $mhs->MASA_STUDI, $matches)) {
-                        $studyPeriod = (int)$matches[1];
-                    }
-
-                    $datas[] = (object) [
+                $datas = $mahasiswaFromMhsYud->map(function($mhs) {
+                    return (object) [
                         'nim' => $mhs->nim,
                         'name' => $mhs->name,
-                        'fakultas_id' => $mhs->fakultas_id ?? $fakultasId,
-                        'prodi_id' => $prodiId,
+                        'fakultas_id' => $mhs->fakultas_id,
+                        'prodi_id' => $mhs->prody_id,
                         'fakultas_name' => '-',
                         'prodi_name' => '-',
-                        'study_period' => $studyPeriod,
-                        'pass_sks' => (int)$mhs->pass_sks,
-                        'ipk' => (float)$mhs->ipk,
-                        'status_otomatis' => $mhs->status,
-                        'status' => $finalStatus,
+                        'study_period' => $mhs->study_period,
+                        'pass_sks' => $mhs->pass_sks,
+                        'ipk' => $mhs->ipk,
+                        'status_otomatis' => $mhs->status_otomatis ?? 'Eligible',
+                        'status' => $mhs->status,
                         'predikat' => $mhs->predikat,
-                        'alasan_status' => $tempStatus->value('alasan') ?? null,
-                        // Auto-select jika status = 'Eligible'
-                        'selected' => $finalStatus === 'Eligible',
-                        'id_smt_masuk' => null,
+                        'alasan_status' => $mhs->alasan_status,
+                        'selected' => true, // Auto-select semua
+                        'id_smt_masuk' => $mhs->id_smt_masuk,
                         'bahasa_asing' => null,
                         'publikasi' => null,
                         'tak' => null,
@@ -148,14 +63,131 @@ class UpdateYudiciumController extends Controller
                         'openlib' => null,
                         'sanksi' => null,
                         'smt_current' => null,
-                        'source' => 'database'
+                        'source' => 'mhs_yudiciums'
                     ];
+                });
+                
+                $source = 'mhs_yudiciums';
+                Log::info('Data berhasil diambil dari mhs_yudiciums', ['count' => $datas->count()]);
+                
+            } else {
+                // B. Penetapan pertama kali: Coba ambil dari API (stt=9 - ALL_ACADEMIC)
+                $datas = [];
+                $source = 'database'; // default fallback
+                
+                try {
+                    $urlAllAcademic = trim(env('URL_ALL_ACADEMIC'), " '\"");
+                    $apiUrl = str_replace(['IDPRODI', 'TANGGAL'], [$prodiId, $tanggal], $urlAllAcademic);
+
+                    Log::info('Fetching from API', ['url' => $apiUrl]);
+                    $response = Http::timeout(10)->get($apiUrl);
+                    $listMahasiswa = $response->json();
+                    
+                    if (!empty($listMahasiswa) && is_array($listMahasiswa)) {
+                        $source = 'api';
+                        Log::info('Data berhasil diambil dari API', ['count' => count($listMahasiswa)]);
+                        
+                        // Ambil daftar NIM yang sudah ada di mhs_yudiciums
+                        $existingNims = MhsYud::pluck('nim')->toArray();
+                        
+                        foreach ($listMahasiswa as $mhs) {
+                            $nim = $mhs['STUDENTID'];
+                            
+                            // Skip mahasiswa yang sudah ada di mhs_yudiciums
+                            if (in_array($nim, $existingNims)) {
+                                Log::info('Skipping mahasiswa yang sudah ada di mhs_yudiciums', ['nim' => $nim]);
+                                continue;
+                            }
+                            
+                            $tempStatus = TempStatus::select('status', 'alasan')
+                                ->where('nim', $nim);
+
+                            $statusFromTemp = $tempStatus->value('status');
+                            $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
+                            $finalStatus = !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi;
+
+                            $datas[] = (object) [
+                                'nim' => $nim,
+                                'name' => $mhs['FULLNAME'],
+                                'fakultas_id' => $mhs['FACULTYID'],
+                                'prodi_id' => $mhs['STUDYPROGRAMID'],
+                                'fakultas_name' => $mhs['FACULTYNAME'] ?? '-',
+                                'prodi_name' => $mhs['STUDYPROGRAMNAME'] ?? '-',
+                                'study_period' => $mhs['MASA_STUDI'],
+                                'pass_sks' => $mhs['PASS_CREDIT'],
+                                'ipk' => $mhs['GPA'],
+                                'status_otomatis' => ucfirst(strtolower($mhs['STATUS'])),
+                                'status' => $finalStatus,
+                                'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
+                                'alasan_status' => $tempStatus->value('alasan') ?? null,
+                                // Auto-select jika: selected = 'Y' DAN periode tidak null
+                                'selected' => (($mhs['SELECTED'] ?? 'N') === 'Y') && !empty($tanggal),
+                                'periode' => $tanggal,
+                                'id_smt_masuk' => $mhs['ID_SMT_MASUK'] ?? null,
+                                'bahasa_asing' => $mhs['BAHASA_ASING'] ?? null,
+                                'publikasi' => $mhs['PUBLIKASI'] ?? null,
+                                'tak' => $mhs['TAK'] ?? null,
+                                'administratif' => $mhs['ADMINISTRATIF'] ?? null,
+                                'bpp' => $mhs['BPP'] ?? null,
+                                'openlib' => $mhs['OPENLIB'] ?? null,
+                                'sanksi' => $mhs['SANKSI'] ?? null,
+                                'smt_current' => $mhs['SMT_CURRENT'] ?? null,
+                                'source' => 'api'
+                            ];
+                        }
+                    } else {
+                        Log::warning('API response kosong, fallback ke database');
+                    }
+                } catch (\Exception $e) {
+                    Log::error('API Error, fallback ke database', [
+                        'error' => $e->getMessage()
+                    ]);
+                }
+
+                // C. Fallback ke mhs_yudiciums jika API gagal atau kosong
+                if (empty($datas)) {
+                    Log::info('Menggunakan data dari mhs_yudiciums (fallback)');
+                    
+                    $mahasiswaFromMhsYud = MhsYud::where('yudicium_id', $yudiciumId)->get();
+                    
+                    if ($mahasiswaFromMhsYud->isNotEmpty()) {
+                        $datas = $mahasiswaFromMhsYud->map(function($mhs) {
+                            return (object) [
+                                'nim' => $mhs->nim,
+                                'name' => $mhs->name,
+                                'fakultas_id' => $mhs->fakultas_id,
+                                'prodi_id' => $mhs->prody_id,
+                                'fakultas_name' => '-',
+                                'prodi_name' => '-',
+                                'study_period' => $mhs->study_period,
+                                'pass_sks' => $mhs->pass_sks,
+                                'ipk' => $mhs->ipk,
+                                'status_otomatis' => $mhs->status_otomatis ?? 'Eligible',
+                                'status' => $mhs->status,
+                                'predikat' => $mhs->predikat,
+                                'alasan_status' => $mhs->alasan_status,
+                                'selected' => true,
+                                'id_smt_masuk' => $mhs->id_smt_masuk,
+                                'bahasa_asing' => null,
+                                'publikasi' => null,
+                                'tak' => null,
+                                'administratif' => null,
+                                'bpp' => null,
+                                'openlib' => null,
+                                'sanksi' => null,
+                                'smt_current' => null,
+                                'source' => 'mhs_yudiciums'
+                            ];
+                        })->toArray();
+                        
+                        $source = 'mhs_yudiciums';
+                    }
+                    
+                    Log::info('Data berhasil diambil dari mhs_yudiciums', ['count' => count($datas)]);
                 }
                 
-                Log::info('Data berhasil diambil dari database', ['count' => count($datas)]);
+                $datas = collect($datas);
             }
-            
-            $datas = collect($datas);
             
             // Log source yang digunakan
             Log::info('Data source', ['source' => $source, 'count' => $datas->count()]);
@@ -253,9 +285,7 @@ class UpdateYudiciumController extends Controller
                             'FULLNAME',
                             'MASA_STUDI',
                             'PASS_CREDIT',
-                            'GPA',
-                            'PREDIKAT',
-                            'STATUS'
+                            'GPA'
                         )
                         ->get();
 
@@ -266,14 +296,26 @@ class UpdateYudiciumController extends Controller
                             $studyPeriod = (int)$matches[1];
                         }
                         
+                        // Generate predikat using MhsYud model function
+                        $predikat = (new MhsYud)->getPredikat($mhs->GPA);
+                        
+                        // Generate status using Mahasiswa model function
+                        $mahasiswaModel = new \App\Models\Mahasiswa();
+                        $status = $mahasiswaModel->hitungStatus(
+                            $studyPeriod, 
+                            (int)$mhs->PASS_CREDIT, 
+                            (float)$mhs->GPA,
+                            (int)$prodiId
+                        );
+                        
                         $listMahasiswa[] = [
                             'STUDENTID' => $mhs->STUDENTID,
                             'FULLNAME' => $mhs->FULLNAME,
                             'MASA_STUDI' => $studyPeriod,
                             'PASS_CREDIT' => (int)$mhs->PASS_CREDIT,
                             'GPA' => (float)$mhs->GPA,
-                            'PREDIKAT' => $mhs->PREDIKAT,
-                            'STATUS' => $mhs->STATUS
+                            'PREDIKAT' => $predikat,
+                            'STATUS' => $status
                         ];
                     }
                     
@@ -321,7 +363,7 @@ class UpdateYudiciumController extends Controller
                         'pass_sks' => (int)($mhs['PASS_CREDIT'] ?? 0),
                         'ipk' => (float)($mhs['GPA'] ?? 0),
                         'predikat' => $mhs['PREDIKAT'] ?? (new MhsYud)->getPredikat($mhs['GPA'] ?? 0),
-                        'status' => 'final' // Status final untuk penetapan
+                        'status' => 'Eligible' // Status Eligible untuk penetapan
                     ];
                     
                     Log::info('Inserting mahasiswa', [
@@ -334,12 +376,9 @@ class UpdateYudiciumController extends Controller
                     
                     Log::info('Successfully inserted', ['nim' => $nim]);
                 } else {
-                    Log::info('Mahasiswa already exists, updating to final', ['nim' => $nim]);
+                    Log::info('Mahasiswa already exists, keeping status as is', ['nim' => $nim]);
                     
-                    // Update ke final jika sudah ada
-                    MhsYud::where('nim', $nim)
-                        ->where('yudicium_id', $validate['id'])
-                        ->update(['status' => 'final']);
+                    // Tidak perlu update status jika sudah ada
                     $skipped++;
                 }
             }

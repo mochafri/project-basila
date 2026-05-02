@@ -13,13 +13,37 @@ class MahasiswaSeeder extends Seeder
      * 
      * Data STUDYPROGRAMID dari API Telkom University
      * 
+     * Standarisasi Universitas:
+     * 
+     * 1. D3 (Diploma 3):
+     *    - Masa Studi Normal: 6 semester (3 tahun)
+     *    - Masa Studi Maksimal: 10 semester (5 tahun)
+     *    - SKS Lulus: 110-120 SKS
+     * 
+     * 2. D4 (Diploma 4):
+     *    - Masa Studi Normal: 8 semester (4 tahun)
+     *    - Masa Studi Maksimal: 14 semester (7 tahun)
+     *    - SKS Lulus: 144-160 SKS
+     * 
+     * 3. S1 (Sarjana):
+     *    - Masa Studi Normal: 8 semester (4 tahun)
+     *    - Masa Studi Maksimal: 14 semester (7 tahun)
+     *    - SKS Lulus: 144-160 SKS
+     * 
+     * 4. S2 (Magister):
+     *    - Masa Studi Normal: 4 semester (2 tahun)
+     *    - Masa Studi Maksimal: 8 semester (4 tahun)
+     *    - SKS Lulus: 36-50 SKS
+     * 
+     * 5. S3 (Doktor):
+     *    - Masa Studi Normal: 6 semester (3 tahun)
+     *    - Masa Studi Maksimal: 10 semester (5 tahun)
+     *    - SKS Lulus: 40-54 SKS
+     * 
      * Kriteria Eligible untuk Yudisium:
-     * 1. IPK minimal 2.75
-     * 2. Masa studi tidak melebihi batas maksimal:
-     *    - D3: Maksimal 8 semester
-     *    - D4/S1: Maksimal 14 semester
-     *    - S2: Maksimal 8 semester
-     *    - S3: Maksimal 10 semester
+     * - Masa studi tidak melebihi batas maksimal
+     * - SKS lulus sesuai standar program studi
+     * - IPK minimal 2.75
      */
     public function run(): void
     {
@@ -129,31 +153,32 @@ class MahasiswaSeeder extends Seeder
                 // Generate IPK dengan distribusi realistis
                 $ipk = $faker->randomFloat(2, 2.5, 4.0);
                 
-                // Tentukan predikat berdasarkan IPK
-                if ($ipk >= 3.51) {
-                    $predikat = 'Cumlaude';
-                } elseif ($ipk >= 3.00) {
-                    $predikat = 'Sangat Memuaskan';
-                } else {
-                    $predikat = 'Memuaskan';
-                }
-                
-                // Generate masa studi berdasarkan jenjang
+                // Generate masa studi dan SKS lulus berdasarkan standarisasi universitas
                 if ($jenjang === 'D3') {
-                    $masaStudi = $faker->randomElement(['6 Semester', '7 Semester', '8 Semester']);
+                    // D3: Normal 6 semester, maksimal 10 semester (5 tahun)
+                    // SKS: 110-120 SKS
+                    $masaStudi = $faker->randomElement(['6 Semester', '7 Semester', '8 Semester', '9 Semester', '10 Semester']);
                     $passCredit = $faker->numberBetween(110, 120);
                 } elseif ($jenjang === 'D4') {
-                    $masaStudi = $faker->randomElement(['8 Semester', '9 Semester', '10 Semester']);
-                    $passCredit = $faker->numberBetween(140, 150);
+                    // D4: Normal 8 semester, maksimal 14 semester (7 tahun)
+                    // SKS: 144-160 SKS
+                    $masaStudi = $faker->randomElement(['8 Semester', '9 Semester', '10 Semester', '11 Semester', '12 Semester', '13 Semester', '14 Semester']);
+                    $passCredit = $faker->numberBetween(144, 160);
                 } elseif ($jenjang === 'S2') {
-                    $masaStudi = $faker->randomElement(['4 Semester', '5 Semester', '6 Semester']);
-                    $passCredit = $faker->numberBetween(40, 50);
+                    // S2: Normal 4 semester, maksimal 8 semester (4 tahun)
+                    // SKS: 36-50 SKS
+                    $masaStudi = $faker->randomElement(['4 Semester', '5 Semester', '6 Semester', '7 Semester', '8 Semester']);
+                    $passCredit = $faker->numberBetween(36, 50);
                 } elseif ($jenjang === 'S3') {
-                    $masaStudi = $faker->randomElement(['6 Semester', '7 Semester', '8 Semester']);
-                    $passCredit = $faker->numberBetween(40, 50);
+                    // S3: Normal 6 semester, maksimal 10 semester (5 tahun)
+                    // SKS: 40-54 SKS
+                    $masaStudi = $faker->randomElement(['6 Semester', '7 Semester', '8 Semester', '9 Semester', '10 Semester']);
+                    $passCredit = $faker->numberBetween(40, 54);
                 } else { // S1
-                    $masaStudi = $faker->randomElement(['8 Semester', '9 Semester', '10 Semester', '11 Semester']);
-                    $passCredit = $faker->numberBetween(140, 150);
+                    // S1: Normal 8 semester, maksimal 14 semester (7 tahun)
+                    // SKS: 144-160 SKS
+                    $masaStudi = $faker->randomElement(['8 Semester', '9 Semester', '10 Semester', '11 Semester', '12 Semester', '13 Semester', '14 Semester']);
+                    $passCredit = $faker->numberBetween(144, 160);
                 }
                 
                 // Generate nama dengan gender
@@ -162,28 +187,7 @@ class MahasiswaSeeder extends Seeder
                     ? $faker->firstNameMale . ' ' . $faker->lastName
                     : $faker->firstNameFemale . ' ' . $faker->lastName;
 
-                // Tentukan status eligible berdasarkan kriteria
-                // Eligible jika: IPK >= 2.75 dan Masa Studi <= batas maksimal
-                $isEligible = true;
-                
-                // Cek IPK minimal
-                if ($ipk < 2.75) {
-                    $isEligible = false;
-                }
-                
-                // Cek masa studi maksimal berdasarkan jenjang
-                $masaSemester = (int) filter_var($masaStudi, FILTER_SANITIZE_NUMBER_INT);
-                if ($jenjang === 'D3' && $masaSemester > 8) {
-                    $isEligible = false;
-                } elseif (($jenjang === 'D4' || $jenjang === 'S1') && $masaSemester > 14) {
-                    $isEligible = false;
-                } elseif ($jenjang === 'S2' && $masaSemester > 8) {
-                    $isEligible = false;
-                } elseif ($jenjang === 'S3' && $masaSemester > 10) {
-                    $isEligible = false;
-                }
-                
-                $status = $isEligible ? 'Eligible' : 'Tidak Eligible';
+                // Note: STATUS dan PREDIKAT akan digenerate dari fungsi, tidak disimpan di database
 
                 DB::table('mahasiswa')->insert([
                     'STUDENTID' => $nim,
@@ -191,10 +195,8 @@ class MahasiswaSeeder extends Seeder
                     'MASA_STUDI' => $masaStudi,
                     'PASS_CREDIT' => $passCredit,
                     'GPA' => $ipk,
-                    'STATUS' => $status,
                     'STUDYPROGRAMID' => $studyProgramId,
                     'FACULTYID' => $facultyId,
-                    'PREDIKAT' => $predikat,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

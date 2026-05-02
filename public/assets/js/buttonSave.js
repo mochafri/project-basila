@@ -28,13 +28,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }).then(async (result) => {
             if (result.isConfirmed) {
+                // Show loading SweetAlert
+                Swal.fire({
+                    title: 'Menyimpan Data...',
+                    html: 'Sedang menyimpan data yudisium, mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
                 try {
                     facultyId = parseInt(fakultasSelect.value);
                     prodiId = parseInt(prodiSelect.value);
 
                     const selectedNims = window.mahasiswaList ? window.mahasiswaList.filter(m => m.selected).map(m => m.nim) : [];
                     
-
+                    // Deteksi source dari data mahasiswa pertama
+                    const source = window.mahasiswaList && window.mahasiswaList.length > 0 
+                        ? (window.mahasiswaList[0].source || 'api') 
+                        : 'api';
 
                     const res = await fetch(routes.saveDraft, {
                         method: "POST",
@@ -47,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             prodi_id: prodiId,
                             alasan: alasan || null,
                             status: status || null,
-                            mahasiswa_nims: selectedNims
+                            mahasiswa_nims: selectedNims,
+                            source: source // 'api' atau 'database'
                         })
                     });
 

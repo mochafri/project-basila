@@ -4,6 +4,7 @@
     $title = 'Penetapan Yudisium';
     $subTitle = 'Tambah';
     $script = '
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="' . asset('assets/js/data-table.js') . '"></script>
         <script src="' . asset('assets/js/getMahasiswa.js') . '"></script>
         <script src="' . asset('assets/js/index3.js') . '"></script>
@@ -43,21 +44,8 @@
                     </select>
                 </div>
 
-                <div class="col-span-12 md:col-span-5">
-                    <label class="block text-sm font-medium text-gray-500 mb-1">{{ __('index3.semester') }}</label>
-                    <select name="periode" id="periodeSelect"
-                        class="form-select border border-gray-300 rounded-md p-2 text-gray-600 w-full" required>
-                        <option value="">{{ __('index3.select_semester') }}</option>
-                        @foreach ($periodes as $p)
-                            <option value="{{ $p['value'] }}" {{ $periode == $p['value'] ? 'selected' : '' }}>
-                                {{ $p['label'] }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <!-- Spacer -->
-                <div class="hidden md:block md:col-span-2"></div>
+                <!-- Spacer untuk desktop -->
+                <div class="hidden md:block md:col-span-7"></div>
 
                 <!-- Program Studi -->
                 <div class="col-span-12 md:col-span-5">
@@ -67,9 +55,9 @@
                     </select>
                 </div>
 
-                <!-- Tombol -->
-                <div class="col-span-12 md:col-start-6 md:col-span-2 flex items-end">
-                    <button class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded shadow h-[38px] w-[135px]"
+                <!-- Tombol Tampilkan -->
+                <div class="col-span-12 md:col-span-2 flex items-end">
+                    <button class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded shadow h-[38px] w-full md:w-[135px]"
                         type="submit">
                         {{ __('index3.show') }}
                     </button>

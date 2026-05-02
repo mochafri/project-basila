@@ -356,5 +356,14 @@
             approveYudicium: "{{ route('yudicium.tetapkan') }}",
             ubahStatus: "{{ route('tempStatus') }}",
         };
+        
+        // Pass all mahasiswa data to JavaScript for state initialization
+        window.allMahasiswaData = @json($datas->map(function($data) {
+            return [
+                'nim' => $data->nim,
+                'checked' => $data->selected ?? false,
+                'disabled' => $data->status !== 'Eligible'
+            ];
+        }));
     </script>
 @endsection

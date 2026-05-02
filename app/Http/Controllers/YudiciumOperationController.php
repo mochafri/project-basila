@@ -26,9 +26,11 @@ class YudiciumOperationController extends Controller
             'fakultas_id'    => 'required|integer',
             'prodi_id'       => 'required|integer',
             'mahasiswa_nims' => 'array',
+            'source'         => 'nullable|string', // 'api' atau 'database'
         ]);
 
         $nims = $validate['mahasiswa_nims'] ?? [];
+        $source = $validate['source'] ?? 'api'; // default api
 
         if (empty($nims)) {
             return response()->json([
@@ -47,26 +49,77 @@ class YudiciumOperationController extends Controller
                 'prodi_id'    => $validate['prodi_id'],
                 'periode'     => null,
                 'no_yudicium' => null,
+                'approval_status' => 'Draft',
                 'created_by'  => auth()->user()?->nip ?: auth()->user()?->username,
             ]);
 
-            // Langsung set API untuk setiap NIM yang dipilih: SELECTED=Y, periode=tanggalHariIni
-            foreach ($nims as $nim) {
-                $apiResponse = $this->yudiciumService->setAcademicStatus($nim, $currentDate, 'Y');
+            // Kondisi 1: Jika data dari API
+            if ($source === 'api') {
+                Log::info('saveDraft: Data dari API, hit API stt=8', ['nims' => $nims]);
                 
-                // Validasi Body (true, TRUE, atau 1)
-                $body = strtolower(trim($apiResponse->body()));
-                if (!$apiResponse->successful() || ($body !== 'true' && $body !== '1')) {
-                    Log::error("[saveDraft] Failed to set status for NIM $nim. Body: " . $apiResponse->body());
-                    throw new \Exception('Gagal mengubah data akademik untuk NIM ' . $nim . '. Response: ' . $apiResponse->body());
+                // Set API untuk setiap NIM yang dipilih: SELECTED=Y, periode=tanggalHariIni
+                foreach ($nims as $nim) {
+                    $apiResponse = $this->yudiciumService->setAcademicStatus($nim, $currentDate, 'Y');
+                    
+                    // Validasi Body (true, TRUE, atau 1)
+                    $body = strtolower(trim($apiResponse->body()));
+                    if (!$apiResponse->successful() || ($body !== 'true' && $body !== '1')) {
+                        Log::error("[saveDraft] Failed to set status for NIM $nim. Body: " . $apiResponse->body());
+                        throw new \Exception('Gagal mengubah data akademik untuk NIM ' . $nim . '. Response: ' . $apiResponse->body());
+                    }
                 }
+
+                // Delay 1.5 detik agar API Feeder sempat melakukan update internal
+                usleep(1500000); 
+
+                // Verifikasi perubahan via stt=9 (ALL_ACADEMIC)
+                $verify = $this->yudiciumService->getAllAcademicData($validate['prodi_id'], $currentDate);
+                
+            } else {
+                // Kondisi 2: Jika data dari Database, insert ke mhs_yudiciums
+                Log::info('saveDraft: Data dari Database, insert ke mhs_yudiciums', ['nims' => $nims]);
+                
+                // Ambil data mahasiswa dari database
+                $mahasiswaData = DB::table('mahasiswa')
+                    ->whereIn('STUDENTID', $nims)
+                    ->where('STUDYPROGRAMID', $validate['prodi_id'])
+                    ->get();
+                
+                foreach ($mahasiswaData as $mhs) {
+                    // Extract numeric value from "10 Semester" format
+                    $studyPeriod = 0;
+                    if (preg_match('/(\d+)/', $mhs->MASA_STUDI, $matches)) {
+                        $studyPeriod = (int)$matches[1];
+                    }
+                    
+                    // Generate predikat dan status
+                    $predikat = (new MhsYud)->getPredikat($mhs->GPA);
+                    
+                    $mahasiswaModel = new \App\Models\Mahasiswa();
+                    $status = $mahasiswaModel->hitungStatus(
+                        $studyPeriod, 
+                        (int)$mhs->PASS_CREDIT, 
+                        (float)$mhs->GPA,
+                        (int)$mhs->STUDYPROGRAMID
+                    );
+                    
+                    // Insert ke mhs_yudiciums
+                    MhsYud::create([
+                        'nim' => $mhs->STUDENTID,
+                        'yudicium_id' => $yudicium->id,
+                        'fakultas_id' => $validate['fakultas_id'],
+                        'prody_id' => $validate['prodi_id'],
+                        'name' => $mhs->FULLNAME,
+                        'study_period' => $studyPeriod,
+                        'pass_sks' => (int)$mhs->PASS_CREDIT,
+                        'ipk' => (float)$mhs->GPA,
+                        'predikat' => $predikat,
+                        'status' => $status,
+                    ]);
+                }
+                
+                Log::info('saveDraft: Berhasil insert ke mhs_yudiciums', ['count' => $mahasiswaData->count()]);
             }
-
-            // Delay 1.5 detik agar API Feeder sempat melakukan update internal
-            usleep(1500000); 
-
-            // Verifikasi perubahan via stt=9 (ALL_ACADEMIC)
-            $verify = $this->yudiciumService->getAllAcademicData($validate['prodi_id'], $currentDate);
 
             DB::commit();
 

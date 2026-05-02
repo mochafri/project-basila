@@ -59,14 +59,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let paginationHTML = `
             <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                <div class="flex flex-1 justify-between sm:hidden">
+                <div class="flex flex-1 items-center justify-between sm:hidden">
                     <button ${currentPage === 1 ? 'disabled' : ''} 
                         class="pagination-btn relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}"
                         data-page="${currentPage - 1}">
                         Previous
                     </button>
+                    <span class="text-sm font-medium text-gray-700">
+                        ${currentPage}/${totalPages}
+                    </span>
                     <button ${currentPage === totalPages ? 'disabled' : ''} 
-                        class="pagination-btn relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}"
+                        class="pagination-btn relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}"
                         data-page="${currentPage + 1}">
                         Next
                     </button>

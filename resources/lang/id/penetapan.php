@@ -3,7 +3,7 @@
 return [
     'title' => 'Penetapan Yudisium',
     'subtitle' => 'Daftar Yudisium',
-    'semester' => 'Periode',
+    'semester' => 'semester',
     'show' => 'Tampilkan',
     'odd' => 'Ganjil',
     'even' => 'Genap',

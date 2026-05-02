@@ -157,8 +157,16 @@ class Index3Controller extends Controller
             $source = 'api';
 
             if ($response->successful() && !empty($data)) {
+                // Ambil daftar NIM yang sudah ada di mhs_yudiciums (semua, tidak peduli status atau prodi)
+                $existingNims = MhsYud::pluck('nim')->toArray();
+                
+                \Log::info('Existing NIMs in mhs_yudiciums (all)', [
+                    'nims' => $existingNims, 
+                    'count' => count($existingNims)
+                ]);
+                
                 $mahasiswa = collect($data ?? [])
-                ->filter(function($mhs) use ($prodiId, $periode) {
+                ->filter(function($mhs) use ($prodiId, $periode, $existingNims) {
                     // Cek jika API tidak melakukan filter, kita bantu filter di sisi backend
                     $matchProdi   = empty($prodiId) || $mhs['STUDYPROGRAMID'] == $prodiId;
                     
@@ -169,42 +177,66 @@ class Index3Controller extends Controller
                     $notSelected = (is_null($valSelected) || $valSelected === 'null' || $valSelected === 'NULL' || $valSelected === 'N' || empty($valSelected)) &&
                                    (is_null($valPeriode) || $valPeriode === 'null' || $valPeriode === 'NULL' || empty($valPeriode));
                     
-                    return $matchProdi && $notSelected;
+                    // Exclude mahasiswa yang sudah ada di mhs_yudiciums
+                    $notInMhsYud = !in_array($mhs['STUDENTID'], $existingNims);
+                    
+                    return $matchProdi && $notSelected && $notInMhsYud;
                 })
                 ->map(function ($mhs) {
                     $tempStatus = TempStatus::select('status', 'alasan')
                         ->where('nim', $mhs['STUDENTID']);
 
-                        $statusFromTemp = $tempStatus->value('status');
-                        $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
+                    $statusFromTemp = $tempStatus->value('status');
+                    
+                    // Generate predikat dari fungsi
+                    $predikat = (new MhsYud)->getPredikat($mhs['GPA']);
+                    
+                    // Generate status dari fungsi hitungStatus jika ada di API
+                    // Extract numeric value from "10 Semester" format
+                    $studyPeriod = 0;
+                    if (isset($mhs['MASA_STUDI']) && preg_match('/(\d+)/', $mhs['MASA_STUDI'], $matches)) {
+                        $studyPeriod = (int)$matches[1];
+                    }
+                    
+                    $mahasiswaModel = new \App\Models\Mahasiswa();
+                    $computedStatus = $mahasiswaModel->hitungStatus(
+                        $studyPeriod, 
+                        (int)($mhs['PASS_CREDIT'] ?? 0), 
+                        (float)($mhs['GPA'] ?? 0),
+                        (int)($mhs['STUDYPROGRAMID'] ?? null)
+                    );
+                    
+                    // Prioritas: temp_status > computed status
+                    $statusFromApi = ucfirst(strtolower($mhs['STATUS']));
+                    $finalStatus = !empty($statusFromTemp) ? $statusFromTemp : $computedStatus;
 
-                        return [
-                            'nim' => $mhs['STUDENTID'] ?? '-',
-                            'name' => $mhs['FULLNAME'] ?? '-',
-                            'study_period' => $mhs['MASA_STUDI'] ?? '-',
-                            'sks_lulus' => $mhs['PASS_CREDIT'] ?? '-',
-                            'ipk' => $mhs['GPA'] ?? '-',
-                            'predikat' => (new MhsYud)->getPredikat($mhs['GPA']),
-                            'status' => !empty($statusFromTemp) ? $statusFromTemp : $statusFromApi,
-                            
-                            // Ekstra jika dibutuhkan js
-                            'fakultas' => $mhs['FACULTYNAME'] ?? '-',
-                            'prodi' => $mhs['STUDYPROGRAMNAME'] ?? '-',
-                            'SMT_CURRENT' => $mhs['SMT_CURRENT'] ?? '-',
-                            'alasan_status' => $tempStatus->value('alasan') ?? '-',
-                        ];
-                    })
+                    return [
+                        'nim' => $mhs['STUDENTID'] ?? '-',
+                        'name' => $mhs['FULLNAME'] ?? '-',
+                        'study_period' => $mhs['MASA_STUDI'] ?? '-',
+                        'sks_lulus' => $mhs['PASS_CREDIT'] ?? '-',
+                        'ipk' => $mhs['GPA'] ?? '-',
+                        'predikat' => $predikat,
+                        'status' => $finalStatus,
+                        
+                        // Ekstra jika dibutuhkan js
+                        'fakultas' => $mhs['FACULTYNAME'] ?? '-',
+                        'prodi' => $mhs['STUDYPROGRAMNAME'] ?? '-',
+                        'SMT_CURRENT' => $mhs['SMT_CURRENT'] ?? '-',
+                        'alasan_status' => $tempStatus->value('alasan') ?? '-',
+                    ];
+                })
                     ->toArray();
             }
 
             if (empty($mahasiswa)) {
                 $source = 'database';
                 
-                // Alur API: Menampilkan mahasiswa eligible yang BELUM dipilih (belum ada di mhs_yudiciums)
+                // Alur API: Menampilkan mahasiswa eligible yang BELUM ada di mhs_yudiciums (semua, tidak peduli status atau prodi)
                 $dbData = DB::table('mahasiswa')
                     ->when($fakultasId, fn($q) => $q->where('FACULTYID', $fakultasId))
                     ->when($prodiId, fn($q) => $q->where('STUDYPROGRAMID', $prodiId))
-                    // Filter mahasiswa yang belum ada di tabel mhs_yudiciums (seperti SELECTED=null di API)
+                    // Filter mahasiswa yang belum ada di tabel mhs_yudiciums
                     ->whereNotIn('STUDENTID', function($query) {
                         $query->select('nim')->from('mhs_yudiciums');
                     })
@@ -213,16 +245,35 @@ class Index3Controller extends Controller
                         'FULLNAME as name',
                         'MASA_STUDI as study_period',
                         'PASS_CREDIT as sks_lulus',
-                        'GPA as ipk',
-                        'PREDIKAT as predikat',
-                        'STATUS as status'
+                        'GPA as ipk'
                     )
                     ->get();
 
-                $mahasiswa = collect($dbData)->map(function($mhs) {
+                $mahasiswa = collect($dbData)->map(function($mhs) use ($prodiId) {
                     $tempStatus = TempStatus::select('status', 'alasan')
                         ->where('nim', $mhs->nim);
                     $statusFromTemp = $tempStatus->value('status');
+                    
+                    // Generate predikat dari fungsi
+                    $predikat = (new MhsYud)->getPredikat($mhs->ipk);
+                    
+                    // Generate status dari fungsi hitungStatus
+                    // Extract numeric value from "10 Semester" format
+                    $studyPeriod = 0;
+                    if (preg_match('/(\d+)/', $mhs->study_period, $matches)) {
+                        $studyPeriod = (int)$matches[1];
+                    }
+                    
+                    $mahasiswaModel = new \App\Models\Mahasiswa();
+                    $computedStatus = $mahasiswaModel->hitungStatus(
+                        $studyPeriod, 
+                        (int)$mhs->sks_lulus, 
+                        (float)$mhs->ipk,
+                        (int)$prodiId
+                    );
+                    
+                    // Prioritas: temp_status > computed status
+                    $status = $statusFromTemp ?: $computedStatus;
                     
                     return [
                         'nim' => $mhs->nim,
@@ -230,14 +281,15 @@ class Index3Controller extends Controller
                         'study_period' => $mhs->study_period,
                         'sks_lulus' => $mhs->sks_lulus,
                         'ipk' => $mhs->ipk,
-                        'predikat' => $mhs->predikat,
-                        'status' => !empty($statusFromTemp) ? $statusFromTemp : $mhs->status,
+                        'predikat' => $predikat,
+                        'status' => $status,
                         
                         // Ekstra jika dibutuhkan js
                         'fakultas' => '-', 
                         'prodi' => '-',
                         'SMT_CURRENT' => '-', // Dummy karena di DB mahasiswa tidak ada SMT_CURRENT
                         'alasan_status' => $tempStatus->value('alasan') ?? '-',
+                        'source' => 'database' // Tambahkan source
                     ];
                 })->toArray();
             }

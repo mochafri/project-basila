@@ -7,30 +7,93 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     const fakultasId = span.dataset.fakultas;
     console.log("Fakultas ID:", fakultasId);
 
+    // Store ALL checkbox states in memory (including disabled ones)
+    const checkboxStates = new Map(); // { nim: { checked: boolean, disabled: boolean } }
+
     // Handle Check All
     const checkAll = document.getElementById('checkAll');
     const totalDipilih = document.getElementById('totalDipilih');
     const totalTidakDipilih = document.getElementById('totalTidakDipilih');
     
+    // Initialize checkbox states from server data (ALL mahasiswa from all pages)
+    function initializeStates() {
+        // First, initialize from server data if available
+        if (window.allMahasiswaData && Array.isArray(window.allMahasiswaData)) {
+            console.log('Initializing from server data:', window.allMahasiswaData.length, 'mahasiswa');
+            window.allMahasiswaData.forEach(mhs => {
+                checkboxStates.set(mhs.nim, {
+                    checked: mhs.checked,
+                    disabled: mhs.disabled
+                });
+            });
+        } else {
+            // Fallback: initialize from current DOM only
+            console.log('Fallback: Initializing from DOM');
+            document.querySelectorAll('.row-checkbox').forEach(cb => {
+                const nim = cb.dataset.nim;
+                if (nim) {
+                    checkboxStates.set(nim, {
+                        checked: cb.checked,
+                        disabled: cb.disabled
+                    });
+                }
+            });
+        }
+        console.log('Initialized states:', checkboxStates.size, 'total checkboxes');
+    }
+    
+    // Sync DOM checkboxes with stored states
+    function syncCheckboxes() {
+        document.querySelectorAll('.row-checkbox').forEach(cb => {
+            const nim = cb.dataset.nim;
+            if (nim && checkboxStates.has(nim)) {
+                const state = checkboxStates.get(nim);
+                cb.checked = state.checked;
+            }
+        });
+    }
+    
     function updateCounts() {
-        const checkboxes = document.querySelectorAll('.row-checkbox:not(:disabled)');
-        const checked = document.querySelectorAll('.row-checkbox:checked:not(:disabled)');
-        const total = checkboxes.length;
-        const selected = checked.length;
+        // Count from ALL stored states (including disabled)
+        const totalStates = checkboxStates.size;
+        const selectedStates = Array.from(checkboxStates.values())
+            .filter(state => state.checked)
+            .length;
         
-        if (totalDipilih) totalDipilih.textContent = selected;
-        if (totalTidakDipilih) totalTidakDipilih.textContent = total - selected;
+        console.log('Update counts - Total:', totalStates, 'Selected:', selectedStates);
+        
+        if (totalDipilih) totalDipilih.textContent = selectedStates;
+        if (totalTidakDipilih) totalTidakDipilih.textContent = totalStates - selectedStates;
+        
+        // Check All should only consider non-disabled checkboxes
+        const eligibleStates = Array.from(checkboxStates.values()).filter(state => !state.disabled);
+        const eligibleSelected = eligibleStates.filter(state => state.checked).length;
         
         if (checkAll) {
-            checkAll.checked = total > 0 && selected === total;
+            checkAll.checked = eligibleStates.length > 0 && eligibleSelected === eligibleStates.length;
         }
     }
 
     if (checkAll) {
         checkAll.addEventListener('change', function() {
-            // Hanya ubah checkbox yang tidak disabled
-            const checkboxes = document.querySelectorAll('.row-checkbox:not(:disabled)');
-            checkboxes.forEach(cb => cb.checked = checkAll.checked);
+            console.log('Check All clicked:', checkAll.checked);
+            
+            // Update only non-disabled states in memory
+            checkboxStates.forEach((state, nim) => {
+                if (!state.disabled) {
+                    state.checked = checkAll.checked;
+                }
+            });
+            
+            // Update visible checkboxes (only non-disabled)
+            document.querySelectorAll('.row-checkbox:not(:disabled)').forEach(cb => {
+                cb.checked = checkAll.checked;
+                const nim = cb.dataset.nim;
+                if (nim && checkboxStates.has(nim)) {
+                    checkboxStates.get(nim).checked = checkAll.checked;
+                }
+            });
+            
             updateCounts();
         });
     }
@@ -38,11 +101,61 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     // Attach event listeners to all individual checkboxes
     document.addEventListener('change', function(e) {
         if (e.target && e.target.classList.contains('row-checkbox')) {
+            const nim = e.target.dataset.nim;
+            if (nim && checkboxStates.has(nim)) {
+                checkboxStates.get(nim).checked = e.target.checked;
+                console.log('Checkbox changed:', nim, e.target.checked);
+            }
             updateCounts();
         }
     });
     
-    // Initialize count on load
+    // Listen for DataTable page changes using event delegation
+    let lastPageContent = '';
+    
+    function checkForPageChange() {
+        const table = document.querySelector('#selection-table tbody');
+        if (table) {
+            const currentContent = table.innerHTML;
+            if (currentContent !== lastPageContent) {
+                lastPageContent = currentContent;
+                console.log('Page changed detected');
+                
+                // Add new checkboxes to state (including disabled ones)
+                document.querySelectorAll('.row-checkbox').forEach(cb => {
+                    const nim = cb.dataset.nim;
+                    if (nim && !checkboxStates.has(nim)) {
+                        checkboxStates.set(nim, {
+                            checked: cb.checked,
+                            disabled: cb.disabled
+                        });
+                    }
+                });
+                
+                syncCheckboxes();
+                updateCounts();
+            }
+        }
+    }
+    
+    // Use setInterval to check for page changes (fallback if MutationObserver doesn't work)
+    setInterval(checkForPageChange, 500);
+    
+    // Also use MutationObserver for immediate detection
+    const table = document.querySelector('#selection-table');
+    if (table) {
+        const observer = new MutationObserver(() => {
+            checkForPageChange();
+        });
+        
+        observer.observe(table, {
+            childList: true,
+            subtree: true
+        });
+    }
+    
+    // Initialize states and count on load
+    initializeStates();
     updateCounts();
 
     // Listener Event buat button tetapkan
@@ -51,7 +164,12 @@ document.addEventListener('DOMContentLoaded', async (e) => {
         const id = urlParams.get('id');
         const parseId = parseInt(id);
 
-        const selectedNims = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.dataset.nim);
+        // Get selected NIMs from stored states (only checked ones)
+        const selectedNims = Array.from(checkboxStates.entries())
+            .filter(([nim, state]) => state.checked)
+            .map(([nim, state]) => nim);
+        
+        console.log('Selected NIMs:', selectedNims.length, selectedNims);
         
 
 

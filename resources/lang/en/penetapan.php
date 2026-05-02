@@ -3,7 +3,7 @@
 return [
     'title' => 'Yudisium Determination',
     'subtitle' => 'Yudisium List',
-    'semester' => 'Periode',
+    'semester' => 'semester',
     'show' => 'Show',
     'odd' => 'Odd',
     'even' => 'Even',

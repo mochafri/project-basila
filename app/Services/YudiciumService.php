@@ -166,13 +166,22 @@ class YudiciumService
             return 'Belum ditetapkan';
         }
 
-        $bulan = date('m', strtotime($periode));
-        $tahun = date('Y', strtotime($periode));
+        $bulan = (int)date('m', strtotime($periode));
+        $tahun = (int)date('Y', strtotime($periode));
 
+        // Genap: Februari (02) - Juli (07)
         if ($bulan >= 2 && $bulan <= 7) {
-            return __('dashboard.even') . " {$tahun}/" . ($tahun + 1);
+            // Tahun ajaran dimulai tahun sebelumnya
+            return __('dashboard.even') . " " . ($tahun - 1) . "/" . $tahun;
         }
 
+        // Ganjil: Agustus (08) - Januari (01)
+        // Jika bulan Januari, tahun ajaran dimulai tahun sebelumnya
+        if ($bulan == 1) {
+            return __('dashboard.odd') . " " . ($tahun - 1) . "/" . $tahun;
+        }
+        
+        // Jika bulan Agustus - Desember
         return __('dashboard.odd') . " {$tahun}/" . ($tahun + 1);
     }
 

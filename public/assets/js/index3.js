@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             prodiSelect.innerHTML = '<option value="">Gagal memuat data prodi</option>';
         }
     });
-    const periodeSelect = document.getElementById('periodeSelect');
+    // const periodeSelect = document.getElementById('periodeSelect'); // DISABLED - Semester filter hidden
     
     function renderTable() {
         const tableEl = document.querySelector('#selection-table');
@@ -142,6 +142,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Show loading SweetAlert
+            Swal.fire({
+                title: 'Mencari Data...',
+                html: 'Sedang mengambil data mahasiswa, mohon tunggu sebentar',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
         try {
             const res = await fetch(routes.filterMhs, {
                 method: "POST",
@@ -152,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify({
                     fakultas: fakultasSelect.value,
                     prodi: prodiSelect.value,
-                    periode: periodeSelect.value
+                    periode: '' // Semester filter disabled
                 })
             });
 
@@ -166,8 +177,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderTable();
             updateSelectionCount();
 
+            // Close loading and show success
+            Swal.fire({
+                icon: 'success',
+                title: 'Data Ditemukan!',
+                text: `Berhasil memuat ${window.mahasiswaList.length} data mahasiswa`,
+                timer: 1500,
+                showConfirmButton: false
+            });
+
         } catch (err) {
             console.error("Error fetching mahasiswa:", err);
+            
+            // Show error alert
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Memuat Data',
+                text: 'Terjadi kesalahan saat mengambil data mahasiswa. Silakan coba lagi.',
+                confirmButtonColor: '#dc2626'
+            });
         }
     });
 }

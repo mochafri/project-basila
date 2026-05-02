@@ -10,26 +10,31 @@ class MhsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * 
+     * Standarisasi untuk S1 (Sarjana):
+     * - Masa Studi Normal: 8 semester (4 tahun)
+     * - Masa Studi Maksimal: 14 semester (7 tahun)
+     * - SKS Lulus: 144-160 SKS
      */
     public function run(): void
     {
         $data = [];
 
         for ($i = 1; $i <= 5; $i++) {
-            $study_period = rand(6, 8);
-            $pass_sks = rand(110, 144);
-            $ipk = number_format(rand(200, 395) / 100, 2);
+            // S1: 8-14 semester, 144-160 SKS
+            $study_period = rand(8, 14);
+            $pass_sks = rand(144, 160);
+            $ipk = number_format(rand(275, 400) / 100, 2); // IPK 2.75 - 4.00
 
+            // Note: STATUS dan PREDIKAT akan digenerate dari fungsi, tidak disimpan di database
             $data[] = [
-                'STUDENTID'     => '2101' . str_pad($i, 4, '0', STR_PAD_LEFT),
-                'FULLNAME'      => 'Mahasiswa ' . $i,
-                'MASA_STUDI'    => $study_period,
+                'STUDENTID'     => '3101' . str_pad($i, 4, '0', STR_PAD_LEFT),
+                'FULLNAME'      => 'Mahasiswa Test ' . $i,
+                'MASA_STUDI'    => $study_period . ' Semester',
                 'PASS_CREDIT'   => $pass_sks,
                 'GPA'           => $ipk,
-                'STATUS'        => (new Mahasiswa)->hitungStatus($study_period, $pass_sks, $ipk),
-                'STUDYPROGRAMID'=> 31,
-                'FACULTYID'     => 7,
-                'PREDIKAT'      => null,
+                'STUDYPROGRAMID'=> 31, // S1 Informatika
+                'FACULTYID'     => 7,  // Fakultas Informatika
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ];
