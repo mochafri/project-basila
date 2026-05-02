@@ -142,46 +142,71 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const yudId = button.dataset.id;
 
-        console.log("ID : ", yudId);
+        // Tampilkan loading di popup
+        popupBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center py-4">
+                    <div class="flex items-center justify-center gap-2 text-gray-500">
+                        <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                        Memuat data...
+                    </div>
+                </td>
+            </tr>
+        `;
+        popup.classList.remove("hidden");
 
         try {
             const res = await fetch(`/yudicium/${yudId}/mahasiswa`);
             if (!res.ok) throw new Error('Failed to fetch');
 
             const data = await res.json();
-            console.log("Data:", data);
+
+            // Tampilkan badge status approval di header popup jika ada
+            const approvalStatus = data.yudisium?.[0]?.approval_status ?? '';
+            const statusBadgeEl = document.getElementById('popup-approval-status');
+            if (statusBadgeEl) {
+                const badgeClass = {
+                    'Approved' : 'bg-green-100 text-green-700',
+                    'Rejected' : 'bg-red-100 text-red-700',
+                    'Waiting'  : 'bg-yellow-100 text-yellow-700',
+                    'Draft'    : 'bg-blue-100 text-blue-700',
+                }[approvalStatus] ?? 'bg-gray-100 text-gray-700';
+
+                statusBadgeEl.innerHTML = approvalStatus
+                    ? `<span class="px-3 py-1 rounded-full text-xs font-semibold ${badgeClass}">${approvalStatus}</span>`
+                    : '';
+            }
 
             if (Array.isArray(data.mahasiswa) && data.mahasiswa.length > 0) {
-                allMahasiswa = data.mahasiswa; // Store all data
-                currentPage = 1; // Reset to page 1 (default untuk Penetapan Yudisium)
-                
-                // Render table with pagination starting at page 1
+                allMahasiswa = data.mahasiswa;
+                currentPage = 1;
                 renderMahasiswaTable(allMahasiswa, currentPage);
             } else {
                 popupBody.innerHTML = `
                     <tr>
-                        <td colspan="8" class="text-center">tidak ada data</td>
+                        <td colspan="8" class="text-center py-6 text-gray-500">
+                            Tidak ada data mahasiswa untuk yudisium ini.
+                        </td>
                     </tr>
                 `;
                 const paginationContainer = document.getElementById('pagination-controls');
-                if (paginationContainer) {
-                    paginationContainer.innerHTML = '';
-                }
+                if (paginationContainer) paginationContainer.innerHTML = '';
             }
 
-            popup.classList.remove("hidden");
         } catch (err) {
             console.error(err);
             popupBody.innerHTML = `
                 <tr>
-                    <td colspan="8" class="text-center">Gagal memuat data</td>
+                    <td colspan="8" class="text-center py-6 text-red-500">
+                        Gagal memuat data. Silakan coba lagi.
+                    </td>
                 </tr>
             `;
             const paginationContainer = document.getElementById('pagination-controls');
-            if (paginationContainer) {
-                paginationContainer.innerHTML = '';
-            }
-            popup.classList.remove("hidden");
+            if (paginationContainer) paginationContainer.innerHTML = '';
         }
     });
 

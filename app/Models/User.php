@@ -21,6 +21,7 @@ class User extends Authenticatable
         'password',
         'role',
         'nip',
+        'fakultas_id',
     ];
 
     /**

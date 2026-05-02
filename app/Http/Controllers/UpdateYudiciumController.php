@@ -392,23 +392,78 @@ class UpdateYudiciumController extends Controller
         }
     }
 
-    public function updateYudicium(Request $request)
+    public function hapusMahasiswa(Request $request)
     {
-        $validate = $request->validate([
-            'id' => 'integer|required'
+        $request->validate([
+            'nim'         => 'required|string',
+            'yudicium_id' => 'required|integer',
         ]);
 
-        $yudicium = Yudicium::find($request->id);
-        $yudicium->approval_status = 'Waiting';
-        $yudicium->save();
-
-        MhsYud::where('yudicium_id', $request->id)
-            ->where('status', 'Tidak Eligible')
+        $deleted = MhsYud::where('nim', $request->nim)
+            ->where('yudicium_id', $request->yudicium_id)
             ->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Data diperbarui'
+        if ($deleted) {
+            Log::info('Mahasiswa dihapus dari daftar yudisium', [
+                'nim' => $request->nim,
+                'yudicium_id' => $request->yudicium_id
+            ]);
+            return response()->json(['success' => true, 'message' => 'Mahasiswa berhasil dihapus dari daftar.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Data tidak ditemukan.'], 404);
+    }
+
+    public function updateYudicium(Request $request)
+    {
+        $request->validate([
+            'id'             => 'required|integer',
+            'mahasiswa_nims' => 'nullable|array',
+            'remove_nims'    => 'nullable|array',
         ]);
+
+        $yudiciumId   = $request->id;
+        $keepNims     = $request->input('mahasiswa_nims', []);
+        $removeNims   = $request->input('remove_nims', []);
+
+        DB::beginTransaction();
+        try {
+            $yudicium = Yudicium::findOrFail($yudiciumId);
+
+            // 1. Hapus mahasiswa yang tidak dicentang (remove_nims)
+            if (!empty($removeNims)) {
+                MhsYud::where('yudicium_id', $yudiciumId)
+                    ->whereIn('nim', $removeNims)
+                    ->delete();
+                Log::info('Hapus mahasiswa tidak dicentang', ['count' => count($removeNims)]);
+            }
+
+            // 2. Update status mahasiswa yang dicentang → Eligible (bukan final)
+            if (!empty($keepNims)) {
+                MhsYud::where('yudicium_id', $yudiciumId)
+                    ->whereIn('nim', $keepNims)
+                    ->update(['status' => 'Eligible']);
+                Log::info('Update status ke Eligible', ['count' => count($keepNims)]);
+            }
+
+            // 3. Set approval_status kembali ke Waiting
+            $yudicium->approval_status = 'Waiting';
+            $yudicium->save();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Yudisium berhasil ditetapkan ulang. ' . count($keepNims) . ' mahasiswa ditetapkan, ' . count($removeNims) . ' dihapus.'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('updateYudicium error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

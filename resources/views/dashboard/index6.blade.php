@@ -121,7 +121,7 @@
                             </div>
                             <div class="GenerateLaporan my-5">
                                 <h1 class="text-xl font-bold mb-5">{{ __('index6.generate') }}</h1>
-                                <form action="{{ route('yudisium.print.rekap') }}" method="GET" target="_blank">
+                                <form id="generateForm" action="{{ route('yudisium.print.rekap') }}" method="GET" target="_blank">
                                     <div class="w-[60%] flex flex-col gap-2 font-medium">
 
                                         {{-- Fakultas --}}
@@ -146,7 +146,7 @@
                                             </select>
                                         </div>
 
-                                        <button
+                                        <button type="button" id="btnGenerate"
                                             class="text-neutral-100 border bg-blue-800 rounded-md shadow-xl w-1/3 px-2 py-1">
                                             {{ __('index6.btn_report') }}
                                         </button>
@@ -166,5 +166,63 @@
         };
     </script>
 
+    <script>
+        document.getElementById('btnGenerate').addEventListener('click', async function () {
+            const form        = document.getElementById('generateForm');
+            const fakultasId  = form.querySelector('[name="fakultas_id"]').value;
+            const periode     = form.querySelector('[name="periode"]').value;
+
+            // Validasi input
+            if (!fakultasId || !periode) {
+                Swal.fire({
+                    title: 'Perhatian!',
+                    text: 'Silakan pilih Fakultas dan Periode terlebih dahulu.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK',
+                    buttonsStyling: false,
+                    customClass: { confirmButton: 'btn-ok' }
+                });
+                return;
+            }
+
+            // Loading state
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Memeriksa data...';
+
+            try {
+                const checkUrl = `{{ route('yudisium.check.rekap') }}?fakultas_id=${fakultasId}&periode=${periode}`;
+                const res  = await fetch(checkUrl);
+                const data = await res.json();
+
+                if (data.exists) {
+                    // Ada data → buka PDF di tab baru
+                    form.submit();
+                } else {
+                    // Tidak ada data → SweetAlert
+                    Swal.fire({
+                        title: 'Data Tidak Ditemukan!',
+                        text: 'Data laporan yudisium tidak ada untuk fakultas dan periode yang dipilih.',
+                        icon: 'info',
+                        confirmButtonText: 'OK',
+                        buttonsStyling: false,
+                        customClass: { confirmButton: 'btn-ok' }
+                    });
+                }
+            } catch (err) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat memeriksa data. Silakan coba lagi.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    buttonsStyling: false,
+                    customClass: { confirmButton: 'btn-ok' }
+                });
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '{{ __('index6.btn_report') }}';
+            }
+        });
+    </script>
 
 @endsection

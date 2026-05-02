@@ -119,9 +119,15 @@ class YudiciumDashboardController extends Controller
     public function approval(Request $request)
     {
         $data = $this->getCommonDashboardData($request);
-        
-        // Get waiting yudiciums via the dedicated method (which we will move to YudiciumApprovalController later or call directly)
-        $yudicium = $this->yudiciumService->getWaitingYudiciums();
+        $user = auth()->user();
+
+        // Dekan hanya melihat yudisium dari fakultasnya sendiri
+        // Admin/superadmin melihat semua
+        if ($user && $user->role === 'dekan' && $user->fakultas_id) {
+            $yudicium = $this->yudiciumService->getWaitingYudiciumsByFakultas($user->fakultas_id);
+        } else {
+            $yudicium = $this->yudiciumService->getWaitingYudiciums();
+        }
 
         return view("dashboard.index4", array_merge($data, [
             'yudicium' => $yudicium,
@@ -142,6 +148,15 @@ class YudiciumDashboardController extends Controller
         $periodeLabel = $selectedPeriode['label'] ?? null;
 
         $datasQuery = DB::table('yudiciums');
+
+        // Filter berdasarkan user yang login (NIP atau username)
+        // Admin & superadmin bisa melihat semua
+        $user = auth()->user();
+        if ($user && !in_array($user->role, ['admin', 'superadmin'])) {
+            $createdBy = $user->nip ?: $user->username;
+            $datasQuery->where('created_by', $createdBy);
+        }
+
         if ($selectedPeriode) {
             $datasQuery->whereBetween('periode', [$selectedPeriode['start'], $selectedPeriode['end']]);
         }

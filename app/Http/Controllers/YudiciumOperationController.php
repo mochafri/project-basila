@@ -47,6 +47,7 @@ class YudiciumOperationController extends Controller
                 'prodi_id'    => $validate['prodi_id'],
                 'periode'     => null,
                 'no_yudicium' => null,
+                'created_by'  => auth()->user()?->nip ?: auth()->user()?->username,
             ]);
 
             // Langsung set API untuk setiap NIM yang dipilih: SELECTED=Y, periode=tanggalHariIni

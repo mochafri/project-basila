@@ -18,6 +18,7 @@ class Yudicium extends Model
         'approval_status',
         'catatan',
         'approved_at',
+        'created_by',
     ];
     
 }

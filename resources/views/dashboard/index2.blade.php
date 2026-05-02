@@ -342,7 +342,10 @@
                         class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div
                             class="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-6xl max-h-[90%] overflow-y-auto relative text-center">
-                            <h2 class="text-2xl font-bold mb-4">{{ __('penetapan.detail_student') }}</h2>
+                            <div class="flex items-center justify-center gap-3 mb-4">
+                                <h2 class="text-2xl font-bold">{{ __('penetapan.detail_student') }}</h2>
+                                <span id="popup-approval-status"></span>
+                            </div>
                             <button id="popup-close" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
                                 <iconify-icon icon="mdi:close" class="text-2xl"></iconify-icon>
                             </button>

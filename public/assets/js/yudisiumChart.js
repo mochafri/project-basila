@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
             toolbar: { show: false }
         },
         series: [{
-            name: 'Jumlah Yudisium',
+            name: 'Jumlah Mahasiswa',
             data: sortedData
         }],
         xaxis: {

@@ -72,6 +72,33 @@ class YudiciumPrintController extends Controller
         return $pdf->stream($filename);
     }
 
+    public function checkRekap(Request $request)
+    {
+        $validate = $request->validate([
+            'fakultas_id' => 'required|integer',
+            'periode'     => 'required|date',
+        ]);
+
+        $periodes = $this->yudiciumService->generatePeriodeDropdown();
+        $selectedPeriode = collect($periodes)->firstWhere('value', $validate['periode']);
+
+        if (!$selectedPeriode) {
+            return response()->json(['exists' => false, 'message' => 'Periode tidak valid']);
+        }
+
+        $count = MhsYud::join('yudiciums', 'mhs_yudiciums.yudicium_id', '=', 'yudiciums.id')
+            ->where('yudiciums.approval_status', 'Approved')
+            ->where('mhs_yudiciums.fakultas_id', $validate['fakultas_id'])
+            ->whereBetween('yudiciums.periode', [$selectedPeriode['start'], $selectedPeriode['end']])
+            ->count();
+
+        return response()->json([
+            'exists'  => $count > 0,
+            'count'   => $count,
+            'message' => $count > 0 ? "Ditemukan {$count} data mahasiswa yudisium" : 'Data laporan yudisium tidak ada',
+        ]);
+    }
+
     public function printRekapPdf(Request $request)
     {
         $validate = $request->validate([

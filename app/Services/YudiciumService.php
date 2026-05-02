@@ -252,6 +252,52 @@ class YudiciumService
 
         return $yudicium;
     }
+    public function getWaitingYudiciumsByFakultas(int $fakultasId)
+    {
+        $yudicium = DB::table('yudiciums')
+            ->select(
+                'yudiciums.id as id',
+                'yudiciums.no_yudicium as no_yudicium',
+                'yudiciums.periode as periode',
+                'yudiciums.fakultas_id as fakultas',
+                'yudiciums.prodi_id as prodi',
+                DB::raw('(SELECT COUNT(*) FROM mhs_yudiciums WHERE mhs_yudiciums.yudicium_id = yudiciums.id) as total_mhs')
+            )
+            ->where('yudiciums.approval_status', 'Waiting')
+            ->where('yudiciums.fakultas_id', $fakultasId)
+            ->get();
+
+        $fakulties  = $this->getFaculties();
+        $prodyCache = [];
+
+        $yudicium->transform(function ($item) use ($fakulties, &$prodyCache) {
+            $faculty = $fakulties->firstWhere('facultyid', $item->fakultas);
+            $item->fakultasname = $faculty['facultyname'] ?? 'Unknown';
+            $facultyId = $faculty['facultyid'] ?? null;
+
+            if ($facultyId) {
+                if (!isset($prodyCache[$facultyId])) {
+                    $prodyCache[$facultyId] = $this->getPrody($facultyId);
+                }
+                $prody = $prodyCache[$facultyId];
+                $item->prodiname = $prody->isNotEmpty()
+                    ? ($prody->firstWhere('studyprogramid', $item->prodi)['studyprogramname'] ?? 'Unknown')
+                    : 'Unknown';
+            } else {
+                $item->prodiname = 'Unknown';
+            }
+
+            $listSelected    = $this->getSelectedAcademicData($item->prodi, $item->periode);
+            $item->total_mhs = !empty($listSelected)
+                ? count($listSelected)
+                : DB::table('mhs_yudiciums')->where('yudicium_id', $item->id)->count();
+
+            return $item;
+        });
+
+        return $yudicium;
+    }
+
     public function getSelectedAcademicData($prodiId, $tanggal)
     {
         $apiUrl = str_replace(['IDPRODI', 'TANGGAL'], [$prodiId, $tanggal], $this->urlPickAcademic);

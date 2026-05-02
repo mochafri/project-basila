@@ -147,6 +147,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/update-yudisium', 'index')->name('index7');
             Route::redirect('/dashboard/index-7/', '/dashboard/update-yudisium');
 
+            Route::post('/update-yudisium', 'updateYudicium')->name('yudicium.updateYudicium');
+
             Route::get('/Tetapkan-yudisium', 'index')->name('index5');
             Route::redirect('/dashboard/index-5/', '/dashboard/index-5');
             
@@ -233,11 +235,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/yudicium-approve', [App\Http\Controllers\YudiciumApprovalController::class, 'generateCode'])->name('yudicium.approve');
     Route::post('/yudicium-update', [App\Http\Controllers\YudiciumApprovalController::class, 'updateStatus'])->name('yudicium.update');
+    Route::post('/yudicium/hapus-mhs', [App\Http\Controllers\UpdateYudiciumController::class, 'hapusMahasiswa'])->name('yudicium.hapusMhs');
     Route::get('/yudicium-approve-single/{id}', [App\Http\Controllers\YudiciumApprovalController::class, 'approve'])->name('yudicium.approve_single');
 
     // Print
     Route::get('/yudicium/print/{id}', [App\Http\Controllers\YudiciumPrintController::class, 'printPdf'])->name('yudicium.print');
     Route::get('/yudisium/print-rekap', [App\Http\Controllers\YudiciumPrintController::class, 'printRekapPdf'])->name('yudisium.print.rekap');
+    Route::get('/yudisium/check-rekap', [App\Http\Controllers\YudiciumPrintController::class, 'checkRekap'])->name('yudisium.check.rekap');
 
     // Penetapan Yudisium - Dual Source (API + Database)
     Route::prefix('yudisium')->group(function () {

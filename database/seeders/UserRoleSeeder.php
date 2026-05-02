@@ -9,159 +9,195 @@ use Illuminate\Support\Facades\Hash;
 
 class UserRoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Data users dengan struktur seperti screenshot
+        // Username yang valid — hapus semua user lain selain superadmin
+        $validUsernames = [
+            'superadmin',
+            'admin',
+            'laak01', 'laak02',
+            'dekan_fit', 'dekan_fik', 'dekan_fte', 'dekan_fri', 'dekan_fif', 'dekan_feb', 'dekan_fkb',
+            'dosen01', 'dosen02', 'dosen03', 'dosen04',
+        ];
+
+        // Hapus user lama yang tidak ada di daftar valid
+        $oldUsers = User::whereNotIn('username', $validUsernames)->get();
+        foreach ($oldUsers as $old) {
+            UserRole::where('user_nib', $old->id)->delete();
+            $old->delete();
+        }
+
         $users = [
-            // Administrator
+            // ─── ADMIN ───────────────────────────────────────────────
             [
                 'username' => 'admin',
-                'nip' => '000000',
-                'password' => Hash::make('admin123'),
-                'role' => 'admin',
-                'user_role' => [
-                    'user_fullname' => 'Administrator',
-                    'role_id' => 10000,
-                ],
+                'nip'      => '196503121990031002',
+                'password' => Hash::make('password'),
+                'role'     => 'admin',
+                'fullname' => 'Budi Santoso',
+                'role_id'  => 10000,
             ],
-            
-            // Kamar Begian
+
+            // ─── LAAK ────────────────────────────────────────────────
             [
-                'username' => 'kamar',
-                'nip' => '111111',
-                'password' => Hash::make('kamar123'),
-                'role' => 'laak',
-                'user_role' => [
-                    'user_fullname' => 'Kamar Begian',
-                    'role_id' => 50055,
-                ],
+                'username' => 'laak01',
+                'nip'      => '197204251998031003',
+                'password' => Hash::make('password'),
+                'role'     => 'laak',
+                'fullname' => 'Siti Rahayu',
+                'role_id'  => 50055,
             ],
-            
-            // Kaur Akademik 1
             [
-                'username' => 'kaur1',
-                'nip' => '198704321',
-                'password' => Hash::make('kaur123'),
-                'role' => 'dekan',
-                'user_role' => [
-                    'user_fullname' => 'Kaur Akademik 1',
-                    'role_id' => 34803,
-                ],
+                'username' => 'laak02',
+                'nip'      => '198001152005012004',
+                'password' => Hash::make('password'),
+                'role'     => 'laak',
+                'fullname' => 'Agus Purnomo',
+                'role_id'  => 50055,
             ],
-            
-            // Kaur Akademik 2
+
+            // ─── DEKAN ───────────────────────────────────────────────
             [
-                'username' => 'kaur2',
-                'nip' => '198766432',
-                'password' => Hash::make('kaur123'),
-                'role' => 'dekan',
-                'user_role' => [
-                    'user_fullname' => 'Kaur Akademik 2',
-                    'role_id' => 30057,
-                ],
+                'username'    => 'dekan_fit',
+                'nip'         => '196812201994031001',
+                'password'    => Hash::make('password'),
+                'role'        => 'dekan',
+                'fakultas_id' => 3,   // FIT - Fakultas Ilmu Terapan
+                'fullname'    => 'Dedy Rahman Wijaya',
+                'role_id'     => 34803,
             ],
-            
-            // Staff A1
             [
-                'username' => 'staffa1',
-                'nip' => '2001001',
-                'password' => Hash::make('staff123'),
-                'role' => 'kaprodi',
-                'user_role' => [
-                    'user_fullname' => 'Staff A1',
-                    'role_id' => 30056,
-                ],
+                'username'    => 'dekan_fik',
+                'nip'         => '197505102001121002',
+                'password'    => Hash::make('password'),
+                'role'        => 'dekan',
+                'fakultas_id' => 4,   // FIK - Fakultas Industri Kreatif
+                'fullname'    => 'Dandi Yunidar',
+                'role_id'     => 34803,
             ],
-            
-            // Staff A2
             [
-                'username' => 'staffa2',
-                'nip' => '2001002',
-                'password' => Hash::make('staff123'),
-                'role' => 'kaprodi',
-                'user_role' => [
-                    'user_fullname' => 'Staff A2',
-                    'role_id' => 30060,
-                ],
+                'username'    => 'dekan_fte',
+                'nip'         => '196904151994031005',
+                'password'    => Hash::make('password'),
+                'role'        => 'dekan',
+                'fakultas_id' => 5,   // FTE - Fakultas Teknik Elektro
+                'fullname'    => 'Achmad Rizal',
+                'role_id'     => 34803,
             ],
-            
-            // Staff B1
             [
-                'username' => 'staffb1',
-                'nip' => '2002001',
-                'password' => Hash::make('staff123'),
-                'role' => 'dosen',
-                'user_role' => [
-                    'user_fullname' => 'Staff B1',
-                    'role_id' => 30055,
-                ],
+                'username'    => 'dekan_fri',
+                'nip'         => '197308221999031003',
+                'password'    => Hash::make('password'),
+                'role'        => 'dekan',
+                'fakultas_id' => 6,   // FRI - Fakultas Rekayasa Industri
+                'fullname'    => 'Muhammad Iqbal',
+                'role_id'     => 34803,
             ],
-            
-            // Staff B2
             [
-                'username' => 'staffb2',
-                'nip' => '2002002',
-                'password' => Hash::make('staff123'),
-                'role' => 'dosen',
-                'user_role' => [
-                    'user_fullname' => 'Staff B2',
-                    'role_id' => 30056,
-                ],
+                'username'    => 'dekan_fif',
+                'nip'         => '197601102003121001',
+                'password'    => Hash::make('password'),
+                'role'        => 'dekan',
+                'fakultas_id' => 7,   // FIF - Fakultas Informatika
+                'fullname'    => 'Kemas Muslim Lhaksmana',
+                'role_id'     => 34803,
+            ],
+            [
+                'username'    => 'dekan_feb',
+                'nip'         => '196711281993032002',
+                'password'    => Hash::make('password'),
+                'role'        => 'dekan',
+                'fakultas_id' => 8,   // FEB - Fakultas Ekonomi dan Bisnis
+                'fullname'    => 'Farida Titik Kristanti',
+                'role_id'     => 34803,
+            ],
+            [
+                'username'    => 'dekan_fkb',
+                'nip'         => '197209141998022001',
+                'password'    => Hash::make('password'),
+                'role'        => 'dekan',
+                'fakultas_id' => 9,   // FKB - Fakultas Komunikasi dan Bisnis
+                'fullname'    => 'Lis Kurnia Nurhayati',
+                'role_id'     => 34803,
+            ],
+
+            // ─── DOSEN ───────────────────────────────────────────────
+            [
+                'username' => 'dosen01',
+                'nip'      => '198203142006041001',
+                'password' => Hash::make('password'),
+                'role'     => 'dosen',
+                'fullname' => 'Rizky Firmansyah',
+                'role_id'  => 30055,
+            ],
+            [
+                'username' => 'dosen02',
+                'nip'      => '197911082004122003',
+                'password' => Hash::make('password'),
+                'role'     => 'dosen',
+                'fullname' => 'Dewi Kusumawati',
+                'role_id'  => 30055,
+            ],
+            [
+                'username' => 'dosen03',
+                'nip'      => '198507252010011005',
+                'password' => Hash::make('password'),
+                'role'     => 'dosen',
+                'fullname' => 'Hendra Gunawan',
+                'role_id'  => 30055,
+            ],
+            [
+                'username' => 'dosen04',
+                'nip'      => '198001302008012002',
+                'password' => Hash::make('password'),
+                'role'     => 'dosen',
+                'fullname' => 'Nurul Hidayah',
+                'role_id'  => 30055,
             ],
         ];
 
-        foreach ($users as $userData) {
-            // Create or update user (tanpa force ID)
+        foreach ($users as $data) {
             $user = User::updateOrCreate(
-                ['username' => $userData['username']],
+                ['username' => $data['username']],
                 [
-                    'nip' => $userData['nip'],
-                    'password' => $userData['password'],
-                    'role' => $userData['role'],
+                    'nip'         => $data['nip'],
+                    'password'    => $data['password'],
+                    'role'        => $data['role'],
+                    'fakultas_id' => $data['fakultas_id'] ?? null,
                 ]
             );
 
-            // Create or update user role
-            if (isset($userData['user_role'])) {
-                UserRole::updateOrCreate(
-                    ['user_nib' => $user->id],
-                    [
-                        'user_fullname' => $userData['user_role']['user_fullname'],
-                        'role_id' => $userData['user_role']['role_id'],
-                    ]
-                );
-            }
+            UserRole::updateOrCreate(
+                ['user_nib' => $user->id],
+                [
+                    'user_fullname' => $data['fullname'],
+                    'role_id'       => $data['role_id'],
+                ]
+            );
         }
 
         $this->command->info('✅ Users dan User Roles berhasil dibuat!');
-        $this->command->info('');
+        $this->command->newLine();
         $this->command->info('📋 Daftar User:');
-        $this->command->info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        
-        // Display actual data from database
-        $allUsers = User::with('userRole')->get();
-        foreach ($allUsers as $user) {
-            $roleId = $user->userRole ? $user->userRole->role_id : 'N/A';
-            $fullname = $user->userRole ? $user->userRole->user_fullname : 'N/A';
+        $this->command->info(str_repeat('─', 90));
+        $this->command->info(sprintf('%-4s %-15s %-20s %-10s %-8s %s', 'ID', 'Username', 'NIP', 'Role', 'Role ID', 'Nama'));
+        $this->command->info(str_repeat('─', 90));
+
+        User::with('userRole')->orderBy('id')->get()->each(function ($u) {
             $this->command->info(sprintf(
-                '%2d | %-10s | %-10s | %-10s | %-8s | %s',
-                $user->id,
-                $user->username,
-                $user->nip,
-                $user->role,
-                $roleId,
-                $fullname
+                '%-4d %-15s %-20s %-10s %-8s %s',
+                $u->id,
+                $u->username,
+                $u->nip ?? '-',
+                $u->role,
+                $u->userRole?->role_id ?? '-',
+                $u->userRole?->user_fullname ?? '-'
             ));
-        }
-        
-        $this->command->info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->command->info('');
-        $this->command->info('🔑 Default Passwords:');
-        $this->command->info('  admin/kamar: admin123/kamar123');
-        $this->command->info('  kaur1/kaur2: kaur123');
-        $this->command->info('  staff*: staff123');
+        });
+
+        $this->command->info(str_repeat('─', 90));
+        $this->command->newLine();
+        $this->command->info('🔑 Password semua user: password');
+        $this->command->info('📊 Total: ' . User::count() . ' users');
     }
 }
