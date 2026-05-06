@@ -283,5 +283,16 @@
             updateStatus: "{{ route('yudicium.update') }}",
             updateYudicium: "{{ route('yudicium.updateYudicium') }}"
         };
+        
+        // Pass all mahasiswa data to JavaScript for checkbox tracking
+        window.allMahasiswaData = @json($datas->map(function($data) {
+            return [
+                'nim' => $data->nim,
+                'name' => $data->name,
+                'checked' => true // Default all checked
+            ];
+        }));
+        
+        console.log('Total mahasiswa from backend:', window.allMahasiswaData.length);
     </script>
 @endsection

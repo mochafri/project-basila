@@ -142,45 +142,125 @@ class Index3Controller extends Controller
                 'semester' => $periode
             ]);
 
-            // API: Kirim parameter filter sebagai query params
-            // Tetap membawa param bawaan url akademik
-            $response = Http::get($this->url, [
-                'periode' => date('Y-m-d'),
-                't' => time(),
-                'fakultas' => $fakultasId,
-                'prodi' => $prodiId,
-                'semester' => $periode
+            // API stt=7: Panggil tanpa parameter (API akan return semua data)
+            // Kita akan filter di backend
+            \Log::info('Calling API stt=7 (no params)', [
+                'url' => $this->url
+            ]);
+            
+            $response = Http::timeout(15)->get($this->url);
+
+            \Log::info('API Response', [
+                'status' => $response->status(),
+                'successful' => $response->successful(),
+                'raw_body' => $response->body(),
+                'data_count' => is_array($response->json()) ? count($response->json()) : 0
             ]);
 
             $data = $response->json();
             $mahasiswa = [];
-            $source = 'api';
+            $source = 'database'; // default fallback
 
-            if ($response->successful() && !empty($data)) {
+            if ($response->successful() && !empty($data) && is_array($data)) {
+                $source = 'api';
+                
+                \Log::info('API Response received', [
+                    'total_from_api' => count($data),
+                    'prodi' => $prodiId
+                ]);
+                
                 // Ambil daftar NIM yang sudah ada di mhs_yudiciums (semua, tidak peduli status atau prodi)
                 $existingNims = MhsYud::pluck('nim')->toArray();
                 
                 \Log::info('Existing NIMs in mhs_yudiciums (all)', [
-                    'nims' => $existingNims, 
                     'count' => count($existingNims)
                 ]);
                 
-                $mahasiswa = collect($data ?? [])
-                ->filter(function($mhs) use ($prodiId, $periode, $existingNims) {
-                    // Cek jika API tidak melakukan filter, kita bantu filter di sisi backend
-                    $matchProdi   = empty($prodiId) || $mhs['STUDYPROGRAMID'] == $prodiId;
+                // Cross-check dengan API stt=10 untuk mendapatkan daftar NIM yang sudah selected
+                $selectedInApiStt10 = [];
+                try {
+                    \Log::info('Cross-checking with API stt=10 to get selected NIMs');
                     
-                    // Hanya tampilkan mahasiswa yang belum dipilih
+                    // Panggil API stt=10 untuk prodi ini dengan tanggal hari ini
+                    $urlPickAcademic = trim(env('URL_PICK_ACADEMIC'), " '\"");
+                    $currentDate = date('Y-m-d');
+                    $apiUrlStt10 = str_replace(['IDPRODI', 'TANGGAL'], [$prodiId, $currentDate], $urlPickAcademic);
+                    
+                    $responseStt10 = Http::timeout(10)->get($apiUrlStt10);
+                    
+                    if ($responseStt10->successful()) {
+                        $dataStt10 = $responseStt10->json();
+                        if (!empty($dataStt10) && is_array($dataStt10)) {
+                            $selectedInApiStt10 = array_column($dataStt10, 'STUDENTID');
+                            \Log::info('Found selected NIMs in API stt=10', [
+                                'count' => count($selectedInApiStt10),
+                                'sample' => array_slice($selectedInApiStt10, 0, 5)
+                            ]);
+                        }
+                    }
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to check API stt=10', [
+                        'error' => $e->getMessage()
+                    ]);
+                }
+                
+                $beforeFilter = count($data);
+                
+                // Untuk debugging: sample data sebelum filter
+                $sampleBeforeFilter = array_slice($data, 0, 3);
+                \Log::info('Sample data before filter', [
+                    'sample' => array_map(function($m) {
+                        return [
+                            'nim' => $m['STUDENTID'],
+                            'name' => $m['FULLNAME'],
+                            'selected' => $m['SELECTED'] ?? 'NULL',
+                            'periode' => $m['PERIODE'] ?? 'NULL'
+                        ];
+                    }, $sampleBeforeFilter)
+                ]);
+                
+                $mahasiswa = collect($data ?? [])
+                ->filter(function($mhs) use ($prodiId, $periode, $existingNims, $selectedInApiStt10) {
+                    // Filter 1: Cek prodi
+                    $matchProdi = empty($prodiId) || $mhs['STUDYPROGRAMID'] == $prodiId;
+                    
+                    // Filter 2: HANYA tampilkan mahasiswa yang SELECTED benar-benar NULL (bukan 'Y', bukan 'N')
                     $valSelected = $mhs['SELECTED'] ?? null;
                     $valPeriode  = $mhs['PERIODE'] ?? null;
 
-                    $notSelected = (is_null($valSelected) || $valSelected === 'null' || $valSelected === 'NULL' || $valSelected === 'N' || empty($valSelected)) &&
-                                   (is_null($valPeriode) || $valPeriode === 'null' || $valPeriode === 'NULL' || empty($valPeriode));
+                    // SELECTED harus benar-benar null atau string 'null' atau 'NULL' atau empty string
+                    // TIDAK boleh 'Y' atau 'N'
+                    $isSelectedNull = (
+                        is_null($valSelected) || 
+                        $valSelected === 'null' || 
+                        $valSelected === 'NULL' || 
+                        $valSelected === ''
+                    );
                     
-                    // Exclude mahasiswa yang sudah ada di mhs_yudiciums
+                    // PERIODE juga harus null atau empty
+                    $isPeriodeNull = (
+                        is_null($valPeriode) || 
+                        $valPeriode === 'null' || 
+                        $valPeriode === 'NULL' || 
+                        $valPeriode === ''
+                    );
+                    
+                    // Keduanya harus null
+                    $notSelectedInApiStt7 = $isSelectedNull && $isPeriodeNull;
+                    
+                    // Filter 3: Cross-check dengan API stt=10 - exclude jika NIM ada di stt=10
+                    $notInApiStt10 = !in_array($mhs['STUDENTID'], $selectedInApiStt10);
+                    
+                    // Filter 4: Exclude mahasiswa yang sudah ada di mhs_yudiciums (database lokal)
                     $notInMhsYud = !in_array($mhs['STUDENTID'], $existingNims);
                     
-                    return $matchProdi && $notSelected && $notInMhsYud;
+                    // Mahasiswa ditampilkan jika:
+                    // 1. Match prodi
+                    // 2. SELECTED = NULL di API stt=7
+                    // 3. PERIODE = NULL di API stt=7
+                    // 4. TIDAK ada di API stt=10 (belum selected)
+                    // 5. Belum ada di database lokal (mhs_yudiciums)
+                    return $matchProdi && $notSelectedInApiStt7 && $notInApiStt10 && $notInMhsYud;
                 })
                 ->map(function ($mhs) {
                     $tempStatus = TempStatus::select('status', 'alasan')
@@ -224,13 +304,30 @@ class Index3Controller extends Controller
                         'prodi' => $mhs['STUDYPROGRAMNAME'] ?? '-',
                         'SMT_CURRENT' => $mhs['SMT_CURRENT'] ?? '-',
                         'alasan_status' => $tempStatus->value('alasan') ?? '-',
+                        'source' => 'api' // Tambahkan source
                     ];
                 })
                     ->toArray();
+                    
+                \Log::info('After filtering', [
+                    'before_filter' => $beforeFilter,
+                    'after_filter' => count($mahasiswa),
+                    'source' => 'api',
+                    'filtered_out' => $beforeFilter - count($mahasiswa),
+                    'excluded_in_mhs_yud' => count($existingNims),
+                    'excluded_in_api_stt10' => count($selectedInApiStt10),
+                    'reason' => 'Excluded: already in mhs_yudiciums OR selected in API stt=7 OR found in API stt=10'
+                ]);
+            } else {
+                \Log::warning('API failed or empty, using database fallback', [
+                    'success' => $response->successful(),
+                    'has_data' => !empty($data),
+                    'is_array' => is_array($data)
+                ]);
             }
 
-            if (empty($mahasiswa)) {
-                $source = 'database';
+            // Fallback ke database HANYA jika API benar-benar gagal atau tidak ada data
+            if ($source === 'database') {
                 
                 // Alur API: Menampilkan mahasiswa eligible yang BELUM ada di mhs_yudiciums (semua, tidak peduli status atau prodi)
                 $dbData = DB::table('mahasiswa')

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     console.log("Fakultas ID:", fakultasId);
 
     // Store ALL checkbox states in memory (including disabled ones)
-    const checkboxStates = new Map(); // { nim: { checked: boolean, disabled: boolean } }
+    const checkboxStates = new Map(); // { nim: { checked: boolean, disabled: boolean, source: string } }
 
     // Handle Check All
     const checkAll = document.getElementById('checkAll');
@@ -23,7 +23,9 @@ document.addEventListener('DOMContentLoaded', async (e) => {
             window.allMahasiswaData.forEach(mhs => {
                 checkboxStates.set(mhs.nim, {
                     checked: mhs.checked,
-                    disabled: mhs.disabled
+                    disabled: mhs.disabled,
+                    source: mhs.source || 'api',
+                    initialChecked: mhs.checked // Track initial state
                 });
             });
         } else {
@@ -34,7 +36,9 @@ document.addEventListener('DOMContentLoaded', async (e) => {
                 if (nim) {
                     checkboxStates.set(nim, {
                         checked: cb.checked,
-                        disabled: cb.disabled
+                        disabled: cb.disabled,
+                        source: cb.dataset.source || 'api',
+                        initialChecked: cb.checked
                     });
                 }
             });
@@ -127,7 +131,9 @@ document.addEventListener('DOMContentLoaded', async (e) => {
                     if (nim && !checkboxStates.has(nim)) {
                         checkboxStates.set(nim, {
                             checked: cb.checked,
-                            disabled: cb.disabled
+                            disabled: cb.disabled,
+                            source: cb.dataset.source || 'api',
+                            initialChecked: cb.checked
                         });
                     }
                 });
@@ -169,9 +175,16 @@ document.addEventListener('DOMContentLoaded', async (e) => {
             .filter(([nim, state]) => state.checked)
             .map(([nim, state]) => nim);
         
-        console.log('Selected NIMs:', selectedNims.length, selectedNims);
+        // Get unchecked NIMs (yang awalnya checked tapi sekarang unchecked)
+        const uncheckedMahasiswa = Array.from(checkboxStates.entries())
+            .filter(([nim, state]) => state.initialChecked && !state.checked)
+            .map(([nim, state]) => ({
+                nim: nim,
+                source: state.source
+            }));
         
-
+        console.log('Selected NIMs:', selectedNims.length, selectedNims);
+        console.log('Unchecked Mahasiswa:', uncheckedMahasiswa.length, uncheckedMahasiswa);
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -191,6 +204,33 @@ document.addEventListener('DOMContentLoaded', async (e) => {
                 try {
                     const parseFaculty = parseInt(fakultasId);
 
+                    // Step 1: Handle unchecked mahasiswa first
+                    if (uncheckedMahasiswa.length > 0) {
+                        console.log('Processing unchecked mahasiswa...');
+                        
+                        const uncheckRes = await fetch(routes.uncheckMahasiswa, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                            },
+                            body: JSON.stringify({
+                                yudicium_id: parseId,
+                                unchecked_mahasiswa: uncheckedMahasiswa
+                            })
+                        });
+
+                        if (!uncheckRes.ok) {
+                            const errData = await uncheckRes.json().catch(() => ({}));
+                            console.error('Uncheck error:', errData);
+                            throw new Error(errData.message || "Gagal memproses mahasiswa yang di-uncheck");
+                        }
+
+                        const uncheckData = await uncheckRes.json();
+                        console.log('Uncheck result:', uncheckData);
+                    }
+
+                    // Step 2: Proceed with tetapkan yudisium
                     const res = await fetch(routes.approveYudicium, {
                         method: "POST",
                         headers: {

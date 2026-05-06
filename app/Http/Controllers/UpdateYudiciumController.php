@@ -322,6 +322,17 @@ class UpdateYudiciumController extends Controller
                     $source = 'database';
                     Log::info('Data berhasil diambil dari database', ['count' => count($listMahasiswa)]);
                 }
+            } else {
+                // Jika data dari API, filter hanya yang ada di mahasiswa_nims (yang di-check)
+                if (!empty($validate['mahasiswa_nims'])) {
+                    $listMahasiswa = array_filter($listMahasiswa, function($mhs) use ($validate) {
+                        return in_array($mhs['STUDENTID'], $validate['mahasiswa_nims']);
+                    });
+                    Log::info('Filtered API data by checked NIMs', [
+                        'original_count' => count($listMahasiswa),
+                        'filtered_count' => count($listMahasiswa)
+                    ]);
+                }
             }
 
             if (empty($listMahasiswa)) {
@@ -330,6 +341,20 @@ class UpdateYudiciumController extends Controller
                     'success' => false,
                     'message' => 'Tidak ada data mahasiswa yang dipilih.'
                 ], 402);
+            }
+
+            // PENTING: Hapus mahasiswa yang TIDAK ada di mahasiswa_nims (yang di-uncheck)
+            // Ini memastikan mahasiswa yang di-uncheck tidak muncul lagi
+            $checkedNims = $validate['mahasiswa_nims'];
+            $deleted = MhsYud::where('yudicium_id', $validate['id'])
+                ->whereNotIn('nim', $checkedNims)
+                ->delete();
+            
+            if ($deleted > 0) {
+                Log::info('Deleted unchecked mahasiswa from mhs_yudiciums', [
+                    'deleted_count' => $deleted,
+                    'yudicium_id' => $validate['id']
+                ]);
             }
 
             // Simpan ke mhs_yudiciums dengan status final
@@ -451,6 +476,89 @@ class UpdateYudiciumController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Data tidak ditemukan.'], 404);
+    }
+
+    public function uncheckMahasiswa(Request $request)
+    {
+        $request->validate([
+            'yudicium_id' => 'required|integer',
+            'unchecked_mahasiswa' => 'required|array',
+            'unchecked_mahasiswa.*.nim' => 'required|string',
+            'unchecked_mahasiswa.*.source' => 'required|in:api,database,mhs_yudiciums',
+        ]);
+
+        $yudiciumId = $request->yudicium_id;
+        $uncheckedList = $request->unchecked_mahasiswa;
+        
+        $yudicium = Yudicium::findOrFail($yudiciumId);
+        $tanggal = $yudicium->created_at ? $yudicium->created_at->format('Y-m-d') : date('Y-m-d');
+        
+        $results = [
+            'api_reset' => [],
+            'database_deleted' => [],
+            'errors' => []
+        ];
+
+        foreach ($uncheckedList as $mhs) {
+            $nim = $mhs['nim'];
+            $source = $mhs['source'];
+
+            try {
+                // SELALU hapus dari database terlebih dahulu (jika ada)
+                $deleted = MhsYud::where('nim', $nim)
+                    ->where('yudicium_id', $yudiciumId)
+                    ->delete();
+                
+                if ($deleted) {
+                    $results['database_deleted'][] = $nim;
+                    Log::info('Berhasil hapus dari mhs_yudiciums untuk NIM: ' . $nim);
+                }
+                
+                // Jika source dari API, hit API stt=11 untuk reset status
+                if ($source === 'api') {
+                    $apiUrl = trim(env('URL_RESET_ACADEMIC'), " '\"");
+                    $apiUrl = str_replace(['NIM', 'TANGGAL'], [$nim, $tanggal], $apiUrl);
+                    
+                    Log::info('Uncheck mahasiswa dari API, hit stt=11', [
+                        'nim' => $nim,
+                        'url' => $apiUrl
+                    ]);
+                    
+                    $response = Http::timeout(10)->get($apiUrl);
+                    
+                    if ($response->successful()) {
+                        $body = strtolower(trim($response->body()));
+                        if ($body === 'true' || $body === '1') {
+                            $results['api_reset'][] = $nim;
+                            Log::info('Berhasil reset API untuk NIM: ' . $nim);
+                        } else {
+                            $results['errors'][] = "NIM {$nim}: API response tidak valid ({$response->body()})";
+                            Log::warning('API reset gagal untuk NIM: ' . $nim, ['response' => $response->body()]);
+                        }
+                    } else {
+                        $results['errors'][] = "NIM {$nim}: API error (status {$response->status()})";
+                        Log::error('API reset error untuk NIM: ' . $nim, ['status' => $response->status()]);
+                    }
+                }
+                
+            } catch (\Exception $e) {
+                $results['errors'][] = "NIM {$nim}: {$e->getMessage()}";
+                Log::error('Error uncheck mahasiswa', [
+                    'nim' => $nim,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
+        $totalProcessed = count($results['database_deleted']);
+        $totalErrors = count($results['errors']);
+
+        return response()->json([
+            'success' => $totalErrors === 0,
+            'message' => "Berhasil menghapus {$totalProcessed} mahasiswa dari database" . 
+                        ($totalErrors > 0 ? ", {$totalErrors} error" : ""),
+            'results' => $results
+        ]);
     }
 
     public function updateYudicium(Request $request)

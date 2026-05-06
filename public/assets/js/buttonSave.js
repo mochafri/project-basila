@@ -50,6 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         ? (window.mahasiswaList[0].source || 'api') 
                         : 'api';
 
+                    console.log('=== SIMPAN DRAFT DEBUG ===');
+                    console.log('Selected NIMs:', selectedNims);
+                    console.log('Source detected:', source);
+                    console.log('Mahasiswa list sample:', window.mahasiswaList ? window.mahasiswaList[0] : null);
+
                     const res = await fetch(routes.saveDraft, {
                         method: "POST",
                         headers: {

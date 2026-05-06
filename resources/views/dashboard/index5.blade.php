@@ -354,16 +354,18 @@
     <script>
         const routes = {
             approveYudicium: "{{ route('yudicium.tetapkan') }}",
+            uncheckMahasiswa: "{{ route('yudicium.uncheck') }}",
             ubahStatus: "{{ route('tempStatus') }}",
         };
         
         // Pass all mahasiswa data to JavaScript for state initialization
-        window.allMahasiswaData = @json($datas->map(function($data) {
+        window.allMahasiswaData = {!! json_encode($datas->map(function($data) {
             return [
                 'nim' => $data->nim,
                 'checked' => $data->selected ?? false,
-                'disabled' => $data->status !== 'Eligible'
+                'disabled' => $data->status !== 'Eligible',
+                'source' => $data->source ?? 'api'
             ];
-        }));
+        })) !!};
     </script>
 @endsection

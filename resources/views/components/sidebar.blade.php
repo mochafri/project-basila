@@ -134,7 +134,7 @@
                     </li>
                     @endif
 
-                    @if(in_array(session('active_role'), ['SUPERADMIN', 'ADMIN LAAK', 'DEKAN', 'DOSEN']))
+                    @if(in_array(session('active_role'), ['SUPERADMIN']))
                     <li>
                         <a href="{{ route('index6') }}">
                             <i class="ri-circle-fill circle-icon text-dark w-auto"></i>

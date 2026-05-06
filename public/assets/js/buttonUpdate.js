@@ -3,22 +3,69 @@ document.addEventListener('DOMContentLoaded', async () => {
     const checkAll   = document.getElementById('checkAll');
 
     // ======================================================
+    // TRACKING CHECKBOX STATE ACROSS PAGINATION
+    // ======================================================
+    // Store checkbox states globally (NIM -> checked status)
+    window.checkboxStates = window.checkboxStates || {};
+    
+    // Initialize all checkboxes from backend data (ALL mahasiswa, not just visible)
+    function initializeCheckboxStates() {
+        // Use data from backend (passed via blade)
+        if (window.allMahasiswaData && window.allMahasiswaData.length > 0) {
+            console.log('Initializing from backend data');
+            window.allMahasiswaData.forEach(mhs => {
+                window.checkboxStates[mhs.nim] = mhs.checked; // Default true
+            });
+        } else {
+            // Fallback: Get from DOM if backend data not available
+            console.log('Fallback: Initializing from DOM');
+            const allRows = document.querySelectorAll('#selection-table tbody tr');
+            allRows.forEach(row => {
+                const checkbox = row.querySelector('.row-checkbox');
+                if (checkbox) {
+                    const nim = checkbox.dataset.nim;
+                    if (window.checkboxStates[nim] === undefined) {
+                        window.checkboxStates[nim] = checkbox.checked;
+                    }
+                }
+            });
+        }
+        
+        console.log('Initialized checkbox states:', window.checkboxStates);
+        console.log('Total mahasiswa:', Object.keys(window.checkboxStates).length);
+        
+        // Restore checkbox states for visible rows
+        restoreCheckboxStates();
+        updateCounts();
+    }
+
+    // ======================================================
     // CHECK ALL
     // ======================================================
     if (checkAll) {
         checkAll.addEventListener('change', function () {
-            document.querySelectorAll('.row-checkbox').forEach(cb => {
-                cb.checked = checkAll.checked;
+            const isChecked = checkAll.checked;
+            
+            // Update ALL NIMs in global state (not just visible ones)
+            Object.keys(window.checkboxStates).forEach(nim => {
+                window.checkboxStates[nim] = isChecked;
             });
+            
+            // Update visible checkboxes
+            document.querySelectorAll('.row-checkbox').forEach(cb => {
+                cb.checked = isChecked;
+            });
+            
+            console.log('Check All clicked:', isChecked);
             updateCounts();
         });
     }
 
     function updateCounts() {
-        const all     = document.querySelectorAll('.row-checkbox');
-        const checked = document.querySelectorAll('.row-checkbox:checked');
-        const total   = all.length;
-        const selected = checked.length;
+        // Count from global state (all pages)
+        const allNims = Object.keys(window.checkboxStates);
+        const total = allNims.length;
+        const selected = allNims.filter(nim => window.checkboxStates[nim]).length;
 
         const dipilihEl      = document.getElementById('totalDipilih');
         const tidakDipilihEl = document.getElementById('totalTidakDipilih');
@@ -26,17 +73,105 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (dipilihEl)      dipilihEl.textContent      = selected;
         if (tidakDipilihEl) tidakDipilihEl.textContent = total - selected;
 
-        if (checkAll) checkAll.checked = total > 0 && selected === total;
+        console.log('Update counts - Total:', total, 'Selected:', selected);
+
+        // Update checkAll state based on global state
+        if (checkAll) {
+            checkAll.checked = total > 0 && selected === total;
+        }
     }
 
+    // Track individual checkbox changes
     document.addEventListener('change', function (e) {
         if (e.target.classList.contains('row-checkbox')) {
+            const nim = e.target.dataset.nim;
+            window.checkboxStates[nim] = e.target.checked;
+            console.log('Checkbox changed:', nim, '=', e.target.checked);
             updateCounts();
         }
     });
 
-    // Init count on load
-    updateCounts();
+    // ======================================================
+    // RESTORE CHECKBOX STATES AFTER DOM CHANGES
+    // ======================================================
+    function restoreCheckboxStates() {
+        document.querySelectorAll('.row-checkbox').forEach(cb => {
+            const nim = cb.dataset.nim;
+            if (window.checkboxStates[nim] !== undefined) {
+                cb.checked = window.checkboxStates[nim];
+            }
+        });
+        console.log('Restored checkbox states for visible rows');
+    }
+
+    // ======================================================
+    // HANDLE PAGINATION - Use MutationObserver to detect DOM changes
+    // ======================================================
+    // Wait for DataTable to be initialized
+    setTimeout(() => {
+        if (window.selectionTable) {
+            console.log('DataTable detected, setting up event listeners');
+            
+            // Listen to page change events
+            window.selectionTable.on('datatable.page', function(page) {
+                console.log('Page changed to:', page);
+                setTimeout(() => {
+                    restoreCheckboxStates();
+                    updateCounts();
+                }, 100);
+            });
+            
+            // Listen to search events
+            window.selectionTable.on('datatable.search', function(query, matched) {
+                console.log('Search performed:', query);
+                setTimeout(() => {
+                    restoreCheckboxStates();
+                    updateCounts();
+                }, 100);
+            });
+            
+            // Listen to sort events
+            window.selectionTable.on('datatable.sort', function(column, direction) {
+                console.log('Sort performed:', column, direction);
+                setTimeout(() => {
+                    restoreCheckboxStates();
+                    updateCounts();
+                }, 100);
+            });
+        } else {
+            console.log('DataTable not found, using MutationObserver fallback');
+        }
+        
+        // Fallback: Use MutationObserver to detect any table changes
+        const tableBody = document.querySelector('#selection-table tbody');
+        if (tableBody) {
+            const observer = new MutationObserver(function(mutations) {
+                // Check if rows were added/removed
+                const hasRowChanges = mutations.some(mutation => 
+                    mutation.type === 'childList' && 
+                    (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0)
+                );
+                
+                if (hasRowChanges) {
+                    console.log('Table DOM changed, restoring states');
+                    setTimeout(() => {
+                        restoreCheckboxStates();
+                        updateCounts();
+                    }, 50);
+                }
+            });
+            
+            observer.observe(tableBody, {
+                childList: true,
+                subtree: true
+            });
+            
+            console.log('MutationObserver set up for table changes');
+        }
+    }, 500); // Wait 500ms for DataTable to initialize
+
+    // Init checkbox states on load
+    initializeCheckboxStates();
 
     // ======================================================
     // TOMBOL HAPUS INDIVIDUAL
@@ -75,8 +210,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const data = await res.json();
                 if (data.success) {
+                    // Remove from global state
+                    delete window.checkboxStates[nim];
+                    
                     // Hapus baris dari tabel
                     btn.closest('tr').remove();
+                    
+                    // Update counts
+                    updateCounts();
+                    
                     Swal.fire({
                         title: 'Dihapus!',
                         text: `${name} berhasil dihapus dari daftar.`,
@@ -170,8 +312,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const urlParams  = new URLSearchParams(window.location.search);
         const id         = parseInt(urlParams.get('id'));
 
-        const checkedNims   = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.dataset.nim);
-        const uncheckedNims = Array.from(document.querySelectorAll('.row-checkbox:not(:checked)')).map(cb => cb.dataset.nim);
+        // Get checked/unchecked NIMs from global state (all pages)
+        const allNims = Object.keys(window.checkboxStates);
+        const checkedNims = allNims.filter(nim => window.checkboxStates[nim]);
+        const uncheckedNims = allNims.filter(nim => !window.checkboxStates[nim]);
 
         if (checkedNims.length === 0) {
             Swal.fire({

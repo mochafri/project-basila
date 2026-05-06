@@ -50,11 +50,19 @@ class YudiciumService
 
     public function setAcademicStatus($nim, $date = '', $selected = 'Y')
     {
-        // Persiapkan URL dengan mengganti placeholder dari .env
-        $apiUrl = str_replace('NIM', $nim, $this->urlSetAcademic);
-        $apiUrl = str_replace('TANGGAL', $date, $apiUrl);
-        $apiUrl = str_replace('SELECTED', $selected, $apiUrl);
+        // Build URL secara manual tanpa encoding tambahan
+        // API ini mungkin sensitif terhadap URL encoding
+        $baseUrl = 'https://webservice-feeder.telkomuniversity.ac.id/apidikti/getRegpd.php';
+        $apiUrl = $baseUrl . '?stt=8&id=' . $nim . '&periode=' . $date . '&selected=' . $selected;
 
+        // Log URL yang akan dipanggil untuk debugging
+        Log::info("[API stt=8] Calling set_academic API", [
+            'nim' => $nim,
+            'date' => $date,
+            'selected' => $selected,
+            'url' => $apiUrl,
+            'base_url_from_env' => $this->urlSetAcademic
+        ]);
 
         try {
             // Mekanisme Retry: Coba 3x dengan jeda 100ms jika ada masalah koneksi
@@ -63,11 +71,19 @@ class YudiciumService
             $status = $response->status();
             $body   = trim($response->body());
 
+            Log::info("[API stt=8] Response received", [
+                'nim' => $nim,
+                'status' => $status,
+                'body' => $body,
+                'successful' => $response->successful()
+            ]);
 
             return $response;
         } catch (\Exception $e) {
             Log::error("[API stt=8] Critical error during API call.", [
                 'nim'   => $nim,
+                'date' => $date,
+                'url' => $apiUrl,
                 'error' => $e->getMessage()
             ]);
             throw $e;
@@ -231,30 +247,19 @@ class YudiciumService
                 $item->prodiname = 'Unknown';
             }
 
-            // Prioritas 1: Ambil total mahasiswa dari API stt=10 (Official Picked)
-            $listSelected = $this->getSelectedAcademicData($item->prodi, $item->periode);
+            // HANYA ambil total mahasiswa dari database mhs_yudiciums
+            // TIDAK menggunakan API
+            $totalFromDb = DB::table('mhs_yudiciums')
+                ->where('yudicium_id', $item->id)
+                ->count();
             
-            if (!empty($listSelected)) {
-                // API berhasil, gunakan count dari API
-                $item->total_mhs = count($listSelected);
-                Log::info('Total mahasiswa dari API', [
-                    'yudicium_id' => $item->id,
-                    'total' => $item->total_mhs,
-                    'source' => 'api'
-                ]);
-            } else {
-                // Prioritas 2: Fallback ke database mhs_yudiciums jika API kosong
-                $totalFromDb = DB::table('mhs_yudiciums')
-                    ->where('yudicium_id', $item->id)
-                    ->count();
-                
-                $item->total_mhs = $totalFromDb;
-                Log::info('Total mahasiswa dari database', [
-                    'yudicium_id' => $item->id,
-                    'total' => $item->total_mhs,
-                    'source' => 'database'
-                ]);
-            }
+            $item->total_mhs = $totalFromDb;
+            
+            Log::info('Total mahasiswa dari database', [
+                'yudicium_id' => $item->id,
+                'total' => $item->total_mhs,
+                'source' => 'database'
+            ]);
 
             return $item;
         });
@@ -279,7 +284,7 @@ class YudiciumService
         $fakulties  = $this->getFaculties();
         $prodyCache = [];
 
-        $yudicium->transform(function ($item) use ($fakulties, &$prodyCache) {
+        $yudicium->transform(function ($item) use ($fakulties, &$prodyCache, $fakultasId) {
             $faculty = $fakulties->firstWhere('facultyid', $item->fakultas);
             $item->fakultasname = $faculty['facultyname'] ?? 'Unknown';
             $facultyId = $faculty['facultyid'] ?? null;
@@ -296,10 +301,18 @@ class YudiciumService
                 $item->prodiname = 'Unknown';
             }
 
-            $listSelected    = $this->getSelectedAcademicData($item->prodi, $item->periode);
-            $item->total_mhs = !empty($listSelected)
-                ? count($listSelected)
-                : DB::table('mhs_yudiciums')->where('yudicium_id', $item->id)->count();
+            // HANYA ambil total mahasiswa dari database mhs_yudiciums
+            // TIDAK menggunakan API
+            $item->total_mhs = DB::table('mhs_yudiciums')
+                ->where('yudicium_id', $item->id)
+                ->count();
+
+            Log::info('Total mahasiswa dari database (by fakultas)', [
+                'yudicium_id' => $item->id,
+                'fakultas_id' => $fakultasId,
+                'total' => $item->total_mhs,
+                'source' => 'database'
+            ]);
 
             return $item;
         });

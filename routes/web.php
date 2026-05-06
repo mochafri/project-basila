@@ -153,6 +153,7 @@ Route::middleware(['auth'])->group(function () {
             Route::redirect('/dashboard/index-5/', '/dashboard/index-5');
             
             Route::post('/tetapkan-yudisium', 'tetapkanYudisium')->name('yudicium.tetapkan');
+            Route::post('/uncheck-mahasiswa', 'uncheckMahasiswa')->name('yudicium.uncheck');
         });
     });
 
